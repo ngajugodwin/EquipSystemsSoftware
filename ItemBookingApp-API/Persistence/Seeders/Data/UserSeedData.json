@@ -1,0 +1,38 @@
+[
+  {
+    "FirstName": "Cyndy",
+    "LastName": "Ezeifedikwa",
+    "UserName": "ezeifedikc",
+    "Email": "ezeifedikc@coventry.ac.uk",
+    "CreatedAt": "2023/05/30"
+  },
+  {
+    "FirstName": "Mannan",
+    "LastName": "Abdul",
+    "UserName": "mannana5",
+    "Email": "mannana5@coventry.ac.uk",
+    "CreatedAt": "2023/05/30"
+  },
+  {
+    "FirstName": "Olushola",
+    "LastName": "Benedict",
+    "UserName": "benedicto",
+    "Email": "benedicto@coventry.ac.uk",
+    "CreatedAt": "2023/05/30"
+  },
+  {
+    "FirstName": "Joshua",
+    "LastName": "Abodunrin",
+    "UserName": "abodunrinj",
+    "Email": "abodunrinj@coventry.ac.uk",
+    "CreatedAt": "2023/05/30"
+  },
+  {
+    "FirstName": "Godwin",
+    "LastName": "Ngaju",
+    "UserName": "ngajug",
+    "Email": "ngajug@coventry.ac.uk",
+    "CreatedAt": "2023/05/30"
+  }
+
+]
