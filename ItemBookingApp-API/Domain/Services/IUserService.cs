@@ -11,13 +11,13 @@ namespace ItemBookingApp_API.Domain.Services
 
         Task<UserResponse> GetUserByIdAsync(long id);
 
-        Task<UserResponse> SaveAsync(AppUser user, List<string> userRoles, string password);
+        Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password);
 
         Task<UserResponse> UpdateAsync(long userId, AppUser user, List<string> userRoles);
 
         Task<UserResponse> DeleteByIdAsync(long userId);
 
-        Task<UserResponse> RestoreUser(long userId);
+        Task<UserResponse> ActivateOrDisableUser(long userId, bool userDeactivationStatus);
 
         Task<UserResponse> ChangePassword(long userId, string oldPassword, string newPassword, bool isAdmin);
 

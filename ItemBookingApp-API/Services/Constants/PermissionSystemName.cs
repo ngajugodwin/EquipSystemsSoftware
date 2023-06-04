@@ -7,4 +7,12 @@
         public const string AccessOrganisationAdminRole = "AccessAdminArea";
         public const string HasUserRole = "HasUserRole";
     }
+
+    public static class RoleName
+    {
+        public const string User = "User";
+        public const string Admin = "Admin";
+        public const string Owner = "Owner";
+        public const string SuperAdmin = "SuperAdmin";
+    }
 }

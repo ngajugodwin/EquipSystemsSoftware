@@ -20,6 +20,12 @@ namespace ItemBookingApp_API.EntityConfiguration
 
             builder.Property(u => u.Email)
                .IsRequired();
+
+            builder.HasOne(u => u.Organisation)
+             .WithMany(o => o.Users)             
+             .HasForeignKey(u => u.OrganisationId)
+             .IsRequired(false)
+             .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

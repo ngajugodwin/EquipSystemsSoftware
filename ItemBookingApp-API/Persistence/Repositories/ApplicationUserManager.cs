@@ -1,6 +1,7 @@
 ﻿using ItemBookingApp_API.Domain.Models.Identity;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Resources.Query;
+using ItemBookingApp_API.Services.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,31 +18,109 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
         }
 
-        public async Task<PagedList<AppUser>> ListAsync(UserQuery userQuery)
+        public async Task<PagedList<AppUser>> ListAsync(UserQuery userQuery, AccountType accountType)
         {
-            var users = Enumerable.Empty<AppUser>().AsQueryable();
+            var users = Enumerable.Empty<AppUser>().AsQueryable();                      
 
-            if (!string.IsNullOrWhiteSpace(userQuery.FilterBy) && userQuery.FilterBy.ToLower() == "inactive")
+            if (accountType == AccountType.Individual)
             {
                 users = base.Users.Include(ur => ur.UserRoles)
-                    .ThenInclude(r => r.Role)
-                    .Where(u => u.IsActive == false)
-                    .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                 .ThenInclude(r => r.Role)
+                 .Where(u => u.Id == userQuery.UserId)
+                 .OrderByDescending(u => u.CreatedAt).AsQueryable();
+
+                return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
+            } 
+            else if (accountType == AccountType.Organisation)
+            {
+                if (!string.IsNullOrWhiteSpace(userQuery.FilterBy) && userQuery.FilterBy.ToLower() == "inactive")
+                {
+                    users = base.Users.Include(ur => ur.UserRoles)
+                        .ThenInclude(r => r.Role)
+                        .Where(u => u.IsActive == false && u.OrganisationId == userQuery.OrganisationId)
+                        .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                }
+                else
+                {
+                    users = base.Users.Include(ur => ur.UserRoles)
+                        .ThenInclude(r => r.Role)
+                        .Where(u => u.OrganisationId == userQuery.OrganisationId)
+                        .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                }
+
+                if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
+                {
+                    users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
+                                || u.LastName.Contains(userQuery.SearchString) && u.OrganisationId == userQuery.OrganisationId);
+                }
+
+                return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
             }
             else
             {
-                users = base.Users.Include(ur => ur.UserRoles)
-                    .ThenInclude(r => r.Role)
-                    .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                return await GetAllUsersAsync(userQuery, true);
             }
 
-            if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
+           
+        }
+
+        private async Task<PagedList<AppUser>> GetAllUsersAsync(UserQuery userQuery, bool isSuperAdmin = false)
+        {
+            var users = Enumerable.Empty<AppUser>().AsQueryable();
+
+            if (userQuery.OrganisationId > 0 && isSuperAdmin)
             {
-                users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
-                            || u.LastName.Contains(userQuery.SearchString));
+                if (!string.IsNullOrWhiteSpace(userQuery.FilterBy) && userQuery.FilterBy.ToLower() == "inactive")
+                {
+                    users = base.Users.Include(ur => ur.UserRoles)
+                        .ThenInclude(r => r.Role)
+                        .Where(u => u.IsActive == false && u.OrganisationId == userQuery.OrganisationId)
+                        .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                }
+                else
+                {
+                    users = base.Users.Include(ur => ur.UserRoles)
+                        .ThenInclude(r => r.Role)
+                        .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                }
+
+                if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
+                {
+                    users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
+                                || u.LastName.Contains(userQuery.SearchString));
+                }
+
+                return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
+            }
+            else
+            {
+                if (userQuery.OrganisationId <= 0 && isSuperAdmin)
+                {
+                    if (!string.IsNullOrWhiteSpace(userQuery.FilterBy) && userQuery.FilterBy.ToLower() == "inactive")
+                    {
+                        users = base.Users.Include(ur => ur.UserRoles)
+                            .ThenInclude(r => r.Role)
+                            .Where(u => u.IsActive == false)
+                            .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                    }
+                    else
+                    {
+                        users = base.Users.Include(ur => ur.UserRoles)
+                            .ThenInclude(r => r.Role)
+                             .Where(u => u.IsActive == true)
+                            .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
+                {
+                    users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
+                                || u.LastName.Contains(userQuery.SearchString));
+                }
+
             }
 
-            return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
+           return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
         }
 
         public async override Task<IdentityResult> CreateAsync(AppUser user, string password)

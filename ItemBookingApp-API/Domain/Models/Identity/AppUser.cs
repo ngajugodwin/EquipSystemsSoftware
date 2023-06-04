@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 
 namespace ItemBookingApp_API.Domain.Models.Identity
 {
@@ -13,6 +14,14 @@ namespace ItemBookingApp_API.Domain.Models.Identity
 
         public override string Email { get; set; }
 
+        public bool IsPrimaryOrganisationContact { get; set; }
+
+        public AccountType AccountType { get; set; }
+
+        public virtual Organisation Organisation { get; set; }
+
+        public int? OrganisationId { get; set; }
+
         public ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<Token> Tokens { get; set; }
 
@@ -20,6 +29,18 @@ namespace ItemBookingApp_API.Domain.Models.Identity
         {
             CreatedAt = DateTime.Now;
             Tokens = new HashSet<Token>();
-        }
+        }       
+    }
+
+    public enum AccountType
+    {
+        [Description("Individual")]
+        Individual = 1,
+
+        [Description("Organisation")]
+        Organisation = 2,
+
+        [Description("Master")]
+        Master = 3,
     }
 }

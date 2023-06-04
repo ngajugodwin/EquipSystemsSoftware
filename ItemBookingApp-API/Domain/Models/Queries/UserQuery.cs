@@ -2,5 +2,8 @@
 {
     public class UserQuery : BaseQuery
     {
+        public int OrganisationId { get; set; }
+
+        public long UserId { get; set; }
     }
 }
