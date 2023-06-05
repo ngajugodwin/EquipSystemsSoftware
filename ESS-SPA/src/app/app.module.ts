@@ -16,6 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 // Import app component
 import { AppComponent } from './app.component';
 
+
 // Import containers
 import {
   DefaultFooterComponent,
@@ -46,6 +47,7 @@ import {
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 
 import {AuthService} from './shared/services/auth-service/auth.service';
+import {UserService} from './shared/services/user-service/user.service';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { JwtInterceptorProvider } from './shared/interceptors/jwt.interceptor';
 import { HttpClientModule } from '@angular/common/http';
@@ -61,7 +63,12 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS],
+  declarations: [
+    AppComponent, 
+    
+    ...APP_CONTAINERS
+    
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -91,6 +98,7 @@ const APP_CONTAINERS = [
 
 
     HttpClientModule,
+   // AccountModule
   ],
   providers: [
     // {
@@ -106,6 +114,7 @@ const APP_CONTAINERS = [
 
     // Code
     AuthService,
+    UserService,
     JwtInterceptorProvider,
     AuthGuard
   ],

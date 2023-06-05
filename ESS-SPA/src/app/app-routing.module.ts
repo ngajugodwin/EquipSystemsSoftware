@@ -7,6 +7,8 @@ import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import {AuthGuard} from './shared/guards/auth.guard';
+import { IndividualAccountComponent } from './views/pre-login/account-type/individual-account/individual-account.component';
+import { OrganisationAccountComponent } from './views/pre-login/account-type/organisation-account/organisation-account.component';
 
 const routes: Routes = [
   {
@@ -49,6 +51,11 @@ const routes: Routes = [
           import('./views/pages/pages.module').then((m) => m.PagesModule)
       },
       {
+        path: 'account',
+        loadChildren: () =>
+          import('./views/pre-login/account.module').then((m) => m.AccountModule)
+      },
+      {
         path: 'admin',
         data: {roles: ['Admin']},
         loadChildren: () => import('./views/post-login/admin/admin.module').then(m => m.AdminModule)
@@ -60,6 +67,20 @@ const routes: Routes = [
     component: LoginComponent,
     data: {
       title: 'Login Page'
+    }
+  },
+  {
+    path: 'individual-account',
+    component: IndividualAccountComponent,
+    data: {
+      title: 'Individual Account Type'
+    }
+  },
+  {
+    path: 'organisation-account',
+    component: OrganisationAccountComponent,
+    data: {
+      title: 'Organisation Account Type'
     }
   },
   {

@@ -23,8 +23,9 @@ namespace ItemBookingApp_API.Controllers
             _userService = userService;
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> CreateNewAccountAsync([FromQuery] bool isExternalReg, [FromBody] SaveUserResource saveUserResource)
+        public async Task<IActionResult> CreateNewAccountAsync([FromBody] SaveUserResource saveUserResource, [FromQuery] bool isExternalReg)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());

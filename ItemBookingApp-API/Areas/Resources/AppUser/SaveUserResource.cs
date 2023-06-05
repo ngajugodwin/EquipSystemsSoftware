@@ -25,7 +25,7 @@ namespace ItemBookingApp_API.Areas.Resources.AppUser
 
         public string[]? Roles { get; set; }
 
-        public Domain.Models.Organisation Organisation { get; set; }
+        public Domain.Models.Organisation? Organisation { get; set; }
 
         public int AccountType { get; set; }
 

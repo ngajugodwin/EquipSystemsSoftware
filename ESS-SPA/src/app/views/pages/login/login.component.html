@@ -48,12 +48,18 @@
               <div>
                 <h2>Sign up</h2>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua.
+                  Welcome to Equip Systems Software where you can loan items at an affordable cost. To get started, sign-up as an individual or organisation.
                 </p>
-                <button [active]="true" cButton class="mt-3" color="primary" routerLink="/register">
-                  Register Now!
-                </button>
+                <c-container>
+                  <c-row>
+                    <c-col> 
+                        <button [active]="true" cButton class="mt-3" color="primary" [routerLink]="['/individual-account']">Individual Account</button>
+                    </c-col>
+                    <c-col>
+                      <button [active]="true" cButton class="mt-3" color="primary" [routerLink]="['/organisation-account']">Corporate Account</button>
+                    </c-col>
+                  </c-row>                 
+                </c-container>               
               </div>
             </c-card-body>
           </c-card>

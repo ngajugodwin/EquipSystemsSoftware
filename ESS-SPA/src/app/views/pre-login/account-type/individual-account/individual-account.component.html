@@ -1,0 +1,91 @@
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4">
+          <c-card-body class="p-4">
+            <form cForm (ngSubmit)="save()" [formGroup]="userForm" id="userForm">
+              <h1>Register - Individual</h1>
+              <p class="text-medium-emphasis">Create your account</p>
+              <div class="form-group">
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilUser"></svg>
+                  </span>
+                  <input
+                    formControlName="username"                   
+                    autoComplete="name" 
+                    cFormControl
+                    [ngClass]="{'is-invalid' : userForm.get('username')?.errors && userForm.get('username')?.touched}"
+                    placeholder="Username" />
+                    <div class="invalid-feedback" *ngIf="userForm.get('username')?.hasError('required') && userForm.get('username')?.touched">The username field is required</div>
+                </c-input-group>
+              </div>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilUser"></svg>
+                </span>
+                <input
+                    formControlName="firstName"                   
+                    autoComplete="firstname" 
+                    cFormControl
+                    [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('firstName')?.touched}"
+                    placeholder="First Name" />
+                    <div class="invalid-feedback" *ngIf="userForm.get('firstName')?.hasError('required') && userForm.get('firstName')?.touched">The first name field is required</div>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilUser"></svg>
+                </span>
+                <input
+                    formControlName="lastName"                   
+                    autoComplete="lastName" 
+                    cFormControl
+                    [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('lastName')?.touched}"
+                    placeholder="Last Name" />
+                    <div class="invalid-feedback" *ngIf="userForm.get('lastName')?.hasError('required') && userForm.get('lastName')?.touched">The last name field is required</div>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>@</span>
+                <input
+                    formControlName="email"                   
+                    autoComplete="email" 
+                    cFormControl
+                    [ngClass]="{'is-invalid' : userForm.get('email')?.errors && userForm.get('email')?.touched}"
+                    placeholder="Email" />
+                    <div class="invalid-feedback" *ngIf="userForm.get('email')?.hasError('required') && userForm.get('email')?.touched">The email field is required</div>
+                    <div class="invalid-feedback" *ngIf="userForm.get('email')?.hasError('email') && userForm.get('email')?.touched">The email address is not valid</div>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLockLocked"></svg>
+                </span>
+                <input
+                  formControlName="password"
+                  [ngClass]="{'is-invalid' : userForm.get('password')?.errors && userForm.get('password')?.touched}"
+                  autoComplete="new-password" cFormControl placeholder="Password" type="password" />
+                  <div class="invalid-feedback" *ngIf="userForm.get('password')?.hasError('required') && userForm.get('password')?.touched">Password is required</div>
+                  <div class="invalid-feedback" *ngIf="userForm.get('password')?.hasError('minlength') && userForm.get('password')?.touched">Password must be at least 4 characters</div>
+                  <div class="invalid-feedback" *ngIf="userForm.get('password')?.hasError('maxlength') && userForm.get('password')?.touched">Password must be not exceed 8 characters</div>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLockLocked"></svg>
+                </span>
+                <input
+                  formControlName="confirmPassword"
+                  [ngClass]="{'is-invalid' : userForm.get('confirmPassword')?.errors && userForm.get('confirmPassword')?.touched}"
+                  autoComplete="new-password" cFormControl placeholder="Confirm Password" type="password" />
+                  <div class="invalid-feedback" *ngIf="userForm.get('confirmPassword')?.hasError('required') && userForm.get('confirmPassword')?.touched">Confirm Password is required</div>
+                  <div class="invalid-feedback" *ngIf="userForm.hasError('mismatch') && userForm.get('confirmPassword')?.touched">Passwords does not match</div>
+              </c-input-group>              
+              <div class="d-grid">
+                <button [disabled]="!userForm.valid" type="submit" cButton color="success">Create Account</button>
+              </div>
+            </form>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountType } from 'src/app/entities/models/accountType';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { AuthService } from 'src/app/shared/services/auth-service/auth.service';
 
@@ -11,6 +12,7 @@ import { AuthService } from 'src/app/shared/services/auth-service/auth.service';
 export class LoginComponent {
   model:any = {};
   isProcessing = false;
+  accountType: AccountType;
 
   constructor(private authService: AuthService, private router: Router) { }
 
