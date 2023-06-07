@@ -1,12 +1,17 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from '@angular/router';
+import { ManageOrganisationsComponent} from './manage-organisations/manage-organisations.component';
 
 
 const routes: Routes = [
-
     {
         path: 'manage-users',
         loadChildren: () => import('./manage-users/users/users.module').then(m => m.UsersModule)
+    },
+    {
+        path: 'manage-organisations', 
+        component: ManageOrganisationsComponent, 
+        data: {title: 'Organisations'}
     }
 ];
 
@@ -17,4 +22,4 @@ const routes: Routes = [
     exports:[RouterModule]
 })
 
-export class AdminRoutingModule {}
+export class MasterAdminRoutingModule {}

@@ -57,6 +57,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile(new ItemMappingProfile());
     cfg.AddProfile(new CategoryMappingProfile());
     cfg.AddProfile(new AppUserMappingProfile());
+    cfg.AddProfile(new OrganisationMappingProfile());
 });
 
 IMapper mapper = config.CreateMapper();

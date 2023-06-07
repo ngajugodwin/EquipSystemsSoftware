@@ -17,10 +17,10 @@ export class UsersComponent implements OnInit {
   }
 
   getUsers() {
-    this.route.data.pipe(map((res) => {
-      console.log(res);
-    }),
-    );
+    // this.route.data.pipe(map((res) => {
+    //   console.log(res);
+    // }),
+    // );
   }
 
 }

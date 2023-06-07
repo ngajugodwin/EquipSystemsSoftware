@@ -2,5 +2,6 @@
 {
     public class OrganisationQuery : BaseQuery
     {
+        public EntityStatus Status { get; set; }
     }
 }

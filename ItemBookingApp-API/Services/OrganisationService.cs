@@ -1,8 +1,10 @@
 ﻿using ItemBookingApp_API.Domain.Models;
+using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Domain.Services.Communication;
 using ItemBookingApp_API.Persistence.Repositories;
+using ItemBookingApp_API.Resources.Query;
 
 namespace ItemBookingApp_API.Services
 {
@@ -28,7 +30,7 @@ namespace ItemBookingApp_API.Services
             if (organisationFromRepo == null)
                 return new OrganisationResponse("Organisation not found");
 
-            var result = (organisationStatus) ? organisationFromRepo.IsActive = true : organisationFromRepo.IsActive = false;
+            var result = (organisationStatus) ? organisationFromRepo.Status == EntityStatus.Active : organisationFromRepo.Status == EntityStatus.Disabled;
 
             await _unitOfWork.CompleteAsync();
             return new OrganisationResponse(organisationFromRepo);
@@ -42,6 +44,9 @@ namespace ItemBookingApp_API.Services
 
                 if (existingOrganisation != null)
                     return new OrganisationResponse("Organisation already exist");
+
+                //send notification to user about pending approval
+                organisation.Status = EntityStatus.Pending;
                                 
                 await _genericRepository.AddAsync<Organisation>(organisation);
                 await _unitOfWork.CompleteAsync();
@@ -55,12 +60,22 @@ namespace ItemBookingApp_API.Services
             }
         }
 
+        public Task<PagedList<Organisation>> ListAsync(OrganisationQuery organisationQuery)
+        {
+            return _organisationRepository.ListAsync(organisationQuery);
+        }
+
+        public async Task<IEnumerable<Organisation>> ListAsync()
+        {
+            return await _organisationRepository.ListAsync();
+        }
+
         public async Task<OrganisationResponse> UpdateAsync(int organisationId, Organisation organisation)
         {
             var organisationFromRepo = await _genericRepository.FindAsync<Organisation>(c => c.Id == organisationId);
 
             if (organisationFromRepo == null)
-                return new OrganisationResponse("Category not found");
+                return new OrganisationResponse("Organisation not found");
 
             var isExist = await _organisationRepository.IsExist(organisation.Name);
 
@@ -79,5 +94,6 @@ namespace ItemBookingApp_API.Services
                 return new OrganisationResponse($"An error occured when updating organisation: {ex.Message}");
             }
         }
+      
     }
 }

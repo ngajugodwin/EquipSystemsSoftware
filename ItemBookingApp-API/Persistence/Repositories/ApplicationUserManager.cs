@@ -156,6 +156,11 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return await base.CreateAsync(user, password);
         }
 
+        public override Task<AppUser> FindByEmailAsync(string email)
+        {
+            return base.FindByEmailAsync(email);
+        }
+
 
         public async Task<AppUser> FindByIdAsync(long userId)
         {

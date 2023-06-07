@@ -22,7 +22,7 @@ namespace ItemBookingApp_API.Controllers
             _mapper = mapper;
             _userService = userService;
         }
-
+        
 
         [HttpPost]
         public async Task<IActionResult> CreateNewAccountAsync([FromBody] SaveUserResource saveUserResource, [FromQuery] bool isExternalReg)
@@ -57,7 +57,6 @@ namespace ItemBookingApp_API.Controllers
             var userToReturn = _mapper.Map<UserResource>(result.Resource);
 
             return Ok(userToReturn);
-
             //  return CreatedAtRoute("GetUserAsync", new { controller = "Users", id = userToReturn.Id }, userToReturn);
         }
     }

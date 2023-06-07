@@ -18,7 +18,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
             var organisation = await _context.Organisations.FindAsync(organisationId);
 
-            return (organisation != null && organisation.IsActive) ? true : false;
+            return (organisation != null && organisation.Status == EntityStatus.Active) ? true : false;
         }
 
         public async Task<bool> IsExist(string organisationName)
@@ -29,14 +29,46 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return (organisation) ? true : false;
         }
 
-        public Task<PagedList<Organisation>> ListAsync(OrganisationQuery organisationQuery)
+        public async Task<PagedList<Organisation>> ListAsync(OrganisationQuery organisationQuery)
         {
-            throw new NotImplementedException();
+            var organisations = Enumerable.Empty<Organisation>().AsQueryable();
+
+            if (organisationQuery.Status > 0)
+            {
+                switch (organisationQuery.Status)
+                {
+                    case EntityStatus.Pending:
+                        organisations = _context.Organisations.Where(o => o.Status == EntityStatus.Pending);
+                        break;
+                    case EntityStatus.Active:
+                        organisations = _context.Organisations.Where(o => o.Status == EntityStatus.Active);
+                        break;
+                    case EntityStatus.Disabled:
+                        organisations = _context.Organisations.Where(o => o.Status == EntityStatus.Disabled);
+                        break;
+                    default:
+                        organisations = _context.Organisations.AsQueryable();
+                        break;
+                }
+            }
+            else
+            {
+                organisations = _context.Organisations.AsQueryable();
+            }
+
+            if (!string.IsNullOrWhiteSpace(organisationQuery.SearchString))
+            {
+                organisations = organisations.Where(c => c.Name.Contains(organisationQuery.SearchString));
+            }
+
+            organisations = organisations.OrderByDescending(c => c.CreatedAt);
+
+            return await PagedList<Organisation>.CreateAsync(organisations, organisationQuery.PageNumber, organisationQuery.PageSize);
         }
 
-        public Task<IEnumerable<Organisation>> ListAsync()
+        public async Task<IEnumerable<Organisation>> ListAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Organisations.ToListAsync();
         }
     }
 }

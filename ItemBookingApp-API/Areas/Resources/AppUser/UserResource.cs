@@ -16,7 +16,7 @@ namespace ItemBookingApp_API.Areas.Resources.AppUser
 
         public DateTime CreatedAt { get; set; }
 
-        public string[] UserRoles { get; set; } = new string[10];    
+        public string[] UserRoles { get; set; }
 
         public string Status { get; set; } = string.Empty;
 

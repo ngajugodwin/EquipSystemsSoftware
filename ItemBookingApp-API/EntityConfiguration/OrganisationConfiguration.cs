@@ -24,6 +24,14 @@ namespace ItemBookingApp_API.EntityConfiguration
 
             builder.Property(i => i.DateOfIncorporation)
                 .IsRequired();
+
+            builder.Property(i => i.Status)
+                .HasDefaultValue(EntityStatus.Pending);
+
+            builder.HasOne(o => o.ApprovedByUser)
+                .WithMany(u => u.ApprovedByUser)
+                .HasForeignKey(o => o.ApprovedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -31,8 +31,8 @@ namespace ItemBookingApp_API.Persistence.Contexts
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new OrganisationConfiguration());
-            modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new AppUserConfiguration());           
             modelBuilder.ApplyConfiguration(new TokenConfiguration());
         }
 

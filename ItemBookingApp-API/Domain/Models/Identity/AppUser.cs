@@ -25,10 +25,13 @@ namespace ItemBookingApp_API.Domain.Models.Identity
         public ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<Token> Tokens { get; set; }
 
+        public virtual ICollection<Organisation> ApprovedByUser { get; set; }
+
         public AppUser()
         {
             CreatedAt = DateTime.Now;
             Tokens = new HashSet<Token>();
+            ApprovedByUser = new HashSet<Organisation>();
         }       
     }
 

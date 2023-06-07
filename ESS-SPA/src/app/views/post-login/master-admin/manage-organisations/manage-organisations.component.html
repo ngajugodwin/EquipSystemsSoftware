@@ -1,0 +1,61 @@
+
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+        <!-- <c-card-header>Users</c-card-header>
+        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
+        <c-card-header>
+          <c-container>
+            <c-row class="align-items-start">
+              <c-col>Organisations</c-col>
+              <c-col><button cButton color="primary" [routerLink]="['/admin/manage-organisation/new']">New Organisation</button></c-col>
+            </c-row>
+          </c-container>
+        </c-card-header>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">
+                <svg cIcon name="cilPeople"></svg>
+              </th>
+              <th>User</th>
+              <th>Country</th>
+              <th>Usage</th>
+              <th>Activity</th>
+              <th>Activity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center">
+              </td>
+              <td>
+                <div>{{ 'Godwin' }}</div>
+              </td>
+              <td>
+                <div>{{ 'Godwin' }}</div>
+              </td>
+              <td>
+                <div>{{ 'Godwin' }}</div>
+              </td>
+              <td>
+                <div>{{ 'Godwin' }}</div>
+              </td>
+              <td>
+                <div>{{ 'Godwin' }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+

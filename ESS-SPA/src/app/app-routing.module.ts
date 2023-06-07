@@ -6,7 +6,7 @@ import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
-import {AuthGuard} from './shared/guards/auth.guard';
+import { AuthGuard } from './shared/guards/auth.guard';
 import { IndividualAccountComponent } from './views/pre-login/account-type/individual-account/individual-account.component';
 import { OrganisationAccountComponent } from './views/pre-login/account-type/organisation-account/organisation-account.component';
 
@@ -56,9 +56,9 @@ const routes: Routes = [
           import('./views/pre-login/account.module').then((m) => m.AccountModule)
       },
       {
-        path: 'admin',
-        data: {roles: ['Admin']},
-        loadChildren: () => import('./views/post-login/admin/admin.module').then(m => m.AdminModule)
+        path: 'master-admin',
+        data: {roles: ['SuperAdmin']},
+        loadChildren: () => import('./views/post-login/master-admin/master-admin.module').then(m => m.MasterAdminModule)
       },
     ]
   },
