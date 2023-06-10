@@ -24,3 +24,15 @@ $enable-rtl: true;
 
 // If you want to add something do it here
 @import "custom";
+
+
+.table-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.search input {
+    width: 250px;
+    height: 33px;
+    border-radius: 20px;
+}

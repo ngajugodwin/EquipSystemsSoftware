@@ -4,6 +4,7 @@ namespace ItemBookingApp_API.Domain.Models
 {
     public enum EntityStatus
     {
+
         [Description("Pending")]
         Pending = 1,
 

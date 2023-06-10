@@ -7,13 +7,16 @@ using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Extension;
 using ItemBookingApp_API.Services;
+using ItemBookingApp_API.Services.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("super-admin/api/[controller]")]
     [ApiController]
+    [Authorize(Policy = PermissionSystemName.AccessSuperAdminArea)]
     public class ManageOrganisationsController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -85,13 +88,16 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         {
             var result = await _genericRepository.FindAsync<Organisation>(x => x.Id == organisationId);
 
+            if (result == null)
+                return Ok("Organisation not found");
+
             var organisationToReturn = _mapper.Map<OrganisationResource>(result);
 
             return Ok(organisationToReturn);
         }
 
-        [HttpPut("{organisationId}/setOrganisationStatus")]
-        public async Task<IActionResult> SetOrganisationStatus(int organisationId, bool organisationStatus)
+        [HttpPut("{organisationId}/setOrganisationStatus/")]
+        public async Task<IActionResult> SetOrganisationStatus([FromQuery] bool organisationStatus, int organisationId)
         {
             var result = await _organisationService.ActivateOrDeactivateOrganisation(organisationId, organisationStatus);
 
@@ -101,6 +107,19 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             var updatedOrganisation = _mapper.Map<OrganisationResource>(result.Resource);
 
             return Ok(updatedOrganisation);
+        }
+
+        [HttpDelete("{organisationId}")]
+        public async Task<IActionResult> DeleteOrganisationAsync(int organisationId)
+        {
+            var result = await _organisationService.RejectOrganisation(organisationId);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var deletedOrganisatione = _mapper.Map<OrganisationResource>(result.Resource);
+
+            return Ok(deletedOrganisatione);
         }
     }
 }

@@ -48,9 +48,13 @@ import { IconModule, IconSetService } from '@coreui/icons-angular';
 
 import {AuthService} from './shared/services/auth-service/auth.service';
 import {UserService} from './shared/services/user-service/user.service';
+import {OrganisationService} from './shared/services/organisation-service/organisation.service';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { JwtInterceptorProvider } from './shared/interceptors/jwt.interceptor';
 import { HttpClientModule } from '@angular/common/http';
+import { MasterAdminModule } from './views/post-login/master-admin/master-admin.module';
+
+import {CustomModule} from './shared/modules/custom.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -95,9 +99,8 @@ const APP_CONTAINERS = [
     BadgeModule,
     ListGroupModule,
     CardModule,
-
-
     HttpClientModule,
+    CustomModule,
    // AccountModule
   ],
   providers: [
@@ -115,6 +118,7 @@ const APP_CONTAINERS = [
     // Code
     AuthService,
     UserService,
+    OrganisationService,
     JwtInterceptorProvider,
     AuthGuard
   ],

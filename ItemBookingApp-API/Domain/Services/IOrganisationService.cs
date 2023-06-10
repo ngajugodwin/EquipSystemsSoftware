@@ -17,5 +17,7 @@ namespace ItemBookingApp_API.Domain.Services
 
         Task<IEnumerable<Organisation>> ListAsync();
 
+        Task<OrganisationResponse> RejectOrganisation(int organisationId);
+
     }
 }

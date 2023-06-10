@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MasterAdminRoutingModule } from './master-admin-routing.module';
 import { ManageOrganisationsComponent } from './manage-organisations/manage-organisations.component';
-import { ButtonModule, CardModule, FormModule, GridModule, TableModule } from '@coreui/angular';
+import { AvatarModule, BadgeModule, ButtonModule, CardModule, DropdownModule, FormModule, GridModule, ModalModule, TableModule } from '@coreui/angular';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '@coreui/icons-angular';
 import { UsersRoutingModule } from './manage-users/users/users-routing.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CustomModule } from 'src/app/shared/modules/custom.module';
 
 
 @NgModule({
@@ -21,6 +22,12 @@ import { ReactiveFormsModule } from '@angular/forms';
         GridModule,
         ButtonModule,
         MasterAdminRoutingModule,
+        AvatarModule,
+        DropdownModule,
+        CustomModule,
+        ModalModule,
+        BadgeModule,
+        FormsModule
     ], 
     exports:[
 

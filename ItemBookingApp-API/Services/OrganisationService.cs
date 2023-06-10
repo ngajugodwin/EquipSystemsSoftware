@@ -1,4 +1,5 @@
 ﻿using ItemBookingApp_API.Domain.Models;
+using ItemBookingApp_API.Domain.Models.Identity;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Domain.Services;
@@ -30,9 +31,33 @@ namespace ItemBookingApp_API.Services
             if (organisationFromRepo == null)
                 return new OrganisationResponse("Organisation not found");
 
-            var result = (organisationStatus) ? organisationFromRepo.Status == EntityStatus.Active : organisationFromRepo.Status == EntityStatus.Disabled;
+            var result = (organisationStatus) ? organisationFromRepo.Status = EntityStatus.Active : organisationFromRepo.Status = EntityStatus.Disabled;
 
             await _unitOfWork.CompleteAsync();
+            return new OrganisationResponse(organisationFromRepo);
+        }
+
+        public async Task<OrganisationResponse> RejectOrganisation(int organisationId)
+        {
+            var organisationFromRepo = await _genericRepository.FindAsync<Organisation>(x => x.Id == organisationId);            
+
+            if (organisationFromRepo == null)
+                return new OrganisationResponse("Organisation not found");
+
+            if (organisationFromRepo.Status != EntityStatus.Pending)
+                return new OrganisationResponse("Only organisation marked as pending can be rejected");
+
+            var organisationUser = await _genericRepository.FindAsync<AppUser>(x => x.OrganisationId == organisationFromRepo.Id);
+
+            if(organisationUser != null)
+            {
+                _genericRepository.Remove<AppUser>(organisationUser);
+            }
+
+            _genericRepository.Remove<Organisation>(organisationFromRepo);
+
+            await _unitOfWork.CompleteAsync();
+
             return new OrganisationResponse(organisationFromRepo);
         }
 

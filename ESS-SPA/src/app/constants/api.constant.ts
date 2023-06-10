@@ -8,3 +8,7 @@ export const AUTH_URL = {
     REGISTER: `${SERVER_END_POINT}/accounts/`,
     REFRESH_TOKEN: `${SERVER_END_POINT}/auth/refreshToken/`,
 };
+
+export const ORG_URL = {
+    BASE_URL: `${SUPER_ADMIN_SERVER_END_POINT}/manageorganisations/`
+}

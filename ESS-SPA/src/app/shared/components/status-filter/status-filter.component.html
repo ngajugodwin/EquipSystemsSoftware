@@ -1,0 +1,5 @@
+<div class="selectWrapper">
+  <select class="selectBox" (change)="onStatusChange($event)" [value]="filterStatus[0].id">
+    <option [value]="filter.id" *ngFor="let filter of filterStatus">{{filter.name}}</option>
+</select>
+</div>

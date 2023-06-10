@@ -5,4 +5,5 @@ export interface IOrganisation {
     registrationNumber: string;
     address: string;
     dateOfIncorporation: Date;
+    status: string;
 }

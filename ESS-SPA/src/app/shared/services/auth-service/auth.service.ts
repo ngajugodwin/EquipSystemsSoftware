@@ -25,7 +25,7 @@ export class AuthService {
         map((response: any) => {
           const user = response;
           if (user) {
-            this.clearStorage();
+           // this.clearStorage();
             this.setLocalStorageValue(user);
           }
         })
@@ -46,8 +46,9 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
+    console.log(!this.jwtHelper.isTokenExpired(token));
     return !this.jwtHelper.isTokenExpired(token);
-    // return !!token; // if have value, return true, else false;
+    //return !!token; // if have value, return true, else false;
   }
   
   logout() {

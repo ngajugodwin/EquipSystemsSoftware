@@ -1,15 +1,36 @@
 
 <c-row>
-  <c-col xs>
+  <c-col xs>   
     <c-card class="mb-4">
         <!-- <c-card-header>Users</c-card-header>
         <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
         <c-card-header>
           <c-container>
-            <c-row class="align-items-start">
-              <c-col>Organisations</c-col>
-              <c-col><button cButton color="primary" [routerLink]="['/admin/manage-organisation/new']">New Organisation</button></c-col>
-            </c-row>
+            <c-row  class="align-items-start">
+              <c-col class="table-title" xs="6">Organisations</c-col>             
+              <c-col class="table-title" xs="3">
+                <div class="search">
+                  <form #form="ngForm" (ngSubmit)="getOrganisations()">
+                    <input class="form-control form-control-sm input-search-box"
+                      type="search"
+                      placeholder="Search"
+                      name="search"
+                      [(ngModel)]="organisationParams.searchString"
+                      autocomplete="off">
+                  </form>
+                </div>
+              </c-col>
+              <c-col xs="3"> 
+                <c-row>
+                  <c-col [xs]="4">
+                    <label><span style="font-weight: bold; padding-right: 5px;">Filter By: </span></label>
+                  </c-col>
+                  <c-col [xs]="6">
+                    <app-status-filter (statusResult)="getOrganisations($event)"></app-status-filter> 
+                  </c-col>
+                </c-row> 
+              </c-col>
+            </c-row>            
           </c-container>
         </c-card-header>
       <c-card-body>
@@ -25,35 +46,47 @@
               <th class="text-center">
                 <svg cIcon name="cilPeople"></svg>
               </th>
-              <th>User</th>
-              <th>Country</th>
-              <th>Usage</th>
-              <th>Activity</th>
-              <th>Activity</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let org of organisations; let i = index">            
               <td class="text-center">
+                <c-avatar
+                  size="md"
+                  src="./assets/img/avatars/2.jpg"
+                  status="danger"
+                ></c-avatar>
               </td>
               <td>
-                <div>{{ 'Godwin' }}</div>
+                {{org.name}}
               </td>
               <td>
-                <div>{{ 'Godwin' }}</div>
-              </td>
+                <c-badge *ngIf="org.status.toLowerCase() === 'active' " color="success">{{org.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="org.status.toLowerCase()=== 'pending' " color="info">{{org.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="org.status.toLowerCase() === 'disabled' " color="danger">{{org.status.toUpperCase()}}</c-badge>
+              </td>     
+              <!-- <td>
+                <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
+              </td> -->
               <td>
-                <div>{{ 'Godwin' }}</div>
-              </td>
-              <td>
-                <div>{{ 'Godwin' }}</div>
-              </td>
-              <td>
-                <div>{{ 'Godwin' }}</div>
+                <c-dropdown>
+                  <a cButton cDropdownToggle color="info" [routerLink]="[]">
+                    Actions
+                  </a>
+                  <ul cDropdownMenu>                    
+                    <li *ngIf="org.status.toLowerCase() === 'pending'"><a (click)="onApproveOrganisation(org.id)" cDropdownItem>Approve</a></li>
+                    <li *ngIf="org.status.toLowerCase() === 'pending'"><a (click)="onRejectOrganisation(org.id)" cDropdownItem>Reject</a></li>
+                    <li *ngIf="org.status.toLowerCase() === 'disabled'"><a (click)="onEnableDisableOrganisation(org.id, true)" cDropdownItem>Enable</a></li>
+                    <li *ngIf="org.status.toLowerCase() === 'active'"><a (click)="onEnableDisableOrganisation(org.id, false)" cDropdownItem>Disable</a></li>
+                  </ul>
+                </c-dropdown>
               </td>
             </tr>
           </tbody>
-        </table>
+        </table>       
       </c-card-body>
     </c-card>
   </c-col>
