@@ -86,9 +86,16 @@ namespace ItemBookingApp_API.Services
 
         public async Task<PagedList<AppUser>> ListAsync(UserQuery userQuery)
         {            
-            var user = await _applicationUserManager.FindByIdAsync(userQuery.UserId);
+          //  var user = await _applicationUserManager.FindByIdAsync(userQuery.UserId);
                 
-            return await _applicationUserManager.ListAsync(userQuery, user.AccountType);
+            return await _applicationUserManager.ListAsync(userQuery, userQuery.AccountType);
+        }
+
+        public async Task<PagedList<AppUser>> ListAsyncV2(UserQuery userQuery)
+        {
+            //  var user = await _applicationUserManager.FindByIdAsync(userQuery.UserId);
+
+            return await _applicationUserManager.ListAsyncV2(userQuery);
         }
 
         public async Task<UserResponse> ActivateOrDisableUser(long userId, bool userDeactivationStatus)
@@ -122,13 +129,13 @@ namespace ItemBookingApp_API.Services
                     });
                 }
 
-                userFromRepo.IsActive = false;
+                userFromRepo.Status = EntityStatus.Disabled;
                 await _unitOfWork.CompleteAsync();
 
                 return new UserResponse(userFromRepo);
             }
 
-            userFromRepo.IsActive = true;
+            userFromRepo.Status = EntityStatus.Active;
 
 
             if (!await _applicationUserManager.IsInRoleAsync(userFromRepo, RoleName.User))
@@ -143,10 +150,8 @@ namespace ItemBookingApp_API.Services
 
         public async Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password)
         {
-
             try
-            {
-              
+            {              
                 if (isExternalReg)
                 {
                     switch (user.AccountType)
@@ -223,6 +228,8 @@ namespace ItemBookingApp_API.Services
                 userRoles.Clear();
                 userRoles.Add(RoleName.SuperAdmin);
 
+                user.Status = EntityStatus.Active;
+
                 return await CreateUser(user, password, userRoles);
             }
 
@@ -242,6 +249,7 @@ namespace ItemBookingApp_API.Services
                 {
                     user.IsPrimaryOrganisationContact = true;
 
+                    user.Status = EntityStatus.Pending;
                     userRoles.Clear();
                     userRoles.Add(RoleName.Owner);
 
@@ -259,6 +267,7 @@ namespace ItemBookingApp_API.Services
         {
             if (user != null && user.AccountType == AccountType.Individual)
             {
+                user.Status = EntityStatus.Pending;
                 userRoles.Clear();
                 userRoles.Add(RoleName.Owner);
 

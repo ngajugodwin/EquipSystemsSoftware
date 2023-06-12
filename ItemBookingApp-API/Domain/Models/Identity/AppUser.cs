@@ -10,7 +10,7 @@ namespace ItemBookingApp_API.Domain.Models.Identity
         public string LastName { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public bool IsActive { get; set; }
+        public EntityStatus Status { get; set; }
 
         public override string Email { get; set; }
 

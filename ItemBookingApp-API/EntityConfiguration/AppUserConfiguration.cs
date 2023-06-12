@@ -1,4 +1,5 @@
-﻿using ItemBookingApp_API.Domain.Models.Identity;
+﻿using ItemBookingApp_API.Domain.Models;
+using ItemBookingApp_API.Domain.Models.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ItemBookingApp_API.EntityConfiguration
@@ -9,7 +10,9 @@ namespace ItemBookingApp_API.EntityConfiguration
         {
             builder.HasKey(u => u.Id);
 
-            
+            builder.Property(u => u.Status)
+                .HasDefaultValue(EntityStatus.Pending);
+
             builder.Property(u => u.FirstName)
                 .IsRequired()
                 .HasMaxLength(50);

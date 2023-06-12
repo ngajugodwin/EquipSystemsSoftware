@@ -7,3 +7,10 @@ export interface IOrganisation {
     dateOfIncorporation: Date;
     status: string;
 }
+
+export class Organisation {
+    name: string;
+    registrationNumber: string;
+    address: string;
+    dateOfIncorporation: Date;
+}

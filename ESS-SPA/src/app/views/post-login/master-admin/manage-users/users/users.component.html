@@ -7,11 +7,58 @@
         <c-card-header>
           <c-container>
             <c-row class="align-items-start">
-              <c-col>Users</c-col>
-              <c-col><button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button></c-col>
+              <c-col xs="3" class="table-title">Users</c-col>
+              <c-col xs="3">
+                <c-col [xs]="6">
+                  <div class="selectWrapper">
+                    <select class="selectBox" (change)="onStatusChange($event)" [value]="filterStatus[0].id">
+                      <option [value]="filter.id" *ngFor="let filter of filterStatus">{{filter.name}}</option>
+                  </select>
+                  </div>
+                </c-col>
+              </c-col>
+              <c-col xs="4">
+                <div class="search">
+                  <form #form="ngForm" (ngSubmit)="getUsers()">
+                    <input class="form-control form-control-sm input-search-box"
+                      type="search"
+                      placeholder="Search user"
+                      name="search"
+                      [(ngModel)]="userParams.searchString"
+                      autocomplete="off">
+                  </form>
+                </div>
+              </c-col>
+              <c-col xs="2"><button cButton color="primary" [routerLink]="['/master-admin/manage-users/new']">New User</button></c-col>
             </c-row>
           </c-container>
         </c-card-header>
+        <div>
+          <c-container style="margin-top: 20px;">
+            <c-row>
+              <c-col xs="5"></c-col>
+              <c-col xs="4" style="float: right;">
+                <div class="selectWrapper">
+                  <select class="selectBox" (change)="onAccountTypeChange($event)" [value]="accountTypes[0].id">
+                    <option [value]="acct.id" *ngFor="let acct of accountTypes">{{acct.name}}</option>
+                </select>
+                </div>
+              </c-col>
+              <c-col xs="3">
+                <div class="search">
+                  <form #form="ngForm" (ngSubmit)="getUsers()">
+                    <input class="form-control form-control-sm input-search-box"
+                      type="search"
+                      placeholder="Search Organisation Name"
+                      name="search"
+                      [(ngModel)]="userParams.accountTypeName"
+                      autocomplete="off">
+                  </form>
+                </div>
+              </c-col>
+            </c-row>
+          </c-container>
+        </div>
       <c-card-body>
         <table
           [hover]="true"
@@ -25,31 +72,50 @@
               <th class="text-center">
                 <svg cIcon name="cilPeople"></svg>
               </th>
-              <th>User</th>
-              <th>Country</th>
-              <th>Usage</th>
-              <th>Activity</th>
-              <th>Activity</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Status</th>
+              <th>Account Type</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let user of users">
               <td class="text-center">
               </td>
               <td>
-                <div>{{ 'Godwin' }}</div>
+                <div>{{ user.firstName }}</div>
               </td>
               <td>
-                <div>{{ 'Godwin' }}</div>
+                <div>{{user.lastName}}</div>
               </td>
               <td>
-                <div>{{ 'Godwin' }}</div>
-              </td>
+                <c-badge *ngIf="user.status.toLowerCase() === 'active' " color="success">{{user.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="user.status.toLowerCase()=== 'pending' " color="info">{{user.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="user.status.toLowerCase() === 'disabled' " color="danger">{{user.status.toUpperCase()}}</c-badge>
+              </td>     
+              <!-- <td>
+                <div>{{ user.status }}</div>
+              </td> -->
               <td>
-                <div>{{ 'Godwin' }}</div>
+                <c-badge color="info">{{user.typeName}}</c-badge>
               </td>
+           
+              <!-- <td>
+                <div>{{ user.accountType }}</div>
+              </td> -->
               <td>
-                <div>{{ 'Godwin' }}</div>
+                <c-dropdown>
+                  <a cButton cDropdownToggle color="info" [routerLink]="[]">
+                    Actions
+                  </a>
+                  <ul cDropdownMenu>                    
+                    <!-- <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onApproveOrganisation(org.id)" cDropdownItem>Approve</a></li>
+                    <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onRejectOrganisation(org.id)" cDropdownItem>Reject</a></li>
+                    <li *ngIf="user.status.toLowerCase() === 'disabled'"><a (click)="onEnableDisableOrganisation(org.id, true)" cDropdownItem>Enable</a></li>
+                    <li *ngIf="user.status.toLowerCase() === 'active'"><a (click)="onEnableDisableOrganisation(org.id, false)" cDropdownItem>Disable</a></li> -->
+                  </ul>
+                </c-dropdown>
               </td>
             </tr>
           </tbody>

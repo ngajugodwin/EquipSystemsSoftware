@@ -9,6 +9,8 @@ namespace ItemBookingApp_API.Domain.Services
     {
         Task<PagedList<AppUser>> ListAsync(UserQuery userQuery);
 
+        Task<PagedList<AppUser>> ListAsyncV2(UserQuery userQuery);
+
         Task<UserResponse> GetUserByIdAsync(long id);
 
         Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password);

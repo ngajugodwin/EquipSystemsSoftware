@@ -89,6 +89,26 @@ export const navItems: INavData[] = [
     ]
   },
   {
+    title: true,
+    name: 'Organisation'
+  },
+  {
+    name: 'Organisation Settings',
+    url: '/organisation-admin',
+    iconComponent: { name: 'cil-ApplicationsSettings'},
+    children: [
+      {
+        name: 'Users',
+        url: 'organisation-admin/manage-organisation-users',
+        iconComponent: {name: 'cil-User'}
+      }
+    ]
+  },
+  {
+    title: true,
+    name: 'Master'
+  },
+  {
     name: 'Master Settings',
     url: '/master-admin',
     iconComponent: { name: 'cil-ApplicationsSettings'},

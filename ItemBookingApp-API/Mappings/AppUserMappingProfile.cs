@@ -21,15 +21,19 @@ namespace ItemBookingApp_API.Mappings
                  {
                      opt.MapFrom(src => src.Organisation.GetOrganisation());
                  })
+                  .ForMember(dest => dest.TypeName, opt =>
+                  {
+                      opt.MapFrom(src => src.AccountType.GetAccountType());
+                  })
                  .ForMember(dest => dest.Status, opt => {
-                     opt.MapFrom(src => src.IsActive ? "Active" : "Inactive");
+                     opt.MapFrom(src => src.Status.ToDescriptionString());
                  });
 
             CreateMap<SaveUserResource, AppUser>();
 
             CreateMap<UpdateUserResource, AppUser>();
 
-            CreateMap<UsersQueryResource, UserQuery>();
+            CreateMap<UserQueryResource, UserQuery>();
         }
     }
 }

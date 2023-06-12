@@ -4,46 +4,77 @@
         <strong>New User</strong>
       </c-card-header>
       <c-card-body>
-        <form cForm class="row g-3">
+        
+        <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="userForm" id="userForm">      
+
           <c-col [md]="6">
-          <label cLabel for="inputEmail4">Email</label>
-          <input cFormControl id="inputEmail4" type="email" />
-          </c-col>
-          <c-col [md]="6">
-          <label cLabel for="inputPassword4">Password</label>
-          <input cFormControl id="inputPassword4" type="password" />
-          </c-col>
-          <c-col [xs]="12">
-          <label cLabel for="inputAddress">Address</label>
-          <input cFormControl id="inputAddress" placeholder="1234 Main St" />
-          </c-col>
-          <c-col [xs]="12">
-          <label cLabel for="inputAddress2">Address 2</label>
-          <input cFormControl id="inputAddress2" placeholder="Apartment, studio, or floor" />
+          <label cLabel for="inputEmail4">First Name</label>
+          <input cFormControl id="inputEmail4" type="text" formControlName="firstName"/>
           </c-col>
           <c-col [md]="6">
-          <label cLabel for="inputCity">City</label>
-          <input cFormControl id="inputCity" />
+          <label cLabel for="inputPassword4">Last Name</label>
+          <input cFormControl id="inputPassword4" type="password" formControlName="firstName"/>
           </c-col>
-          <c-col [md]="4">
-          <label cLabel for="inputState">State</label>
-          <select cSelect id="inputState">
-          <option>Choose...</option>
-          <option>...</option>
-          </select>
+          <c-col [xs]="6">
+          <label cLabel for="inputAddress">Username</label>
+          <input cFormControl placeholder="" formControlName="userName"/>
           </c-col>
-          <c-col [md]="2">
-          <label cLabel for="inputZip">Zip</label>
-          <input cFormControl id="inputZip" />
+          <c-col [md]="6">
+            <label cLabel for="inputState">Account Type</label>
+            <select cSelect id="inputState" (click)="onAccountTypeSelected($event)" [value]="accountTypes[0].id">
+              <option [value]="type.id" *ngFor="let type of accountTypes">{{type.name}}</option>
+            <!-- <option>...</option> -->
+            </select>
+          </c-col>
+          <div  *ngIf="true">
+              <div *ngFor="let org of organisationProperties; let index = index" [formGroupName]="index">
+                <c-col [md]="6" >
+                  <label cLabel>Organisation Name</label>
+                  <input [formControlName]="index" cFormControl type="text" />
+                </c-col>
+              </div>
+          </div>
+
+            <!-- <c-row>
+              <c-col [md]="6" >
+                <label cLabel>Organisation Name</label>
+                <input formControlName="name" cFormControl type="text" />
+              </c-col>
+              <c-col [md]="6">
+                <label cLabel>Registration Number</label>
+                <input  formControlName="registrationNumber" cFormControl type="text" />
+              </c-col>
+                  <c-col [md]="6">
+                <label cLabel>Date of Incorporation</label>
+                <input formControlName="dateOfIncoporation" cFormControl type="date" />
+              </c-col>
+              <c-col [md]="6">
+                <label cLabel>Address</label>
+                <input formControlName="address" cFormControl type="name" />
+              </c-col>
+             
+            </c-row>            -->
+          
+          <!-- <c-container *ngIf="true">
+            <c-col [md]="6">
+              <label cLabel for="inputEmail4">Organisation Name</label>
+              <input cFormControl id="inputEmail4" type="email" />
+            </c-col>
+            <c-col [md]="6">
+              <label cLabel>Address</label>
+              <input cFormControl type="name" />
+            </c-col>
+          </c-container> -->
+          <c-col [xs]="6">
+          <label cLabel>Password</label>
+          <input cFormControl placeholder="" />
+          </c-col>
+          <c-col [xs]="6">
+            <label cLabel>Confirm Password</label>
+            <input cFormControl placeholder="" />
           </c-col>
           <c-col [xs]="12">
-          <c-form-check>
-          <input cFormCheckInput id="gridCheck" name="gridCheck" type="checkbox" />
-          <label cFormCheckLabel for="gridCheck">Check me out</label>
-          </c-form-check>
-          </c-col>
-          <c-col [xs]="12">
-          <button cButton type="submit">Sign in</button>
+          <button cButton type="submit">Create New User</button>
           </c-col>
           </form>
       </c-card-body>

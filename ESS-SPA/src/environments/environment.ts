@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   SERVER_END_POINT: 'http://localhost:5110/api',
   SUPER_ADMIN_SERVER_END_POINT: 'http://localhost:5110/super-admin/api',
+  ORG_ADMIN_SERVER_END_POINT: 'http://localhost:5110/organisation-admin/api',
 };
 
 /*

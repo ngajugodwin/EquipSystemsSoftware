@@ -1,4 +1,5 @@
-﻿using ItemBookingApp_API.Domain.Models.Identity;
+﻿using ItemBookingApp_API.Domain.Models;
+using ItemBookingApp_API.Domain.Models.Identity;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Resources.Query;
 using ItemBookingApp_API.Services.Constants;
@@ -17,6 +18,52 @@ namespace ItemBookingApp_API.Persistence.Repositories
                 : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
         }
+        private IQueryable<AppUser> FilterByStatus(IQueryable<AppUser> users, EntityStatus status, int orgId)
+        {
+            if (users.Count() > 0)
+            {
+                if (orgId > 0)
+                {
+                    switch (status)
+                    {
+                        case EntityStatus.Pending:
+                            return users.Include(x => x.Organisation)
+                                .Where(x => x.Status == status 
+                                || x.OrganisationId == orgId).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        case EntityStatus.Active:
+                            return users.Include(x => x.Organisation)
+                                .Where(x => x.Status == status 
+                                || x.OrganisationId == orgId).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        case EntityStatus.Disabled:
+                            return users.Include(x => x.Organisation)
+                                .Where(x => x.Status == status 
+                                || x.OrganisationId == orgId).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        default:
+                            return users.Include(x => x.Organisation)
+                                .Where(x => x.Status == status 
+                                || x.OrganisationId == orgId).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                    }
+
+                } else
+                {
+                    switch (status)
+                    {
+                        case EntityStatus.Pending:
+                            return users.Include(x=> x.Organisation).Where(x => x.Status == status).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        case EntityStatus.Active:
+                            return users.Include(x => x.Organisation).Where(x => x.Status == status).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        case EntityStatus.Disabled:
+                            return users.Include(x => x.Organisation).Where(x => x.Status == status).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        default:
+                            return users.Include(x => x.Organisation).Where(x => x.Status == status).OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                    }
+                }
+
+                  
+            }
+
+            return users;
+        }
 
         public async Task<PagedList<AppUser>> ListAsync(UserQuery userQuery, AccountType accountType)
         {
@@ -24,34 +71,62 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
             if (accountType == AccountType.Individual)
             {
+                if (!string.IsNullOrWhiteSpace(userQuery.AccountTypeName))
+                {
+                    users = base.Users.Include(ur => ur.UserRoles)
+                        .ThenInclude(r => r.Role)
+                        .Where(u => u.FirstName.Contains(userQuery.AccountTypeName) || u.LastName.Contains(userQuery.AccountTypeName))
+                        .OrderByDescending(u => u.CreatedAt).AsQueryable().AsNoTracking();
+                }
+                
+
                 users = base.Users.Include(ur => ur.UserRoles)
-                 .ThenInclude(r => r.Role)
-                 .Where(u => u.Id == userQuery.UserId)
-                 .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                    .ThenInclude(r => r.Role)
+                    .OrderByDescending(u => u.CreatedAt).AsQueryable().AsNoTracking();               
 
                 return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
             } 
             else if (accountType == AccountType.Organisation)
             {
-                if (!string.IsNullOrWhiteSpace(userQuery.FilterBy) && userQuery.FilterBy.ToLower() == "inactive")
+                if (userQuery.Status > 0)
                 {
-                    users = base.Users.Include(ur => ur.UserRoles)
-                        .ThenInclude(r => r.Role)
-                        .Where(u => u.IsActive == false && u.OrganisationId == userQuery.OrganisationId)
-                        .OrderByDescending(u => u.CreatedAt).AsQueryable();
+
+                    switch (userQuery.Status)
+                    {
+                        case EntityStatus.Pending:
+                            users = FilterByStatus(base.Users, userQuery.Status, userQuery.OrganisationId);
+                            break;
+                        case EntityStatus.Active:
+                            users = FilterByStatus(base.Users, userQuery.Status, userQuery.OrganisationId);
+                            break;
+                        case EntityStatus.Disabled:
+                            users = FilterByStatus(base.Users, userQuery.Status, userQuery.OrganisationId);
+                            break;
+                        default:
+                            users = FilterByStatus(base.Users, userQuery.Status, userQuery.OrganisationId);
+                            break;
+                    }
+
+                    //users = base.Users.Include(ur => ur.UserRoles)
+                    //    .ThenInclude(r => r.Role)
+                    //    .Include(o => o.Organisation)
+                    //    .Where(u => u.Status == EntityStatus.Disabled && u.Organisation.Name.Contains(userQuery.AccountTypeName))
+                    //    .OrderByDescending(u => u.CreatedAt).AsQueryable();
                 }
                 else
                 {
                     users = base.Users.Include(ur => ur.UserRoles)
                         .ThenInclude(r => r.Role)
-                        .Where(u => u.OrganisationId == userQuery.OrganisationId)
+                        .Include(o => o.Organisation)
+                        .Where(u => u.Organisation.Name.Contains(userQuery.AccountTypeName) && u.OrganisationId == userQuery.OrganisationId || u.AccountType == userQuery.AccountType)
                         .OrderByDescending(u => u.CreatedAt).AsQueryable();
                 }
 
                 if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
                 {
                     users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
-                                || u.LastName.Contains(userQuery.SearchString) && u.OrganisationId == userQuery.OrganisationId);
+                                || u.LastName.Contains(userQuery.SearchString) 
+                                || u.Organisation.Name.Contains(userQuery.AccountTypeName) && u.OrganisationId == userQuery.OrganisationId);
                 }
 
                 return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
@@ -70,23 +145,22 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
             if (userQuery.OrganisationId > 0 && isSuperAdmin)
             {
-                if (!string.IsNullOrWhiteSpace(userQuery.FilterBy) && userQuery.FilterBy.ToLower() == "inactive")
+                if (userQuery.Status > 0)
                 {
-                    users = base.Users.Include(ur => ur.UserRoles)
-                        .ThenInclude(r => r.Role)
-                        .Where(u => u.IsActive == false && u.OrganisationId == userQuery.OrganisationId)
-                        .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                    users = FilterByStatus(base.Users, userQuery.Status, userQuery.OrganisationId);
                 }
                 else
                 {
                     users = base.Users.Include(ur => ur.UserRoles)
                         .ThenInclude(r => r.Role)
+                        .Include(u => u.Organisation)
+                        .Where(u => u.OrganisationId == userQuery.OrganisationId)
                         .OrderByDescending(u => u.CreatedAt).AsQueryable();
                 }
 
                 if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
                 {
-                    users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
+                    users = base.Users.Where(u => u.FirstName.Contains(userQuery.SearchString)
                                 || u.LastName.Contains(userQuery.SearchString));
                 }
 
@@ -96,20 +170,12 @@ namespace ItemBookingApp_API.Persistence.Repositories
             {
                 if (userQuery.OrganisationId <= 0 && isSuperAdmin)
                 {
-                    if (!string.IsNullOrWhiteSpace(userQuery.FilterBy) && userQuery.FilterBy.ToLower() == "inactive")
+                    if (userQuery.Status > 0)
                     {
-                        users = base.Users.Include(ur => ur.UserRoles)
-                            .ThenInclude(r => r.Role)
-                            .Where(u => u.IsActive == false)
-                            .OrderByDescending(u => u.CreatedAt).AsQueryable();
+                        users = FilterByStatus(base.Users, userQuery.Status, userQuery.OrganisationId);
                     }
-                    else
-                    {
-                        users = base.Users.Include(ur => ur.UserRoles)
-                            .ThenInclude(r => r.Role)
-                             .Where(u => u.IsActive == true)
-                            .OrderByDescending(u => u.CreatedAt).AsQueryable();
-                    }
+
+                    users = FilterByStatus(base.Users, userQuery.Status, 0);
                 }
 
                 if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
@@ -121,6 +187,96 @@ namespace ItemBookingApp_API.Persistence.Repositories
             }
 
            return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
+        }
+
+        private IQueryable<AppUser> ApplyCustomFilter(IQueryable<AppUser> users, UserQuery query)
+        {
+         //   var usersToReturn = Enumerable.Empty<AppUser>().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.AccountTypeName) || !string.IsNullOrWhiteSpace(query.SearchString))
+            {
+                if (query.AccountType == AccountType.Master || query.AccountType == AccountType.Individual)
+                {
+                    users = users.Include(x => x.Organisation)
+                        .Where(u => u.Status == query.Status
+                        && u.AccountType == query.AccountType
+                        || u.FirstName.Contains(query.AccountTypeName)
+                        || u.LastName.Contains(query.AccountTypeName)).AsQueryable().AsNoTracking();
+                } else
+                {
+                    users = users.Include(x => x.Organisation)
+                       .Where(u => u.Status == query.Status
+                       && u.AccountType == query.AccountType
+                       && u.Organisation.Name.Contains(query.AccountTypeName)).AsQueryable().AsNoTracking();
+                }
+              
+
+                //users = users.Include(x => x.Organisation)
+                //    .Where(u => u.Status == query.Status 
+                //    && u.AccountType == query.AccountType
+                //    || u.FirstName.Contains(query.AccountTypeName)
+                //    || u.LastName.Contains(query.AccountTypeName)
+                //    || u.Organisation.Name.Contains(query.AccountTypeName)).AsQueryable().AsNoTracking();
+            }
+            else
+            {
+                if (query.AccountType == AccountType.Master || query.AccountType == AccountType.Individual)
+                {
+                    users = users.Include(x => x.Organisation)
+                        .Where(u => u.Status == query.Status
+                        && u.AccountType == query.AccountType
+                        || u.FirstName.Contains(query.AccountTypeName)
+                        || u.LastName.Contains(query.AccountTypeName)).AsQueryable().AsNoTracking();
+                }
+                else
+                {
+                    users = users.Include(x => x.Organisation)
+                       .Where(u => u.Status == query.Status
+                       && u.AccountType == query.AccountType
+                       && u.Organisation.Name.Contains(query.AccountTypeName)).AsQueryable().AsNoTracking();
+                }
+
+
+                //users = users.Include(x => x.Organisation)
+                //    .Where(u => u.AccountType == query.AccountType
+                //    && u.Status == query.Status).AsQueryable().AsNoTracking();
+            }
+
+            return users;
+        }
+
+        public async Task<PagedList<AppUser>> ListAsyncV2(UserQuery userQuery)
+        {
+            var users = base.Users;
+
+            if (userQuery.Status > 0 && userQuery.AccountType > 0)
+            {
+                switch (userQuery.Status)
+                {
+                    case EntityStatus.Active:
+                        users = ApplyCustomFilter(users, userQuery);
+                        break;
+                    case EntityStatus.Disabled:
+                        users = ApplyCustomFilter(users, userQuery);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                users = users.Include(o => o.Organisation).Where(x => x.AccountType == userQuery.AccountType && x.Status == userQuery.Status);
+            }
+
+            if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
+            {
+                users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
+                            || u.LastName.Contains(userQuery.SearchString)
+                            && u.Status == userQuery.Status
+                            && u.AccountType == userQuery.AccountType);
+            }
+
+            return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
         }
 
         public async override Task<IdentityResult> CreateAsync(AppUser user, string password)

@@ -16,7 +16,7 @@ export class ManageOrganisationsComponent implements OnInit {
   organisationParams: any = {};
   pagination: Pagination;  
   organisations: IOrganisation[] = [];
-
+  
 
   constructor(private organisationService: OrganisationService) { }
 

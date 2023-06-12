@@ -20,6 +20,8 @@ namespace ItemBookingApp_API.Areas.Resources.AppUser
 
         public string Status { get; set; } = string.Empty;
 
+        public string TypeName { get; set; } = string.Empty;
+
         public OrganisationResource OrganisationResource { get; set; }
     }
 }

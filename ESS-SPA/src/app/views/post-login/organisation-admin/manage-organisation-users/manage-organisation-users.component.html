@@ -1,0 +1,99 @@
+
+<c-row>
+  <c-col xs>   
+    <c-card class="mb-4">
+        <!-- <c-card-header>Users</c-card-header>
+        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
+        <c-card-header>
+          <c-container>
+            <c-row  class="align-items-start">
+              <c-col class="table-title" xs="6">Organisation Users</c-col>             
+              <c-col class="table-title" xs="3">
+                <div class="search">
+                  <form #form="ngForm" (ngSubmit)="getOrganisationUsers()">
+                    <input class="form-control form-control-sm input-search-box"
+                      type="search"
+                      placeholder="Search"
+                      name="search"
+                      [(ngModel)]="userParams.searchString"
+                      autocomplete="off">
+                  </form>
+                </div>
+              </c-col>
+              <c-col xs="3"> 
+                <button cButton color="primary" [routerLink]="['/organisation-admin/manage-organisation-users/new']">New User</button>
+              </c-col>
+            </c-row>            
+          </c-container>
+        </c-card-header>
+        <c-card-body>
+          <c-row>
+            <c-col [xs]="9">
+              <div></div>
+            </c-col>
+            <c-col [xs]="3">
+              <app-status-filter (statusResult)="getOrganisationUsers($event)"></app-status-filter> 
+            </c-col>
+          </c-row>
+        </c-card-body>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">
+                <svg cIcon name="cilPeople"></svg>
+              </th>
+              <th>FirstName</th>
+              <th>LastName</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users; let i = index">            
+              <td class="text-center">
+                <c-avatar
+                  size="md"
+                  src="./assets/img/avatars/2.jpg"
+                  status="danger"
+                ></c-avatar>
+              </td>
+              <td>
+                {{user.firstName}}
+              </td>
+              <td>
+                {{user.lastName}}
+              </td>
+              <td>
+                <c-badge *ngIf="user.status.toLowerCase() === 'active' " color="success">{{user.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="user.status.toLowerCase()=== 'pending' " color="info">{{user.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="user.status.toLowerCase() === 'disabled' " color="danger">{{user.status.toUpperCase()}}</c-badge>
+              </td>     
+              <!-- <td>
+                <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
+              </td> -->
+              <td>
+                <c-dropdown>
+                  <a cButton cDropdownToggle color="info" [routerLink]="[]">
+                    Actions
+                  </a>
+                  <ul cDropdownMenu>                    
+                    <li><a (click)="onEditUser(user)" cDropdownItem>Edit</a></li>
+                    <li><a (click)="onDisableUser(user)" cDropdownItem>Disable</a></li>                
+                  </ul>
+                </c-dropdown>
+              </td>
+            </tr>
+          </tbody>
+        </table>       
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using ItemBookingApp_API.Areas.Resources.AppUser;
 using ItemBookingApp_API.Areas.Resources.Category;
+using ItemBookingApp_API.Areas.Resources.Organisation;
 using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Domain.Models.Identity;
+using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Extension;
 using ItemBookingApp_API.Resources.SelfService;
@@ -65,6 +67,20 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             var updatedUserToReturn = _mapper.Map<UserResource>(result.Resource);
 
             return Ok(updatedUserToReturn);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListAsync([FromQuery] UserQueryResource userQueryResource)
+        {
+            var userQuery = _mapper.Map<UserQueryResource, UserQuery>(userQueryResource);
+
+            var users = await _userService.ListAsyncV2(userQuery);
+
+            var usersToReturn = _mapper.Map<IEnumerable<UserResource>>(users);
+
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
+
+            return Ok(usersToReturn);
         }
 
         [HttpGet("{id}", Name = "GetUserAsync")]

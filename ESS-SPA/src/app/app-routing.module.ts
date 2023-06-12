@@ -60,6 +60,11 @@ const routes: Routes = [
     //    data: {roles: ['SuperAdmin', 'Owner']},
         loadChildren: () => import('./views/post-login/master-admin/master-admin.module').then(m => m.MasterAdminModule)
       },
+      {
+        path: 'organisation-admin',
+    //    data: {roles: ['SuperAdmin', 'Owner']},
+        loadChildren: () => import('./views/post-login/organisation-admin/organisation-admin.module').then(m => m.OrganisationAdminModule)
+      },
     ]
   },
   {

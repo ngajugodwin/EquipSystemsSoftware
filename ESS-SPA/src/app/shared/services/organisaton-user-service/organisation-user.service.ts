@@ -1,32 +1,36 @@
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import { AUTH_URL, USER_URL } from 'src/app/constants/api.constant';
+import { Observable, map } from 'rxjs';
+import { ORG_ADMIN } from 'src/app/constants/api.constant';
 import { PaginationResult } from 'src/app/entities/models/pagination';
 import { IUser } from 'src/app/entities/models/user';
-import { map } from 'rxjs';
-import { UserParams } from 'src/app/entities/models/basequeryParams';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class OrganisationUserService {
+
 
 constructor(private http: HttpClient) { }
 
-createUserAccount(userForCreation: IUser) {
+createOrganisationUserAccount(userForCreation: IUser) {
   let params = new HttpParams();
-  params = new HttpParams().set('isExternalReg', true)
+  params = new HttpParams().set('isExternalReg', false)
 
-  return this.http.post<IUser>(AUTH_URL.REGISTER, userForCreation,  {params: params});
+  return this.http.post<IUser>(ORG_ADMIN.BASE_URL, userForCreation,  {params: params});
 }
 
-updateUser(userId: number, userToUpdate: IUser) {
-  // return this.http.put(USER_URL.BASE_URL + userId, userToUpdate);
+updateOrganisationUser(userId: number, userToUpdate: IUser) {
+   return this.http.put(ORG_ADMIN.BASE_URL + userId, userToUpdate);
 }
 
+activateOrDisableUser(userId: number, newStatus: boolean): Observable<IUser> {
+  let params = new HttpParams();
+  params = new HttpParams().set('userStatus', newStatus);
+  return this.http.put<IUser>(ORG_ADMIN.BASE_URL + `${userId}/setUserStatus`, {}, {params: params});
+}
 
-getUsers(page?: number, itemsPerPage?: number, userParams?: UserParams): Observable<PaginationResult<IUser[]>> {
+getOrganisationUsers(page?: number, itemsPerPage?: number, userParams?: any): Observable<PaginationResult<IUser[]>> {
   const paginatedResult: PaginationResult<IUser[]> = new PaginationResult<IUser[]>();
 
   let params = new HttpParams();
@@ -43,20 +47,12 @@ getUsers(page?: number, itemsPerPage?: number, userParams?: UserParams): Observa
       params = params.append('organisationId', userParams.organisationId);
     }
 
-    if (userParams.accountType > 0) {
-      params = params.append('accountType', userParams.accountType);
-    }
-
-    if (userParams.accountTypeName !=  null) {
-      params = params.append('accountTypeName', userParams.accountTypeName);
-    }
-
     if (userParams.status !=  null) {
       params = params.append('status', userParams.status);
     }
   }
 
-  return this.http.get<IUser[]>(USER_URL.SUPER_ADMIN_BASE_URL, {observe: 'response', params})
+  return this.http.get<IUser[]>(ORG_ADMIN.BASE_URL, {observe: 'response', params})
   .pipe(
     map((response: HttpResponse<IUser[]>) => {
       if (response.body) {
@@ -68,10 +64,6 @@ getUsers(page?: number, itemsPerPage?: number, userParams?: UserParams): Observa
       return paginatedResult;
     })
   );
-}
-
-getUser(id: number): Observable<IUser> {
-  return this.http.get<IUser>(USER_URL.SUPER_ADMIN_BASE_URL + id);
 }
 
 

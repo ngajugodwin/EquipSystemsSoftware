@@ -41,8 +41,9 @@ namespace ItemBookingApp_API.Persistence.Seeders
 
                 foreach (var user in users)
                 {
+                    user.Status = Domain.Models.EntityStatus.Active;
                     _userManager.CreateAsync(user, "password").Wait();
-                    _userManager.AddToRoleAsync(user, "Owner").Wait();
+                    _userManager.AddToRoleAsync(user, "SuperAdmin").Wait();
                 }
 
                 var superAdmin = new AppUser
@@ -50,7 +51,7 @@ namespace ItemBookingApp_API.Persistence.Seeders
                     FirstName = "Admin",
                     LastName = "Admin",
                     UserName = "admin",
-                    IsActive = true,
+                    Status = Domain.Models.EntityStatus.Active,
                     Email = "admin@example.com"
                 };
 
