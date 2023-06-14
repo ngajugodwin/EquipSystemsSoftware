@@ -46,6 +46,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOrganisationService, OrganisationService>();
+builder.Services.AddScoped<IManageAdminOrganisationService, ManageAdminOrganisationService>();
 //Services
 #endregion
 
@@ -58,6 +59,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile(new CategoryMappingProfile());
     cfg.AddProfile(new AppUserMappingProfile());
     cfg.AddProfile(new OrganisationMappingProfile());
+    cfg.AddProfile(new RoleMappingProfile());
 });
 
 IMapper mapper = config.CreateMapper();

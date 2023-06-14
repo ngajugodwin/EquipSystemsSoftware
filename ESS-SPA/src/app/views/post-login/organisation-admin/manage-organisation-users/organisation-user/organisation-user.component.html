@@ -7,41 +7,75 @@
       
       <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="userForm" id="userForm">
         <c-col [md]="6">
-        <label cLabel for="inputEmail4">First Name</label>
-        <input cFormControl id="inputEmail4" type="text" formControlName="firstName"/>
+        <label cLabel for="inputFirstName">First Name</label>
+        <input cFormControl id="inputEmail4" type="text"
+            [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('firstName')?.touched}"
+            formControlName="firstName"/>
+            <div class="invalid-feedback" *ngIf="userForm.get('firstName')?.hasError('required') && userForm.get('firstName')?.touched">The first name field is required</div>
         </c-col>
         <c-col [md]="6">
-        <label cLabel for="inputPassword4">Last Name</label>
-        <input cFormControl id="inputPassword4" type="password" formControlName="firstName"/>
+        <label cLabel for="inputLastName">Last Name</label>
+        <input cFormControl id="inputPassword4" type="text" 
+            [ngClass]="{'is-invalid' : userForm.get('lastName')?.errors && userForm.get('lastName')?.touched}"
+            formControlName="lastName"/>
+            <div class="invalid-feedback" *ngIf="userForm.get('lastName')?.hasError('required') && userForm.get('lastName')?.touched">The last name field is required</div>
         </c-col>
         <c-col [xs]="6">
-        <label cLabel for="inputAddress">Username</label>
-        <input cFormControl placeholder="" formControlName="userName"/>
+        <label cLabel for="inputUsername">Username</label>
+        <input type="text" cFormControl 
+            [ngClass]="{'is-invalid' : userForm.get('userName')?.errors && userForm.get('userName')?.touched}"
+            placeholder="" formControlName="userName"/>
+            <div class="invalid-feedback" *ngIf="userForm.get('userName')?.hasError('required') && userForm.get('userName')?.touched">The username field is required</div>
         </c-col>
         <c-col [xs]="6">
           <label cLabel>Email</label>
-          <input cFormControl placeholder="" formControlName="email"/>
+          <input type="email" cFormControl 
+            [ngClass]="{'is-invalid' : userForm.get('email')?.errors && userForm.get('email')?.touched}"
+            placeholder="" 
+            formControlName="email"/>
+            <div class="invalid-feedback" *ngIf="userForm.get('email')?.hasError('required') && userForm.get('email')?.touched">The email field is required</div>
+            <div class="invalid-feedback" *ngIf="userForm.get('email')?.hasError('email') && userForm.get('email')?.touched">The email address is not valid</div>
           </c-col>
-        <!-- <div  *ngIf="true">
-            <div *ngFor="let org of organisationProperties; let index = index" [formGroupName]="index">
-              <c-col [md]="6" >
-                <label cLabel>Organisation Name</label>
-                <input [formControlName]="index" cFormControl type="text" />
-              </c-col>
-            </div>
-        </div> -->
-        <c-col [xs]="6">
-        <label cLabel>Password</label>
-        <input cFormControl placeholder="" />
-        </c-col>
-        <c-col [xs]="6">
-          <label cLabel>Confirm Password</label>
-          <input cFormControl placeholder="" />
+        <div *ngIf="!isEditUserMode">
+          <c-row>
+            <c-col [xs]="6">
+              <label cLabel>Password</label>
+              <input type="password" cFormControl placeholder="" 
+                  [ngClass]="{'is-invalid' : userForm.get('password')?.errors && userForm.get('password')?.touched}"
+                  formControlName="password"/>
+                  <div class="invalid-feedback" *ngIf="userForm.get('password')?.hasError('required') && userForm.get('password')?.touched">Password is required</div>
+                  <div class="invalid-feedback" *ngIf="userForm.get('password')?.hasError('minlength') && userForm.get('password')?.touched">Password must be at least 4 characters</div>
+                  <div class="invalid-feedback" *ngIf="userForm.get('password')?.hasError('maxlength') && userForm.get('password')?.touched">Password must be not exceed 8 characters</div>
+            </c-col>
+            <c-col [xs]="6">
+              <label cLabel>Confirm Password</label>
+              <input type="password" cFormControl placeholder="" 
+              [ngClass]="{'is-invalid' : userForm.get('confirmPassword')?.errors && userForm.get('confirmPassword')?.touched}"
+              formControlName="confirmPassword"/>
+              <div class="invalid-feedback" *ngIf="userForm.get('confirmPassword')?.hasError('required') && userForm.get('confirmPassword')?.touched">Confirm Password is required</div>
+              <div class="invalid-feedback" *ngIf="userForm.hasError('mismatch') && userForm.get('confirmPassword')?.touched">Passwords does not match</div>
+            </c-col>
+          </c-row>
+        </div>
+        <c-col>
+          <label cLabel>Roles</label>
+          <div formArrayName="roles">
+            <div class="checkbox" *ngFor="let role of userFormGroups.controls; let i = index">
+                <input type="checkbox"
+                  [formControlName]="i"
+                  >
+                <label>{{rolesForDisplay[i].name}}</label>
+              </div>
+          </div>
         </c-col>
         <c-col [xs]="12">
-        <button cButton type="submit">Create New User</button>
+        <button [disabled]="!userForm.valid" form="userForm" cButton type="submit">Create New User</button>
         </c-col>
         </form>
     </c-card-body>
+    <c-card-footer>
+      <!-- <button type="submit" [disabled]="!userForm.valid" form="userForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Submit</button>
+      <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button> -->
+    </c-card-footer>
   </c-card>
 </c-col>

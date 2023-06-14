@@ -46,6 +46,8 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 
+import {RoleService} from './shared/services/role-service/role.service';
+import {ManageAdminOrganisationService} from './shared/services/manage-admin-organisaton-service/manage-admin-organisation.service';
 import {AuthService} from './shared/services/auth-service/auth.service';
 import {UserService} from './shared/services/user-service/user.service';
 import {OrganisationService} from './shared/services/organisation-service/organisation.service';
@@ -119,6 +121,8 @@ const APP_CONTAINERS = [
     AuthService,
     UserService,
     OrganisationService,
+    ManageAdminOrganisationService,
+    RoleService,
     JwtInterceptorProvider,
     AuthGuard
   ],

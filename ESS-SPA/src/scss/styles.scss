@@ -36,3 +36,17 @@ $enable-rtl: true;
     height: 33px;
     border-radius: 20px;
 }
+
+.selectWrapper{
+    border-radius:36px;
+    display:inline-block;
+    overflow:hidden;
+    background:#cccccc;
+    border:1px solid #cccccc;
+  }
+  .selectBox{
+    width:150px;
+    height:30px;
+    border:0px;
+    outline:none;
+  }

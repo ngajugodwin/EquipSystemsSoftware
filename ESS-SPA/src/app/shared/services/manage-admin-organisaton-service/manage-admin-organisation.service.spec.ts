@@ -1,16 +1,16 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async, inject } from '@angular/core/testing';
-import { OrganisationUserService } from './organisation-user.service';
+import { ManageAdminOrganisationService } from './manage-admin-organisation.service';
 
 describe('Service: OrganisationUser', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [OrganisationUserService]
+      providers: [ManageAdminOrganisationService]
     });
   });
 
-  it('should ...', inject([OrganisationUserService], (service: OrganisationUserService) => {
+  it('should ...', inject([ManageAdminOrganisationService], (service: ManageAdminOrganisationService) => {
     expect(service).toBeTruthy();
   }));
 });

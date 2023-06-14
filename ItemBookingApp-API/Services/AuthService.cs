@@ -139,10 +139,12 @@ namespace ItemBookingApp_API.Services
         private async Task<string> GenerateAccessToken(AppUser user)
         {
             var tokenExpiryTime = Convert.ToDouble(_appSettings.ExpireTime);
+
+            var organisationId = (user.OrganisationId > 0) ? user.OrganisationId.ToString() : string.Empty;
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
 //                new Claim(JwtRegisteredClaimNames.NameId)
             };
 

@@ -6,6 +6,7 @@ using ItemBookingApp_API.Services.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
 
 namespace ItemBookingApp_API.Persistence.Repositories
 {
@@ -310,6 +311,56 @@ namespace ItemBookingApp_API.Persistence.Repositories
             }
 
             return await base.CreateAsync(user, password);
+        }
+
+        public async Task<PagedList<AppUser>> GetOrganisationUsersListAsync(int organisationId, UserQuery userQuery)
+        {
+            var users = Enumerable.Empty<AppUser>().AsQueryable();
+
+            if (userQuery.Status > 0)
+            {
+                switch (userQuery.Status)
+                {
+                    case EntityStatus.Pending:
+                        users = base.Users.Include(x => x.Organisation)
+                                     .Where(x => x.Status == userQuery.Status
+                                     && x.OrganisationId == organisationId)
+                                     .OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        break;
+                    case EntityStatus.Active:
+                        users = base.Users.Include(x => x.Organisation)
+                                     .Where(x => x.Status == userQuery.Status
+                                     && x.OrganisationId == organisationId)
+                                     .OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        break;
+                    case EntityStatus.Disabled:
+                        users = base.Users.Include(x => x.Organisation)
+                                     .Where(x => x.Status == userQuery.Status
+                                     && x.OrganisationId == organisationId)
+                                     .OrderBy(c => c.CreatedAt).AsQueryable().AsNoTracking();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                users = base.Users
+                    .Include(ur => ur.UserRoles)
+                    .ThenInclude(r => r.Role)
+                    .Where(x => x.OrganisationId == organisationId)
+                    .OrderByDescending(u => u.CreatedAt).AsQueryable();
+            }
+
+            if (!string.IsNullOrWhiteSpace(userQuery.SearchString))
+            {
+                users = users.Where(u => u.FirstName.Contains(userQuery.SearchString)
+                            || u.LastName.Contains(userQuery.SearchString)
+                            && u.OrganisationId == organisationId
+                            && u.Status == userQuery.Status);
+            }
+
+            return await PagedList<AppUser>.CreateAsync(users, userQuery.PageNumber, userQuery.PageSize);
         }
 
         public override Task<AppUser> FindByEmailAsync(string email)

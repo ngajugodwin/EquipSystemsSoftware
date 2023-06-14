@@ -11,7 +11,7 @@ export const AUTH_URL = {
 };
 
 export const ORG_URL = {
-    BASE_URL: `${SUPER_ADMIN_SERVER_END_POINT}/manageorganisations/`
+    BASE_URL: `${SUPER_ADMIN_SERVER_END_POINT}/manageorganisations`
 }
 
 export const USER_URL = {
@@ -21,8 +21,12 @@ export const USER_URL = {
 }
 
 export const ORG_ADMIN = {
-    BASE_URL: `${ORG_ADMIN_SERVER_END_POINT}/manageorganisationusers`
+    BASE_URL: `${ORG_ADMIN_SERVER_END_POINT}/manageadminorganisationusers`,
 }
+
+export const ROLE_URL = {
+    BASE_URL: `${ORG_ADMIN_SERVER_END_POINT}/roles/`,
+  };
 
 // export const USER_URL2 = {
 //     SUPER_ADMIN_BASE_URL: `${SUPER_ADMIN_SERVER_END_POINT}/manageusers/`

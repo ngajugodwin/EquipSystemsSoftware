@@ -56,6 +56,10 @@ const routes: Routes = [
           import('./views/pre-login/account.module').then((m) => m.AccountModule)
       },
       {
+        path: 'self-service',
+        loadChildren: () => import('./views/post-login/self-service/self-service.module').then(m => m.SelfServiceModule)
+      },
+      {
         path: 'master-admin',
     //    data: {roles: ['SuperAdmin', 'Owner']},
         loadChildren: () => import('./views/post-login/master-admin/master-admin.module').then(m => m.MasterAdminModule)

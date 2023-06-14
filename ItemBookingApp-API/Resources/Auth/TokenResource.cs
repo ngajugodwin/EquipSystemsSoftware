@@ -11,5 +11,7 @@ namespace ItemBookingApp_API.Resources.Auth
         public string RefreshToken { get; set; }
 
         public UserResource User { get; set; }
+
+        public int OrganisationId { get; set; }
     }
 }

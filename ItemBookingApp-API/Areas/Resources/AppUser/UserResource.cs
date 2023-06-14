@@ -22,6 +22,8 @@ namespace ItemBookingApp_API.Areas.Resources.AppUser
 
         public string TypeName { get; set; } = string.Empty;
 
+        public string? OrganisationId { get; set; }
+
         public OrganisationResource OrganisationResource { get; set; }
     }
 }

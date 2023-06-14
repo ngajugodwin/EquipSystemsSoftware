@@ -8,6 +8,10 @@ import {ManageOrganisationUsersComponent} from './manage-organisation-users/mana
 import {OrganisationUserComponent} from './manage-organisation-users/organisation-user/organisation-user.component';
 import {OrganisationAdminRoutingModule} from './organisation-admin-routing.module';
 
+import {UserResolver} from '../../../shared/resolvers/user.resolver';
+import { SelfServiceModule } from '../self-service/self-service.module';
+import { ChangeUserPasswordComponent } from './manage-organisation-users/change-user-password/change-user-password.component';
+
 @NgModule({
 
     imports:[
@@ -26,16 +30,20 @@ import {OrganisationAdminRoutingModule} from './organisation-admin-routing.modul
         BadgeModule,
         FormsModule,
 
-        OrganisationAdminRoutingModule
+        OrganisationAdminRoutingModule,
+        SelfServiceModule
     ], 
     exports:[
 
     ],
     declarations:[
         ManageOrganisationUsersComponent,
-        OrganisationUserComponent
+        OrganisationUserComponent,
+        ChangeUserPasswordComponent
+        // ChangePasswordComponent
     ],
     providers:[
+        UserResolver
 
     ]
 })

@@ -4,9 +4,9 @@ namespace ItemBookingApp_API.Resources.SelfService
 {
     public class PasswordUpdateResource
     {
-        public string OldPassword { get; set; }
+        public string? OldPassword { get; set; }
 
         [Required]
-        public string NewPassword { get; set; }
+        public string NewPassword { get; set; } = String.Empty;
     }
 }

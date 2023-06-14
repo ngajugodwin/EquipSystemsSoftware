@@ -14,5 +14,6 @@ export interface IUser {
     accountType: AccountType,
     status: string,
     typeName: string,
+    password: string,
     userRoles: IRole[];
 }

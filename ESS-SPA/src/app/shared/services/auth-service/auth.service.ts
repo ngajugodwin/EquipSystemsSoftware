@@ -16,6 +16,7 @@ export class AuthService {
   decodedToken: any;
   private jwtHelper = new JwtHelperService();
   currentUser: IUser;
+  organisationId: number;
 
  constructor(private http: HttpClient,
     private router: Router) { }
@@ -75,6 +76,12 @@ export class AuthService {
     });
 
     return isMatch;
+  }
+
+  getOrganisationId(): number{
+    const userData: IUser = JSON.parse(localStorage.getItem('user') || "{}");
+
+    return (userData.organisationId > 0 && userData.organisationId !== null) ? userData.organisationId : 0;
   }
 
   clearStorage()

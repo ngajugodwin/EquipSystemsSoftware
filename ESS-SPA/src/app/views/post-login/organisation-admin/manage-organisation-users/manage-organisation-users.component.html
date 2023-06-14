@@ -32,7 +32,11 @@
               <div></div>
             </c-col>
             <c-col [xs]="3">
-              <app-status-filter (statusResult)="getOrganisationUsers($event)"></app-status-filter> 
+              <div class="selectWrapper">
+                <select class="selectBox" (change)="onStatusChange($event)" [value]="filterStatus[0].id">
+                  <option [value]="filter.id" *ngFor="let filter of filterStatus">{{filter.name}}</option>
+              </select>
+              </div>
             </c-col>
           </c-row>
         </c-card-body>
@@ -70,12 +74,13 @@
               <td>
                 {{user.lastName}}
               </td>
-              <td>
+             
+               <td>
                 <c-badge *ngIf="user.status.toLowerCase() === 'active' " color="success">{{user.status.toUpperCase()}}</c-badge>
                 <c-badge *ngIf="user.status.toLowerCase()=== 'pending' " color="info">{{user.status.toUpperCase()}}</c-badge>
                 <c-badge *ngIf="user.status.toLowerCase() === 'disabled' " color="danger">{{user.status.toUpperCase()}}</c-badge>
-              </td>     
-              <!-- <td>
+              </td> 
+             <!-- <td>
                 <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
               </td> -->
               <td>
@@ -85,7 +90,9 @@
                   </a>
                   <ul cDropdownMenu>                    
                     <li><a (click)="onEditUser(user)" cDropdownItem>Edit</a></li>
-                    <li><a (click)="onDisableUser(user)" cDropdownItem>Disable</a></li>                
+                    <li><a (click)="onChangePassword(user)" cDropdownItem>Change Password</a></li>
+                    <li *ngIf="user.status.toLowerCase() === 'active'"><a (click)="onUserStatusChange(user.id, false)" cDropdownItem>Disable</a></li>           
+                    <li *ngIf="user.status.toLowerCase() === 'disabled'"><a (click)="onUserStatusChange(user.id, true)" cDropdownItem>Enable</a></li>       
                   </ul>
                 </c-dropdown>
               </td>
