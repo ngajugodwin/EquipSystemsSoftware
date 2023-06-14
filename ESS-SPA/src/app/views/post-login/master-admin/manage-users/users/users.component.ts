@@ -32,6 +32,7 @@ export class UsersComponent implements OnInit {
     this.getUsers(this.userParams.status);
   }
 
+  // get users
   getUsers(currentStatus?: number, accounType?: number) {
     this.userParams.status = currentStatus === undefined ? this.userParams.status : currentStatus;
     this.userParams.accountType = accounType === undefined ? this.userParams.accountType : accounType;
