@@ -22,7 +22,7 @@ export class DefaultLayoutComponent implements OnInit {
 
 
   ngOnInit(): void {
-   // this.initMenu();
+ //  this.initMenu();
   }
 
 
@@ -32,10 +32,10 @@ export class DefaultLayoutComponent implements OnInit {
     console.log(roles);
     const menus = this.menuService.getMenus();
     this.navItems = menus;
-    // if (this.authService.roleMatch(roles)) {
-    //   this.navItems = menus;
-    // } else {
-    //    this.navItems = menus.filter(menu => menu.name !== 'Settings');
-    // }
+    if (this.authService.roleMatch(roles)) {
+      this.navItems = menus;
+    } else {
+       this.navItems = menus.filter(menu => menu.name !== 'Settings');
+    }
   }
 }

@@ -84,6 +84,12 @@ export class AuthService {
     return (userData.organisationId > 0 && userData.organisationId !== null) ? userData.organisationId : 0;
   }
 
+  getCurrentUser(): IUser {
+    const userData: IUser = JSON.parse(localStorage.getItem('user') || "{}");
+
+    return userData ?? null;
+  }
+
   clearStorage()
   {
     localStorage.removeItem('token');

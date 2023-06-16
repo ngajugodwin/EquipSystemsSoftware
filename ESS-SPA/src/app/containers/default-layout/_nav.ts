@@ -7,51 +7,51 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-speedometer' },
     badge: {
       color: 'info',
-      text: 'NEW'
+      text: ''
+      // text: 'NEW'
     }
   },
   {
     title: true,
-    name: 'Theme'
+    name: 'User'
   },
   {
-    name: 'Colors',
-    url: '/theme/colors',
+    name: 'Bookings',
+    url: '/my-bookings',
     iconComponent: { name: 'cil-drop' }
   },
   {
-    name: 'Typography',
-    url: '/theme/typography',
-    linkProps: { fragment: 'someAnchor' },
+    name: 'Self Service',
+    url: '/self-service',
     iconComponent: { name: 'cil-pencil' }
   },
-  {
-    name: 'Components',
-    title: true
-  },
-  {
-    name: 'Notifications',
-    url: '/notifications',
-    iconComponent: { name: 'cil-bell' },
-    children: [
-      {
-        name: 'Alerts',
-        url: '/notifications/alerts'
-      },
-      {
-        name: 'Badges',
-        url: '/notifications/badges'
-      },
-      {
-        name: 'Modal',
-        url: '/notifications/modal'
-      },
-      {
-        name: 'Toast',
-        url: '/notifications/toasts'
-      }
-    ]
-  },
+  // {
+  //   name: 'Components',
+  //   title: true
+  // },
+  // // {
+  // //   name: 'Notifications',
+  // //   url: '/notifications',
+  // //   iconComponent: { name: 'cil-bell' },
+  // //   children: [
+  // //     {
+  // //       name: 'Alerts',
+  // //       url: '/notifications/alerts'
+  // //     },
+  // //     {
+  // //       name: 'Badges',
+  // //       url: '/notifications/badges'
+  // //     },
+  // //     {
+  // //       name: 'Modal',
+  // //       url: '/notifications/modal'
+  // //     },
+  // //     {
+  // //       name: 'Toast',
+  // //       url: '/notifications/toasts'
+  // //     }
+  // //   ]
+  // // },
   // {
   //   name: 'Widgets',
   //   url: '/widgets',
@@ -61,33 +61,33 @@ export const navItems: INavData[] = [
   //     text: 'NEW'
   //   }
   // },
-  {
-    title: true,
-    name: 'Extras'
-  },
-  {
-    name: 'Pages',
-    url: '/login',
-    iconComponent: { name: 'cil-star' },
-    children: [
-      {
-        name: 'Login',
-        url: '/login'
-      },
-      {
-        name: 'Register',
-        url: '/register'
-      },
-      {
-        name: 'Error 404',
-        url: '/404'
-      },
-      {
-        name: 'Error 500',
-        url: '/500'
-      }
-    ]
-  },
+  // {
+  //   title: true,
+  //   name: 'Extras'
+  // },
+  // {
+  //   name: 'Pages',
+  //   url: '/login',
+  //   iconComponent: { name: 'cil-star' },
+  //   children: [
+  //     {
+  //       name: 'Login',
+  //       url: '/login'
+  //     },
+  //     {
+  //       name: 'Register',
+  //       url: '/register'
+  //     },
+  //     {
+  //       name: 'Error 404',
+  //       url: '/404'
+  //     },
+  //     {
+  //       name: 'Error 500',
+  //       url: '/500'
+  //     }
+  //   ]
+  // },
   {
     title: true,
     name: 'Organisation'

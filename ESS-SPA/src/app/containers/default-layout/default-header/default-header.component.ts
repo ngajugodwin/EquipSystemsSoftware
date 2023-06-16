@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/shared/services/auth-service/auth.service';
 })
 export class DefaultHeaderComponent extends HeaderComponent{
 
-  @Input() sidebarId: string = "sidebar";
+ @Input() sidebarId: string = "sidebar";
 
   public newMessages = new Array(4)
   public newTasks = new Array(5)

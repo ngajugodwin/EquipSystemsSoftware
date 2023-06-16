@@ -30,7 +30,7 @@ activateOrDisableOrganisation(organisationId: number, newStatus: boolean): Obser
   let params = new HttpParams();
   params = new HttpParams().set('organisationStatus', newStatus);
   console.log(params);
-  return this.http.put<IOrganisation>(ORG_URL.BASE_URL + `${organisationId}/setOrganisationStatus`, {}, {params: params});
+  return this.http.put<IOrganisation>(ORG_URL.BASE_URL + `/${organisationId}/setOrganisationStatus`, {}, {params: params});
 }
 
 rejectOrganisation(organisationId: number) {
