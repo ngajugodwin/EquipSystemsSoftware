@@ -2,13 +2,14 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
-import { ORG_URL } from 'src/app/constants/api.constant';
+// import { ORG_URL } from 'src/app/constants/api.constant';
 import { IOrganisation } from 'src/app/entities/models/organisation';
 import {OrganisationParams} from '../../../entities/models/basequeryParams';
 import {PaginationResult} from '../../../entities/models/pagination';
 import { get } from 'http';
 import { IUser } from 'src/app/entities/models/user';
 import { map } from 'rxjs';
+import { MASTER_ADMIN_URL } from 'src/app/constants/api.constant';
 
 @Injectable({
   providedIn: 'root'
@@ -19,22 +20,22 @@ constructor(private http: HttpClient) { }
 
 
 getOrganisation(organisationId: number): Observable<IOrganisation> {
-  return this.http.get<IOrganisation>(ORG_URL.BASE_URL + `${organisationId}`);
+  return this.http.get<IOrganisation>(MASTER_ADMIN_URL.MANAGE_ORGANISATION + `${organisationId}`);
 }
 
 updateOrganisation(organisationId: number, organisationToUpdate: IOrganisation) {
-  return this.http.put<IOrganisation>(ORG_URL.BASE_URL + `${organisationId}`, organisationToUpdate);
+  return this.http.put<IOrganisation>(MASTER_ADMIN_URL.MANAGE_ORGANISATION + `${organisationId}`, organisationToUpdate);
 }
 
 activateOrDisableOrganisation(organisationId: number, newStatus: boolean): Observable<IOrganisation> {
   let params = new HttpParams();
   params = new HttpParams().set('organisationStatus', newStatus);
   console.log(params);
-  return this.http.put<IOrganisation>(ORG_URL.BASE_URL + `/${organisationId}/setOrganisationStatus`, {}, {params: params});
+  return this.http.put<IOrganisation>(MASTER_ADMIN_URL.MANAGE_ORGANISATION + `/${organisationId}/setOrganisationStatus`, {}, {params: params});
 }
 
 rejectOrganisation(organisationId: number) {
-  return this.http.delete<IOrganisation>(ORG_URL.BASE_URL + `${organisationId}`);
+  return this.http.delete<IOrganisation>(MASTER_ADMIN_URL.MANAGE_ORGANISATION + `${organisationId}`);
 }
 
 getOrganisations(page?: number, itemsPerPage?: number, organisationParams?: OrganisationParams)  {
@@ -55,7 +56,7 @@ getOrganisations(page?: number, itemsPerPage?: number, organisationParams?: Orga
     }
   }
 
-  return this.http.get<IOrganisation[]>(ORG_URL.BASE_URL, {observe: 'response', params})
+  return this.http.get<IOrganisation[]>(MASTER_ADMIN_URL.MANAGE_ORGANISATION, {observe: 'response', params})
   .pipe(
     map((response: HttpResponse<IOrganisation[]>) => {
       if (response.body) {

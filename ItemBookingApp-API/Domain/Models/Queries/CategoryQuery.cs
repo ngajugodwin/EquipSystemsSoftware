@@ -2,5 +2,6 @@
 {
     public class CategoryQuery : BaseQuery
     {
+        public EntityStatus Status { get; set; }
     }
 }

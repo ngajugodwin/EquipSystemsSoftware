@@ -14,8 +14,8 @@ namespace ItemBookingApp_API.EntityConfiguration
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(i => i.IsActive)
-                .HasDefaultValue(true);
+            builder.Property(i => i.Status)
+                .HasDefaultValue(EntityStatus.Active);
 
         }
     }

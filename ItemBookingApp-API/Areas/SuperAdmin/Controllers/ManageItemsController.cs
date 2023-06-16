@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 {
-    [Route("super-admin/api/{categoryId}/[controller]")]
+    [Route("super-admin/api/{itemTypeId}/[controller]")]
     [ApiController]
     [Authorize(Policy = PermissionSystemName.AccessSuperAdminArea)]
     public class ManageItemsController : ControllerBase
@@ -31,9 +31,9 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpGet("{itemId}", Name = "GetItemAsync")]
-        public async Task<IActionResult> GetItemAsync(int itemId)
+        public async Task<IActionResult> GetItemAsync(int itemTypeId, int itemId)
         {
-            var item = await _genericRepository.FindAsync<Item>(x => x.Id == itemId);
+            var item = await _genericRepository.FindAsync<Item>(x => x.Id == itemId && x.ItemTypeId == itemTypeId);
 
             if (item == null)
                 return BadRequest("Item not found!");
@@ -44,14 +44,14 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateItemAsync(int categoryId, [FromBody] SaveItemResource saveItemResource)
+        public async Task<IActionResult> CreateItemAsync(int itemTypeId, [FromBody] SaveItemResource saveItemResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var category = await _genericRepository.FindAsync<Category>(c => c.Id == categoryId);
+            var itemType = await _genericRepository.FindAsync<ItemType>(c => c.Id == itemTypeId);
 
-            if (category == null || category.Id != saveItemResource.CategoryId)
+            if (itemType == null || itemType.Id != saveItemResource.ItemTypeId)
                 return BadRequest("Requested resource is invalid");
 
             var result = await _itemRepository.IsExist(saveItemResource.Name, saveItemResource.SerialNumber);
@@ -66,20 +66,23 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             {
                 await _genericRepository.AddAsync<Item>(itemToSave);
                 await _unitOfWork.CompleteAsync();
+
+                var itemToReturn = _mapper.Map<Item, ItemResource>(itemToSave);
+
+                return Ok(itemToReturn);
             }
             catch (Exception ex)
             {
                 throw;
             }
 
-            var itemToReturn = _mapper.Map<Item, ItemResource>(itemToSave);
-
-            return Ok(itemToReturn);
+            
         }
 
         [HttpPut("{itemId}")]
-        public async Task<IActionResult> UpdateItemsync(int categoryId, int itemId, [FromBody] UpdateItemResource updateItemResource)
+        public async Task<IActionResult> UpdateItemsync(int itemTypeId, int itemId, [FromBody] UpdateItemResource updateItemResource)
         {
+            // return Ok();
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
@@ -94,7 +97,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             var item = _mapper.Map<UpdateItemResource, Item>(updateItemResource);
 
             itemFromRepo.Name = item.Name;
-            itemFromRepo.CategoryId = item.CategoryId;
+            itemFromRepo.ItemTypeId = item.ItemTypeId;
             itemFromRepo.SerialNumber = item.SerialNumber;
             itemFromRepo.ItemState = (ItemState)updateItemResource.ItemStateId;
 
@@ -102,15 +105,15 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             {
                 _genericRepository.UpdateAsync<Item>(itemFromRepo);
                 await _unitOfWork.CompleteAsync();
+
+                var updatedItemToReturn = _mapper.Map<ItemResource>(itemFromRepo);
+
+                return Ok(updatedItemToReturn);
             }
             catch (Exception ex)
             {
                 throw ex;
-            }
-
-            var updatedItemToReturn = _mapper.Map<ItemResource>(itemFromRepo);
-
-            return Ok(updatedItemToReturn);
+            }          
         }
 
         [HttpDelete("{itemId}")]
@@ -137,9 +140,9 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpPut("changeItemStatus")]
-        public async Task<IActionResult> ActivateItem(int itemId, bool itemStatus)
+        public async Task<IActionResult> ActivateOrDisableItem(int itemId, bool itemStatus)
         {
-            var item = await _genericRepository.FindAsync<Item>(i => i.Id == itemId, ignoreQueryFilters: true);
+            var item = await _genericRepository.FindAsync<Item>(i => i.Id == itemId);
 
             if (item == null)
             {
@@ -164,11 +167,11 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListAsync(int categoryId, [FromQuery] ItemQueryResource itemQueryResource)
+        public async Task<IActionResult> ListAsync(int itemTypeId, [FromQuery] ItemQueryResource itemQueryResource)
         {
             var itemQuery = _mapper.Map<ItemQueryResource, ItemQuery>(itemQueryResource);
 
-            var items = await _itemRepository.ListAsync(itemQuery, categoryId);
+            var items = await _itemRepository.ListAsync(itemQuery, itemTypeId);
 
             var itemsToReturn = _mapper.Map<IEnumerable<ItemResource>>(items);
 
@@ -178,9 +181,9 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpGet("getAvailableItems")]
-        public async Task<IActionResult> GetAvailableItems(int categoryId)
+        public async Task<IActionResult> GetAvailableItems(int itemTypeId)
         {
-            var items = await _itemRepository.GetAvailableItems(categoryId);
+            var items = await _itemRepository.GetAvailableItems(itemTypeId);
 
             var itemsToReturn = _mapper.Map<IEnumerable<ItemResource>>(items);
 

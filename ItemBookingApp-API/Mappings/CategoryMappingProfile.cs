@@ -2,6 +2,7 @@
 using ItemBookingApp_API.Areas.Resources.Category;
 using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Domain.Models.Queries;
+using ItemBookingApp_API.Extension;
 
 namespace ItemBookingApp_API.Mappings
 {
@@ -11,7 +12,7 @@ namespace ItemBookingApp_API.Mappings
         {
             CreateMap<Category, CategoryResource>()
                 .ForMember(dest => dest.Status, opt => {
-                    opt.MapFrom(src => src.IsActive ? "Active" : "Disabled");
+                    opt.MapFrom(src => src.Status.ToDescriptionString());
                 }); ;
 
             CreateMap<SaveCategoryResource, Category>();

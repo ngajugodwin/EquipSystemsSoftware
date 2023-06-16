@@ -18,10 +18,10 @@ namespace ItemBookingApp_API.Persistence.Repositories
           //  _categoryRepository = categoryRepository;
         }
 
-        public async Task<IList<Item>> GetAvailableItems(int categoryId)
+        public async Task<IList<Item>> GetAvailableItems(int itemTypeId)
         {
             return await _context.Items
-               .Where(i => i.CategoryId == categoryId
+               .Where(i => i.ItemTypeId == itemTypeId
                && i.IsActive == true
                && i.ItemState == ItemState.Available).ToListAsync();
         }
@@ -61,25 +61,24 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return status;
         }
 
-        public async Task<PagedList<Item>> ListAsync(ItemQuery itemQuery, int categoryId)
-        {            
-
+        public async Task<PagedList<Item>> ListAsync(ItemQuery itemQuery, int itemTypeId)
+        {
             var items = Enumerable.Empty<Item>().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(itemQuery.FilterBy) && itemQuery.FilterBy.ToLower() == "inactive")
             {
                 items = _context.Items.IgnoreQueryFilters()
-                    .Where(c => c.IsActive == false && c.CategoryId == categoryId)
+                    .Where(c => c.IsActive == false && c.ItemTypeId == itemTypeId)
                     .AsQueryable();
-            } 
+            }
             else
             {
-                items = _context.Items.AsQueryable().Where(i => i.CategoryId == categoryId);
+                items = _context.Items.AsQueryable().Where(i => i.ItemTypeId == itemTypeId);
             }
 
 
             items = FilterByItemState((ItemState)itemQuery.ItemState, items);
-          
+
 
             if (!string.IsNullOrWhiteSpace(itemQuery.SearchString))
             {
@@ -91,7 +90,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return await PagedList<Item>.CreateAsync(items, itemQuery.PageNumber, itemQuery.PageSize);
         }       
 
-        public async Task<IEnumerable<Item>> ListAsync(int categoryId, int[] itemIds = null)
+        public async Task<IEnumerable<Item>> ListAsync(int itemTypeId, int[] itemIds = null)
         {
             // var result = await _categoryRepository.IsValid(categoryId);
 

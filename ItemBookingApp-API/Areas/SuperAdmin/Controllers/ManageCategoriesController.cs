@@ -66,6 +66,8 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 
             var category = _mapper.Map<UpdateCategoryResource, Category>(updateCategoryResource);
 
+
+
             var result = await _categoryService.UpdateAsync(categoryId, category);
 
             if (!result.Success)
@@ -90,7 +92,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpPut("{categoryId}/setCategoryStatus")]
-        public async Task<IActionResult> SetCategoryStatus(int categoryId, UpdateCategoryStatus updateCategoryStatus)
+        public async Task<IActionResult> SetCategoryStatus(int categoryId, [FromQuery] UpdateCategoryStatus updateCategoryStatus)
         {
             var result = await _categoryService.ActivateOrDeactivateCategory(categoryId, updateCategoryStatus.CategoryStatus);
 

@@ -12,7 +12,7 @@ namespace ItemBookingApp_API.Areas.Resources.Item
         public bool IsActive { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
+        public int ItemTypeId { get; set; }
 
         [Required]
         public string SerialNumber { get; set; }

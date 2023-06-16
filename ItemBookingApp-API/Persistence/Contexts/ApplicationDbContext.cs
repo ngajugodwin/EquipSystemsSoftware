@@ -16,6 +16,8 @@ namespace ItemBookingApp_API.Persistence.Contexts
         public DbSet<Organisation> Organisations { get; set; }
         public DbSet<Token> Tokens { get; set; }
 
+        public DbSet<ItemType> ItemTypes { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -34,6 +36,7 @@ namespace ItemBookingApp_API.Persistence.Contexts
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());           
             modelBuilder.ApplyConfiguration(new TokenConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
         }
 
     }

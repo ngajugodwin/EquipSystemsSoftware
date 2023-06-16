@@ -27,7 +27,7 @@ namespace ItemBookingApp_API.Services
             if (categoryFromRepo == null)
                 return new CategoryResponse("Category not found");
 
-            var result = (categoryStatus) ? categoryFromRepo.IsActive = true : categoryFromRepo.IsActive = false;
+            var result = (categoryStatus) ? categoryFromRepo.Status = EntityStatus.Active : categoryFromRepo.Status = EntityStatus.Disabled;
 
             await _unitOfWork.CompleteAsync();
             return new CategoryResponse(categoryFromRepo);

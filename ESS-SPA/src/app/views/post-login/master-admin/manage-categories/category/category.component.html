@@ -1,0 +1,24 @@
+<c-col xxl="12">
+  <c-card>
+    <c-card-header ngPreserveWhitespaces>
+      <strong>{{formTitle}}</strong>
+    </c-card-header>
+    <c-card-body>      
+      <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="categoryForm" id="categoryForm">
+        <c-col [xs]="12">
+          <label cLabel>Category Name</label>
+          <input type="text" cFormControl placeholder="" 
+              [ngClass]="{'is-invalid' : categoryForm.get('name')?.errors && categoryForm.get('name')?.touched}"
+              formControlName="name"/>
+              <div class="invalid-feedback" *ngIf="categoryForm.get('name')?.hasError('required') && categoryForm.get('name')?.touched">Password is required</div>
+        </c-col>
+        </form>
+    </c-card-body>
+    <c-card-footer>
+      <div>
+        <button style="margin-right: 10px;" type="submit" [disabled]="!categoryForm.valid || isSaving === true" form="categoryForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save</button>
+        <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+      </div>    
+    </c-card-footer>
+  </c-card>
+</c-col>

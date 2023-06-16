@@ -122,6 +122,11 @@ export const navItems: INavData[] = [
         name: 'Organisations',
         url: 'master-admin/manage-organisations',
         iconComponent: {name: 'cil-User'}
+      },
+      {
+        name: 'Categories & Items',
+        url: 'master-admin/manage-categories',
+        iconComponent: {name: 'cil-User'}
       }
     ]
   }

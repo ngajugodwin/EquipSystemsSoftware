@@ -33,15 +33,15 @@ namespace ItemBookingApp_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(2);
 
                     b.HasKey("Id");
 
@@ -199,9 +199,6 @@ namespace ItemBookingApp_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -215,6 +212,9 @@ namespace ItemBookingApp_API.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
+                    b.Property<int>("ItemTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -226,9 +226,38 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("ItemTypeId");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("ItemBookingApp_API.Domain.Models.ItemType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ItemTypes");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Organisation", b =>
@@ -425,8 +454,19 @@ namespace ItemBookingApp_API.Migrations
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Item", b =>
                 {
-                    b.HasOne("ItemBookingApp_API.Domain.Models.Category", "Category")
+                    b.HasOne("ItemBookingApp_API.Domain.Models.ItemType", "ItemType")
                         .WithMany("Items")
+                        .HasForeignKey("ItemTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ItemType");
+                });
+
+            modelBuilder.Entity("ItemBookingApp_API.Domain.Models.ItemType", b =>
+                {
+                    b.HasOne("ItemBookingApp_API.Domain.Models.Category", "Category")
+                        .WithMany("ItemTypes")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -493,7 +533,7 @@ namespace ItemBookingApp_API.Migrations
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Category", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("ItemTypes");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Identity.AppUser", b =>
@@ -508,6 +548,11 @@ namespace ItemBookingApp_API.Migrations
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Identity.Role", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("ItemBookingApp_API.Domain.Models.ItemType", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Organisation", b =>

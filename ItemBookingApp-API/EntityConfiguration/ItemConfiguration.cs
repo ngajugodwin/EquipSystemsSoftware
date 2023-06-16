@@ -23,9 +23,9 @@ namespace ItemBookingApp_API.EntityConfiguration
             builder.Property(i => i.SerialNumber)
                 .IsRequired();
 
-            builder.HasOne(b => b.Category)
+            builder.HasOne(b => b.ItemType)
              .WithMany(i => i.Items)
-             .HasForeignKey(b => b.CategoryId)
+             .HasForeignKey(b => b.ItemTypeId)
              .OnDelete(DeleteBehavior.Restrict);
         }
     }

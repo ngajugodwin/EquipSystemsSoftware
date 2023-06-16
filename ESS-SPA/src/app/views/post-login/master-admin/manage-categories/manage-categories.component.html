@@ -1,0 +1,112 @@
+
+<c-row>
+  <c-col xs>   
+    <c-card class="mb-4">
+        <!-- <c-card-header>Users</c-card-header>
+        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
+        <c-card-header>
+          <c-container>
+            <c-row  class="align-items-start">
+              <c-col class="table-title" xs="6">Categories</c-col>             
+              <c-col class="table-title" xs="3">
+                <div class="search">
+                  <form #form="ngForm" (ngSubmit)="getCategories()">
+                    <input class="form-control form-control-sm input-search-box"
+                      type="search"
+                      placeholder="Search"
+                      name="search"
+                      [(ngModel)]="categoryParams.searchString"
+                      autocomplete="off">
+                  </form>
+                </div>
+              </c-col>
+              <c-col xs="2"><button cButton color="primary" [routerLink]="['/master-admin/manage-categories/new']">New Category</button></c-col>
+               
+            </c-row>            
+          </c-container>
+        </c-card-header>
+        <c-card-body>
+          <c-container>
+            <c-row>
+              <c-col [xs]="7">
+               
+              </c-col>
+              <c-col [xs]="5">
+                <c-row>
+                  <c-col>
+                    <label><span style="font-weight: bold; margin-left: 15px;">Filter By: </span></label>
+                  </c-col>
+                  <c-col>
+                    <div class="selectWrapper">
+                      <select class="selectBox" (change)="onStatusChange($event)" [value]="filterStatus[0].id">
+                        <option [value]="filter.id" *ngFor="let filter of filterStatus">{{filter.name}}</option>
+                    </select>
+                    </div>
+                  </c-col>
+                </c-row>
+              
+              </c-col>
+            </c-row> 
+          </c-container>
+        </c-card-body>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">
+                <svg cIcon name="cilPeople"></svg>
+              </th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let category of categories; let i = index">            
+              <td class="text-center">
+                <c-avatar
+                  size="md"
+                  src="./assets/img/avatars/2.jpg"
+                  status="danger"
+                ></c-avatar>
+              </td>
+              <td>
+                {{category.name}}
+              </td>
+              <td>
+                <c-badge *ngIf="category.status.toLowerCase() === 'active' " color="success">{{category.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="category.status.toLowerCase()=== 'pending' " color="info">{{category.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="category.status.toLowerCase() === 'disabled' " color="danger">{{category.status.toUpperCase()}}</c-badge>
+              </td>     
+              <td>{{category.createdAt | date}}</td>
+              <!-- <td>
+                <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
+              </td> -->
+              <td>
+                <c-dropdown>
+                  <a cButton cDropdownToggle color="info" [routerLink]="[]">
+                    Actions
+                  </a>
+                  <ul cDropdownMenu>                    
+                    <li><a (click)="onEditCategory(category.id)" cDropdownItem>Edit</a></li>
+                    <li><a (click)="onViewItemTypes(category.id)" cDropdownItem>View Item Types</a></li>
+                    <li *ngIf="category.status.toLowerCase() === 'active'"><a (click)="onEnableDisableCategory(category.id, false)" cDropdownItem>Disable</a></li>
+                    <li *ngIf="category.status.toLowerCase() === 'disabled'"><a (click)="onEnableDisableCategory(category.id, true)" cDropdownItem>Enable</a></li>
+                  </ul>
+                </c-dropdown>
+              </td>
+            </tr>
+          </tbody>
+        </table>       
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+

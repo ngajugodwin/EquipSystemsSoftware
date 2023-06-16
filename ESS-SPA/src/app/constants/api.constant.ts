@@ -10,14 +10,14 @@ export const AUTH_URL = {
     REFRESH_TOKEN: `${SERVER_END_POINT}/auth/refreshToken/`,
 };
 
-export const ORG_URL = {
-    BASE_URL: `${SUPER_ADMIN_SERVER_END_POINT}/manageorganisations`
+export const MASTER_ADMIN_URL = {
+    MANAGE_ORGANISATION: `${SUPER_ADMIN_SERVER_END_POINT}/manageorganisations`,
+
+    MANAGE_CATEGORIES: `${SUPER_ADMIN_SERVER_END_POINT}/managecategories`
 }
 
 export const USER_URL = {
     SUPER_ADMIN_BASE_URL: `${SUPER_ADMIN_SERVER_END_POINT}/manageusers/`
-
-   
 }
 
 export const ORG_ADMIN = {

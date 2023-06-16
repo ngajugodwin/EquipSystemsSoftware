@@ -7,7 +7,12 @@ import { IconModule } from '@coreui/icons-angular';
 import { UsersRoutingModule } from './manage-users/users/users-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomModule } from 'src/app/shared/modules/custom.module';
-
+import { ManageCategoriesComponent } from './manage-categories/manage-categories.component';
+import {ItemTypesComponent} from './manage-categories/item-types/item-types.component'
+import {ItemsComponent} from './manage-categories/item-types/items/items.component';
+import {ItemComponent} from './manage-categories/item-types/items/item/item.component';
+import { CategoryComponent } from './manage-categories/category/category.component';
+import {CategoryResolver} from '../../../shared/resolvers/category.resolver';
 
 @NgModule({
 
@@ -27,16 +32,22 @@ import { CustomModule } from 'src/app/shared/modules/custom.module';
         CustomModule,
         ModalModule,
         BadgeModule,
-        FormsModule
+        FormsModule,
+        CardModule
     ], 
     exports:[
 
     ],
     declarations:[
-        ManageOrganisationsComponent
+        ManageOrganisationsComponent,
+        ManageCategoriesComponent,
+        CategoryComponent,
+        ItemTypesComponent,
+        ItemComponent,
+        ItemsComponent
     ],
     providers:[
-
+        CategoryResolver
     ]
 })
 

@@ -41,6 +41,7 @@ builder.Services.AddScoped<IGenericRepository, GenericRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrganisationRepository, OrganisationRepository>();
+builder.Services.AddScoped<IItemTypeRepository, ItemTypeRepository>();
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -60,6 +61,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile(new AppUserMappingProfile());
     cfg.AddProfile(new OrganisationMappingProfile());
     cfg.AddProfile(new RoleMappingProfile());
+    cfg.AddProfile(new ItemTypeMappingProfile());
 });
 
 IMapper mapper = config.CreateMapper();

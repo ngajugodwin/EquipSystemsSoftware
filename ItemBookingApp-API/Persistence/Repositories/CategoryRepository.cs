@@ -19,7 +19,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
             var category = await _context.Categories.FindAsync(categoryId);
 
-            return (category != null && category.IsActive) ? true : false;
+            return (category != null && category.Status == EntityStatus.Active) ? true : false;
         }
 
         public async Task<bool> IsExist(string categoryName)
@@ -34,11 +34,23 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
             var categories = Enumerable.Empty<Category>().AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(categoryQuery.FilterBy) && categoryQuery.FilterBy.ToLower() == "inactive")
+            if (categoryQuery.Status > 0)
             {
-                categories = _context.Categories.IgnoreQueryFilters()
-                    .Where(c => c.IsActive == false)
-                    .AsQueryable();
+                switch (categoryQuery.Status)
+                {
+                    case EntityStatus.Pending:
+                        categories = _context.Categories.Where(o => o.Status == EntityStatus.Pending);
+                        break;
+                    case EntityStatus.Active:
+                        categories = _context.Categories.Where(o => o.Status == EntityStatus.Active);
+                        break;
+                    case EntityStatus.Disabled:
+                        categories = _context.Categories.Where(o => o.Status == EntityStatus.Disabled);
+                        break;
+                    default:
+                        categories = _context.Categories.AsQueryable();
+                        break;
+                }
             }
             else
             {
