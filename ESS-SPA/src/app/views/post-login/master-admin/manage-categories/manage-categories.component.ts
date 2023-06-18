@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {ICategory} from '../../../../entities/models/category';
 import { Pagination } from 'src/app/entities/models/pagination';
 import { CategoryService } from 'src/app/shared/services/category-service/category.service';
@@ -6,19 +6,26 @@ import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { QUERY } from 'src/app/constants/app.constant';
 import { EntityStatus } from 'src/app/entities/models/entityStatus';
 import { Router } from '@angular/router';
+import { NgxModalService } from "ngx-modalview";
+import { CategoryComponent } from './category/category.component';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-manage-categories',
   templateUrl: './manage-categories.component.html',
   styleUrls: ['./manage-categories.component.css']
 })
-export class ManageCategoriesComponent implements OnInit {
+export class ManageCategoriesComponent implements OnInit, OnDestroy {
+  private $disposable = new Subscription;
   categoryParams: any = {};
   pagination: Pagination;  
   categories: ICategory[] = [];
   filterStatus: { id: number; name: string }[] = [];
 
-  constructor(private categoryService: CategoryService, private router: Router) { }
+  constructor(private categoryService: CategoryService, 
+    private NgxModalService:NgxModalService,
+    private router: Router) { }
 
   ngOnInit() {
     this.initFilter(EntityStatus);
@@ -42,7 +49,6 @@ export class ManageCategoriesComponent implements OnInit {
   }
 
   onStatusChange(data: any) {
-    console.log(data.target.value);
     this.getCategories(data.target.value);
   }
 
@@ -53,11 +59,38 @@ export class ManageCategoriesComponent implements OnInit {
    this.categoryParams.status = EntityStatus.Active;
   }
 
-  onEditCategory(categoryId: number) {
-    this.router.navigate([`/master-admin/manage-categories/edit/${categoryId}`])
+
+  onNewCategory() {
+   this.$disposable = this.NgxModalService.addModal(CategoryComponent, {
+      title: 'New Category',
+      message: '',
+      data: {}
+    })
+    .subscribe((res: ICategory)=>{
+        if(res) {
+            this.getCategories(this.categoryParams.status);
+        }
+    });
+    
   }
 
-  onViewItemTypes(categoryId: number) {}
+  onEditCategory(category: ICategory) {
+    this.$disposable = this.NgxModalService.addModal(CategoryComponent, {
+      title: 'Edit Category',
+      message: '',
+      data: category
+    })
+    .subscribe((res: ICategory)=>{
+        if(res) {
+            this.getCategories(this.categoryParams.status);
+        }
+    });
+  }
+
+  onViewItemTypes(category: ICategory) {
+    this.categoryService.setCurrentCategory(category);
+    this.router.navigate([`/master-admin/manage-categories/${category.id}/item-types`]);
+  }
 
   onEnableDisableCategory(categoryId: number, status: boolean) {
 
@@ -93,5 +126,8 @@ export class ManageCategoriesComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.$disposable.unsubscribe();
+  }
 
 }

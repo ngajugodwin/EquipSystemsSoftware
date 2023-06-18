@@ -20,7 +20,7 @@
                   </form>
                 </div>
               </c-col>
-              <c-col xs="2"><button cButton color="primary" [routerLink]="['/master-admin/manage-categories/new']">New Category</button></c-col>
+              <c-col xs="2"><button cButton color="primary" (click)="onNewCategory()">New Category</button></c-col>
                
             </c-row>            
           </c-container>
@@ -95,8 +95,8 @@
                     Actions
                   </a>
                   <ul cDropdownMenu>                    
-                    <li><a (click)="onEditCategory(category.id)" cDropdownItem>Edit</a></li>
-                    <li><a (click)="onViewItemTypes(category.id)" cDropdownItem>View Item Types</a></li>
+                    <li><a (click)="onEditCategory(category)" cDropdownItem>Edit</a></li>
+                    <li><a (click)="onViewItemTypes(category)" cDropdownItem>View Item Types</a></li>
                     <li *ngIf="category.status.toLowerCase() === 'active'"><a (click)="onEnableDisableCategory(category.id, false)" cDropdownItem>Disable</a></li>
                     <li *ngIf="category.status.toLowerCase() === 'disabled'"><a (click)="onEnableDisableCategory(category.id, true)" cDropdownItem>Enable</a></li>
                   </ul>

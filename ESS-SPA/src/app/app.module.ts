@@ -46,6 +46,8 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 
+import {ItemService} from './shared/services/item-service/item.service';
+import {ItemTypeService} from './shared/services/itemTypes-service/item-type.service';
 import {CategoryService} from './shared/services/category-service/category.service';
 import {RoleService} from './shared/services/role-service/role.service';
 import {ManageAdminOrganisationService} from './shared/services/manage-admin-organisaton-service/manage-admin-organisation.service';
@@ -58,6 +60,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { MasterAdminModule } from './views/post-login/master-admin/master-admin.module';
 
 import {CustomModule} from './shared/modules/custom.module';
+
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { ModalDialogModule } from 'ngx-modal-dialog';
+import { DefaultNgxModalOptionConfig, NgxModalView, defaultNgxModalOptions } from 'ngx-modalview';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -104,13 +110,30 @@ const APP_CONTAINERS = [
     CardModule,
     HttpClientModule,
     CustomModule,
+    NgxModalView.forRoot({container: 'modal-container'}, {...defaultNgxModalOptions, ...{
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      wrapperDefaultClasses: 'modal fade-anim',
+      wrapperClass: 'in',
+      animationDuration: 400,
+      autoFocus: true,
+      draggable: true
+    }}),
+
+    // NgxSmartModalModule.forRoot(),
+    ModalDialogModule.forRoot()
    // AccountModule
+
   ],
   providers: [
     // {
     //   provide: LocationStrategy,
     //   useClass: HashLocationStrategy,
     // },
+    {
+      provide: DefaultNgxModalOptionConfig,
+      useValue: {...defaultNgxModalOptions, ...{ closeOnEscape: true, closeOnClickOutside: true }}
+    },
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
@@ -125,8 +148,11 @@ const APP_CONTAINERS = [
     ManageAdminOrganisationService,
     RoleService,
     CategoryService,
+    ItemTypeService,
+    ItemService,
     JwtInterceptorProvider,
-    AuthGuard
+    AuthGuard,
+    NgxSmartModalService
   ],
   bootstrap: [AppComponent],
 })

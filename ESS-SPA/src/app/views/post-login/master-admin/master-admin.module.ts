@@ -13,6 +13,12 @@ import {ItemsComponent} from './manage-categories/item-types/items/items.compone
 import {ItemComponent} from './manage-categories/item-types/items/item/item.component';
 import { CategoryComponent } from './manage-categories/category/category.component';
 import {CategoryResolver} from '../../../shared/resolvers/category.resolver';
+import { ItemResolver } from 'src/app/shared/resolvers/item.resolver';
+import { ItemTypeComponent } from './manage-categories/item-types/item-type/item-type.component';
+import { ItemTypeResolver } from 'src/app/shared/resolvers/item-type.resolver';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+
+import {ConfirmComponent} from './manage-categories/item-types/items/confirm/confirm.component';
 
 @NgModule({
 
@@ -33,21 +39,29 @@ import {CategoryResolver} from '../../../shared/resolvers/category.resolver';
         ModalModule,
         BadgeModule,
         FormsModule,
-        CardModule
+        CardModule,
+        NgxSmartModalModule.forRoot()
     ], 
     exports:[
 
+    ], 
+    entryComponents: [
+        ConfirmComponent
     ],
     declarations:[
         ManageOrganisationsComponent,
         ManageCategoriesComponent,
         CategoryComponent,
         ItemTypesComponent,
+        ItemTypeComponent,
         ItemComponent,
-        ItemsComponent
+        ItemsComponent,
+        ConfirmComponent
     ],
     providers:[
-        CategoryResolver
+        CategoryResolver,
+        ItemTypeResolver,
+        ItemResolver
     ]
 })
 

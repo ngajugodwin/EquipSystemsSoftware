@@ -1,0 +1,24 @@
+<c-col class="modal-content">
+  <c-card>
+    <c-card-header ngPreserveWhitespaces>
+      <strong>{{title}}</strong>
+    </c-card-header>
+    <c-card-body>      
+      <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="itemTypeForm" id="itemTypeForm">
+        <c-col [xs]="12">
+          <label cLabel>Item Type Name</label>
+          <input type="text" cFormControl placeholder="" 
+              [ngClass]="{'is-invalid' : itemTypeForm.get('name')?.errors && itemTypeForm.get('name')?.touched}"
+              formControlName="name"/>
+              <div class="invalid-feedback" *ngIf="itemTypeForm.get('name')?.hasError('required') && itemTypeForm.get('name')?.touched">Item type name is required</div>
+        </c-col>
+        </form>
+    </c-card-body>
+    <c-card-footer>
+      <div class="center-action-button">
+        <button style="margin-right: 10px;" type="submit" [disabled]="!itemTypeForm.valid || isSaving === true" form="itemTypeForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save  </button>
+        <button type="reset" (click)="closeDialog()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+      </div>    
+    </c-card-footer>
+  </c-card>
+</c-col>

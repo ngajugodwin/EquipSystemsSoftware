@@ -1,17 +1,34 @@
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
 import { MASTER_ADMIN_URL } from 'src/app/constants/api.constant';
 import { ICategory } from 'src/app/entities/models/category';
 import { PaginationResult } from 'src/app/entities/models/pagination';
+import {BehaviorSubject} from 'rxjs';
+
+// import {Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
+  // private currentCategory: any;
 
-constructor(private http: HttpClient) { }
+  private currentCategory = new BehaviorSubject<any>(null);
+  
+constructor(private http: HttpClient) {
+ }
+
+
+setCurrentCategory(category: ICategory) {
+  this.currentCategory.next(category);
+}
+
+retrieveCurrentCategory(): Observable<ICategory> {
+  return this.currentCategory.asObservable();
+}
+
 
 getCategory(categoryId: number): Observable<ICategory> {
   return this.http.get<ICategory>(MASTER_ADMIN_URL.MANAGE_CATEGORIES + `/${categoryId}`);

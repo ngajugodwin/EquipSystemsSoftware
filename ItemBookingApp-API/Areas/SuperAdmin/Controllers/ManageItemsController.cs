@@ -31,9 +31,9 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpGet("{itemId}", Name = "GetItemAsync")]
-        public async Task<IActionResult> GetItemAsync(int itemTypeId, int itemId)
+        public async Task<IActionResult> GetItemAsync(int itemId)
         {
-            var item = await _genericRepository.FindAsync<Item>(x => x.Id == itemId && x.ItemTypeId == itemTypeId);
+            var item = await _genericRepository.FindAsync<Item>(x => x.Id == itemId);
 
             if (item == null)
                 return BadRequest("Item not found!");
@@ -44,15 +44,10 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateItemAsync(int itemTypeId, [FromBody] SaveItemResource saveItemResource)
+        public async Task<IActionResult> CreateItemAsync([FromBody] SaveItemResource saveItemResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
-
-            var itemType = await _genericRepository.FindAsync<ItemType>(c => c.Id == itemTypeId);
-
-            if (itemType == null || itemType.Id != saveItemResource.ItemTypeId)
-                return BadRequest("Requested resource is invalid");
 
             var result = await _itemRepository.IsExist(saveItemResource.Name, saveItemResource.SerialNumber);
 
@@ -64,6 +59,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 
             try
             {
+                itemToSave.IsActive = true;
                 await _genericRepository.AddAsync<Item>(itemToSave);
                 await _unitOfWork.CompleteAsync();
 
@@ -80,7 +76,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpPut("{itemId}")]
-        public async Task<IActionResult> UpdateItemsync(int itemTypeId, int itemId, [FromBody] UpdateItemResource updateItemResource)
+        public async Task<IActionResult> UpdateItemsync(int itemId, [FromBody] UpdateItemResource updateItemResource)
         {
             // return Ok();
             if (!ModelState.IsValid)

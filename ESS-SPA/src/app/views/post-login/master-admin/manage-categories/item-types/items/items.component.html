@@ -1,3 +1,80 @@
-<p>
-  items works!
-</p>
+<c-card>
+  <c-card-header style="margin-bottom: 0.3rem;">
+    <c-row>
+      <c-col xs="7">
+       
+      </c-col>
+      <c-col xs="5">
+        <c-col class="button-right" ><button cButton color="primary" (click)="newItem()">New Item</button></c-col>
+      </c-col>
+    </c-row>
+  </c-card-header>
+  <c-container class="set-filter">
+    <c-row>
+      <c-col xs="7"></c-col>
+      <c-col xs="5">
+        <div style="float: right;" class="selectWrapper">
+          <select class="selectBox" (change)="onStatusChange($event)">
+            <option value="active">Active</option>
+            <option value="disabled">Disabled</option>
+          </select>
+        </div>
+      </c-col>
+    </c-row>
+  </c-container>
+  <c-card-body>
+    <table
+[hover]="true"
+[responsive]="true"
+[striped]="true"
+cTable
+class="mb-0 border"
+>
+<thead cTableColor="light">
+<tr>
+<th class="text-center">
+  <svg cIcon name="cilPeople"></svg>
+</th>
+<th>Name</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+<tr class="clickable" *ngFor="let item of items; let i = index">            
+<td class="text-center">
+  <c-avatar
+    size="md"
+    src="./assets/img/avatars/2.jpg"
+    status="danger"
+  ></c-avatar>
+</td>
+<td>
+  {{item.name}}
+</td>
+<td>
+  <c-badge *ngIf="item.status.toLowerCase() === 'active' " color="success">{{item.status.toUpperCase()}}</c-badge>
+  <c-badge *ngIf="item.status.toLowerCase() === 'inactive' " color="danger">{{item.status.toUpperCase()}}</c-badge>
+</td>     
+<!-- <td>
+  <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
+</td> -->
+<td>
+  <c-dropdown>
+    <a cButton cDropdownToggle color="info" [routerLink]="[]">
+      Actions
+    </a>
+    <ul cDropdownMenu>                    
+      <li><a (click)="onEditItem(item)" cDropdownItem>Edit</a></li>
+      <li *ngIf="item.status.toLowerCase() === 'active'"><a (click)="onEnableDisableItem(item.id, false)" cDropdownItem>Disable</a></li>
+      <li *ngIf="item.status.toLowerCase() === 'inactive'"><a (click)="onEnableDisableItem(item.id, true)" cDropdownItem>Enable</a></li>
+    </ul>
+  </c-dropdown>
+</td>
+</tr>
+</tbody>
+</table>   
+
+  </c-card-body>
+</c-card>

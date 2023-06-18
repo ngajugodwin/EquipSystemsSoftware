@@ -1,3 +1,99 @@
-<p>
-  item-types works!
-</p>
+
+<c-row>
+  <c-col xs>   
+    <c-card class="mb-4">
+        <!-- <c-card-header>Users</c-card-header>
+        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
+        <c-card-header>
+          <c-container >
+            <i></i><span class="table-title">Item Types</span>
+          </c-container>
+        </c-card-header>
+        <c-card-body>
+          <c-row>
+            <c-col [xs]="7">
+              <c-card>
+                <c-card-header>
+                  <c-row>
+                    <c-col xs="7">
+                      <div class="selectWrapper">
+                        <select class="selectBox" (change)="onStatusChange($event)">
+                          <option value="active">Active</option>
+                          <option value="disabled">Disabled</option>
+                        </select>
+                        <!-- <select class="selectBox" (change)="onStatusChange($event)" [value]="filterStatus[0].name">
+                          <option [value]="filter.id" *ngFor="let filter of filterStatus">{{filter.name}}</option>
+                        </select> -->
+                      </div>
+                    </c-col>
+                    <c-col xs="5">
+                      <c-col class="button-right" ><button cButton color="primary" (click)="newItemType()">New Item Type</button></c-col>
+                    </c-col>
+                  </c-row>
+                </c-card-header>
+                <c-card-body>
+                  <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">
+                <svg cIcon name="cilPeople"></svg>
+              </th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr (dblclick)="onSelectedItemType(itemType)" class="clickable" *ngFor="let itemType of itemTypes; let i = index">            
+              <td class="text-center">
+                <c-avatar
+                  size="md"
+                  src="./assets/img/avatars/2.jpg"
+                  status="danger"
+                ></c-avatar>
+              </td>
+              <td>
+                {{itemType.name}}
+              </td>
+              <td>
+                <c-badge *ngIf="itemType.status.toLowerCase() === 'active' " color="success">{{itemType.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="itemType.status.toLowerCase() === 'inactive' " color="danger">{{itemType.status.toUpperCase()}}</c-badge>
+              </td>     
+              <!-- <td>
+                <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
+              </td> -->
+              <td>
+                <c-dropdown>
+                  <a cButton cDropdownToggle color="info" [routerLink]="[]">
+                    Actions
+                  </a>
+                  <ul cDropdownMenu>                    
+                    <li><a (click)="onEditItemType(itemType)" cDropdownItem>Edit</a></li>
+                    <li *ngIf="itemType.status.toLowerCase() === 'active'"><a (click)="onEnableDisableItemType(itemType.id, false)" cDropdownItem>Disable</a></li>
+                    <li *ngIf="itemType.status.toLowerCase() === 'inactive'"><a (click)="onEnableDisableItemType(itemType.id, true)" cDropdownItem>Enable</a></li>
+                  </ul>
+                </c-dropdown>
+              </td>
+            </tr>
+          </tbody>
+        </table>   
+
+                </c-card-body>
+              </c-card>
+            </c-col>
+            <c-col [xs]="5">
+              <app-items [currentItemType]="selectedItemType"></app-items>
+            </c-col>
+          </c-row>
+        </c-card-body>
+      
+    </c-card>
+  </c-col>
+</c-row>
+

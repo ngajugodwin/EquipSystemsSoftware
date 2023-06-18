@@ -1,38 +1,49 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxModalComponent } from 'ngx-modalview';
 import { ICategory } from 'src/app/entities/models/category';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { CategoryService } from 'src/app/shared/services/category-service/category.service';
+import {ModalData} from '../../../../../entities/models/modalData';
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css']
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent extends NgxModalComponent<ModalData, ICategory> implements OnInit, ModalData  {
+  title: string;
+  message: string;
+  data: ICategory;
+
   formTitle: string;
   categoryForm: FormGroup;
   isSaving = false;
 
   constructor(private fb: FormBuilder, private router: Router, 
     private categoryService: CategoryService,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute) { 
+      super();
+    }
 
   ngOnInit() {
     this.initCategoryForm();
-    this.getCategory();
+    this.checkForEditAction();
   }
 
   initCategoryForm() {
     this.categoryForm = this.fb.group({
       id: [null],
       name: ['', Validators.required]
-    },  {validator: [this.passwordMatchValidator]} as AbstractControlOptions)
+    })
   }
 
-  private passwordMatchValidator(f: FormGroup) {
-    return f.get('password')?.value === f.get('confirmPassword')?.value ? null : {'mismatch': true};
+  checkForEditAction() {
+    if (this.data) {
+      this.assignValuesToControl(this.data);
+      this.formTitle = 'Edit Item Type';
+    }
   }
 
   save() {
@@ -44,8 +55,10 @@ export class CategoryComponent implements OnInit {
         this.categoryService.updateCategory(category.id, category).subscribe({
           next: (updatedCategory) => {
             this.isSaving = false;
+            this.result = updatedCategory;
+            this.closeDialog(); 
             console.log('Category updated successfully' + updatedCategory) //TODO show success toaster message 
-            this.router.navigate(['/master-admin/manage-categories']);
+            
           },
           error: (error: ErrorResponse) => {
             console.log(error) // TODO: show error toaster
@@ -55,8 +68,9 @@ export class CategoryComponent implements OnInit {
         this.categoryService.createCategory(category).subscribe({
           next: (newCategory: ICategory) => {
             if (newCategory) {
-              console.log(newCategory) //TODO show success toaster
-              this.router.navigate(['/master-admin/manage-categories']);
+              this.result = newCategory;
+              console.log(newCategory) //TODO show success toaster     
+              this.closeDialog();  
             }
           },
           error: (error: ErrorResponse) => {
@@ -67,21 +81,9 @@ export class CategoryComponent implements OnInit {
      }
    }
 
-  cancel() {
-    this.router.navigate(['/master-admin/manage-categories']);
-  }
-
-  getCategory() {
-    this.activatedRoute.data.subscribe(data => {
-    const category = data['category'];
-    if (category) {
-      this.formTitle = 'Edit Category';
-      console.log(category);
-      this.assignValuesToControl(category);
-    } else {
-      this.formTitle = 'New Category';
-    }
-   });
+  closeDialog() {
+    this.close();
+    // this.router.navigate(['/master-admin/manage-categories']);
   }
 
   assignValuesToControl(category: ICategory) {

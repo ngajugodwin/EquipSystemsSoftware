@@ -1,3 +1,31 @@
-<p>
-  item works!
-</p>
+<c-col class="modal-content">
+    <c-card>
+      <c-card-header ngPreserveWhitespaces>
+        <strong>{{title}}</strong>
+      </c-card-header>
+      <c-card-body>      
+        <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="itemForm" id="itemForm">
+          <c-col [xs]="12">
+            <label cLabel>Item Name</label>
+            <input type="text" cFormControl placeholder="" 
+                [ngClass]="{'is-invalid' : itemForm.get('name')?.errors && itemForm.get('name')?.touched}"
+                formControlName="name"/>
+                <div class="invalid-feedback" *ngIf="itemForm.get('name')?.hasError('required') && itemForm.get('name')?.touched">Item name is required</div>
+          </c-col>
+          <c-col [xs]="12">
+            <label cLabel>Serial Number</label>
+            <input type="text" cFormControl placeholder="" 
+                [ngClass]="{'is-invalid' : itemForm.get('serialNumber')?.errors && itemForm.get('serialNumber')?.touched}"
+                formControlName="serialNumber"/>
+                <div class="invalid-feedback" *ngIf="itemForm.get('serialNumber')?.hasError('required') && itemForm.get('serialNumber')?.touched">Serial number is required</div>
+          </c-col>
+          </form>
+      </c-card-body>
+      <c-card-footer>
+        <div>
+          <button style="margin-right: 10px;" type="submit" [disabled]="!itemForm.valid || isSaving === true" form="itemForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save  </button>
+          <button type="reset" (click)="closeDialog()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+        </div>    
+      </c-card-footer>
+    </c-card>
+  </c-col>

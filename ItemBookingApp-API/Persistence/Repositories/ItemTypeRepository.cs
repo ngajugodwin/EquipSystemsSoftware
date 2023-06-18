@@ -25,7 +25,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
             var itemTypes = Enumerable.Empty<ItemType>().AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(itemTypeQuery.FilterBy) && itemTypeQuery.FilterBy.ToLower() == "inactive")
+            if (!string.IsNullOrWhiteSpace(itemTypeQuery.Status) && itemTypeQuery.Status.ToLower() == "disabled")
             {
                 itemTypes = _context.ItemTypes.Where(c => c.IsActive == false && c.CategoryId == categoryId)
                     .AsQueryable();

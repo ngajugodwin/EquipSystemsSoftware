@@ -25,7 +25,25 @@ $enable-rtl: true;
 // If you want to add something do it here
 @import "custom";
 
+/* NgxSmartModal */
+// @import 'ngx-smart-modal/src/ngx-smart-modal';
+// @import '../../node_modules/ngx-simple-modal/styles/simple-modal.scss';
 
+@import '../../node_modules/ngx-modalview//styles/ngx-modal.scss';
+
+.modal-content {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.center-action-button {
+  display: flex;
+  justify-content: center;
+}
+.button-right {
+  float: right;
+}
 .table-title {
     font-size: 20px;
     font-weight: bold;
@@ -50,3 +68,7 @@ $enable-rtl: true;
     border:0px;
     outline:none;
   }
+
+  .clickable {
+    cursor: pointer;
+}

@@ -2,7 +2,7 @@
 {
     public class ItemQuery : BaseQuery
     {
-        public bool IsActive { get; set; } = false;
+        public string Status { get; set; } = string.Empty;
         public int ItemState { get; set; }
     }
 }

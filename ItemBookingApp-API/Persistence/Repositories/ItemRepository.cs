@@ -65,7 +65,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
             var items = Enumerable.Empty<Item>().AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(itemQuery.FilterBy) && itemQuery.FilterBy.ToLower() == "inactive")
+            if (!string.IsNullOrWhiteSpace(itemQuery.Status) && itemQuery.Status.ToLower() == "disabled")
             {
                 items = _context.Items.IgnoreQueryFilters()
                     .Where(c => c.IsActive == false && c.ItemTypeId == itemTypeId)
@@ -73,11 +73,8 @@ namespace ItemBookingApp_API.Persistence.Repositories
             }
             else
             {
-                items = _context.Items.AsQueryable().Where(i => i.ItemTypeId == itemTypeId);
+                items = _context.Items.AsQueryable().Where(i => i.ItemTypeId == itemTypeId && i.IsActive == true);
             }
-
-
-            items = FilterByItemState((ItemState)itemQuery.ItemState, items);
 
 
             if (!string.IsNullOrWhiteSpace(itemQuery.SearchString))

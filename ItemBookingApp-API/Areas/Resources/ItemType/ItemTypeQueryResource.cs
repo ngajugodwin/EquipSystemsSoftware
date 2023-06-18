@@ -4,6 +4,6 @@ namespace ItemBookingApp_API.Areas.Resources.ItemType
 {
     public class ItemTypeQueryResource : BaseQuery
     {
-        public bool IsActive { get; set; } = false;
+        public string Status { get; set; } = string.Empty;
     }
 }

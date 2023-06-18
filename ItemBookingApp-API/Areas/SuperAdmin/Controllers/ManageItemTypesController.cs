@@ -32,9 +32,9 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpGet("{itemTypeId}", Name = "GetItemTypeAsync")]
-        public async Task<IActionResult> GetItemTypeAsync(int categoryId, int itemTypeId)
+        public async Task<IActionResult> GetItemTypeAsync(int itemTypeId)
         {
-            var item = await _genericRepository.FindAsync<ItemType>(x => x.Id == itemTypeId && x.CategoryId == categoryId);
+            var item = await _genericRepository.FindAsync<ItemType>(x => x.Id == itemTypeId);
 
             if (item == null)
                 return BadRequest("Item type not found!");
@@ -65,6 +65,8 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 
             try
             {
+                itemTypeToSave.IsActive = true;
+
                 await _genericRepository.AddAsync<ItemType>(itemTypeToSave);
                 await _unitOfWork.CompleteAsync();
 

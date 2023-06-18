@@ -1,0 +1,39 @@
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 200px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid black;
+    box-shadow: 10px 10px 5px #888888;
+ }
+
+ /* .modal-content {
+    position: absolute;
+    background-color: red;
+ } */
+
+ /* .modal-content {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+ } */
+
+ /* .modal-content {
+    width: 500px;
+    height: 400px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0px 0px 10px #cccccc;
+    border-radius: 10px;
+    z-index:1000;
+ } */
