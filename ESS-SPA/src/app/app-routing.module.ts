@@ -56,6 +56,10 @@ const routes: Routes = [
           import('./views/pre-login/account.module').then((m) => m.AccountModule)
       },
       {
+        path: 'shop-items',
+        loadChildren: () => import('./views/post-login/shop-items/shop-items.module').then(m => m.ShopItemsModule)
+      },
+      {
         path: 'self-service',
         loadChildren: () => import('./views/post-login/self-service/self-service.module').then(m => m.SelfServiceModule)
       },

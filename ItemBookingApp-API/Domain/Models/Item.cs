@@ -17,8 +17,14 @@ namespace ItemBookingApp_API.Domain.Models
 
         public int ItemTypeId { get; set; }
         public virtual ItemType ItemType { get; set; }
+
+        public int CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+
         public string? Url { get; set; }
         public string? PublicId { get; set; }
+
+        public decimal Price { get; set; }
     }
 
     public enum ItemState 

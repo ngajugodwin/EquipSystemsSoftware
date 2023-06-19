@@ -69,6 +69,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 // import { FileUploadModule } from '../../node_modules/ng2-file-upload/file-upload/file-upload.module';
 
 import { UploaderModule } from "angular-uploader";
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -116,6 +117,7 @@ const APP_CONTAINERS = [
     HttpClientModule,
     CustomModule,
     UploaderModule,
+    PaginationModule.forRoot(),
     FileUploadModule,
     NgxModalView.forRoot({container: 'modal-container'}, {...defaultNgxModalOptions, ...{
       closeOnEscape: true,

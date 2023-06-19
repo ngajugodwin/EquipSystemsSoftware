@@ -199,6 +199,9 @@ namespace ItemBookingApp_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -220,6 +223,10 @@ namespace ItemBookingApp_API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
 
@@ -231,6 +238,8 @@ namespace ItemBookingApp_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ItemTypeId");
 
@@ -460,11 +469,19 @@ namespace ItemBookingApp_API.Migrations
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Item", b =>
                 {
+                    b.HasOne("ItemBookingApp_API.Domain.Models.Category", "Category")
+                        .WithMany("Items")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ItemBookingApp_API.Domain.Models.ItemType", "ItemType")
                         .WithMany("Items")
                         .HasForeignKey("ItemTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("ItemType");
                 });
@@ -540,6 +557,8 @@ namespace ItemBookingApp_API.Migrations
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Category", b =>
                 {
                     b.Navigation("ItemTypes");
+
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Identity.AppUser", b =>

@@ -79,7 +79,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
         [HttpGet("{categoryId}", Name = "GetCategoryAsync")]
-        public async Task<IActionResult> GetItemTypeAsync(int categoryId)
+        public async Task<IActionResult> GetCategoryAsync(int categoryId)
         {
             var result = await _categoryService.GetCategoryByIdAsync(categoryId);
 

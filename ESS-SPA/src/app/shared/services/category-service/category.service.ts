@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
-import { MASTER_ADMIN_URL } from 'src/app/constants/api.constant';
+import { CUSTOMER_URL, MASTER_ADMIN_URL } from 'src/app/constants/api.constant';
 import { ICategory } from 'src/app/entities/models/category';
 import { PaginationResult } from 'src/app/entities/models/pagination';
 import {BehaviorSubject} from 'rxjs';
@@ -67,6 +67,38 @@ getCategories(page?: number, itemsPerPage?: number, categoryParams?: any)  {
   }
 
   return this.http.get<ICategory[]>(MASTER_ADMIN_URL.MANAGE_CATEGORIES, {observe: 'response', params})
+  .pipe(
+    map((response: HttpResponse<ICategory[]>) => {
+      if (response.body) {
+        paginatedResult.result = response.body;
+      }
+      if (response.headers.get('Pagination') != null) {
+        paginatedResult.pagination = JSON.parse(response.headers.get('Pagination') || '');
+      }
+      return paginatedResult;
+    })
+  );
+}
+
+getCategoriesForCustomer(page?: number, itemsPerPage?: number, itemsParams?: any) {
+  const paginatedResult: PaginationResult<ICategory[]> = new PaginationResult<ICategory[]>();
+
+  let params = new HttpParams();
+
+  if (page != null && itemsPerPage != null) {
+    params = params.append('pageNumber', page.toString());
+    params = params.append('pageSize', itemsPerPage.toString());
+  }
+
+  if (itemsParams !=  null) {
+    params = params.append('searchString', itemsParams.searchString);
+
+    if (itemsParams.status !=  null) {
+      params = params.append('status', itemsParams.status);
+    }
+  }
+
+  return this.http.get<ICategory[]>(CUSTOMER_URL.BASE_URL + `/Categories`, {observe: 'response', params})
   .pipe(
     map((response: HttpResponse<ICategory[]>) => {
       if (response.body) {

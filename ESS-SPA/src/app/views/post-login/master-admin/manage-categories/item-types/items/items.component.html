@@ -2,7 +2,9 @@
   <c-card-header style="margin-bottom: 0.3rem;">
     <c-row>
       <c-col xs="7">
-       
+        <c-container >
+          <i></i><span class="table-title">Items</span>
+        </c-container>
       </c-col>
       <c-col xs="5">
         <c-col class="button-right" ><button cButton color="primary" (click)="newItem()">New Item</button></c-col>
@@ -11,7 +13,9 @@
   </c-card-header>
   <c-container class="set-filter">
     <c-row>
-      <c-col xs="7"></c-col>
+      <c-col xs="7">
+
+      </c-col>
       <c-col xs="5">
         <div style="float: right;" class="selectWrapper">
           <select class="selectBox" (change)="onStatusChange($event)">

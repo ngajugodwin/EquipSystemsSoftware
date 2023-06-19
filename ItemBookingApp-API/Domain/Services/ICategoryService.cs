@@ -1,12 +1,15 @@
 ﻿using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Services.Communication;
+using ItemBookingApp_API.Resources.CustomerQueries;
 using ItemBookingApp_API.Resources.Query;
 
 namespace ItemBookingApp_API.Domain.Services
 {
     public interface ICategoryService
     {
+        Task<PagedList<Category>> CustomerListAsync(CustomerCategoryQuery customerCategoryQuery);
+
         Task<PagedList<Category>> ListAsync(CategoryQuery categoryQuery);
 
         Task<IEnumerable<Category>> ListAsync();

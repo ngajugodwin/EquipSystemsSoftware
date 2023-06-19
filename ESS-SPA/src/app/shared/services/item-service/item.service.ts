@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import {IItem} from '../../../entities/models/item';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { MASTER_ADMIN_URL } from 'src/app/constants/api.constant';
+import { CUSTOMER_URL, MASTER_ADMIN_URL, USER_URL } from 'src/app/constants/api.constant';
 import { PaginationResult } from 'src/app/entities/models/pagination';
+import { ItemParams } from 'src/app/entities/models/itemParams';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +86,51 @@ export class ItemService {
     }
   
     return this.http.get<IItem[]>(MASTER_ADMIN_URL.MANAGE_ITEM + `/${itemTypeId}/ManageItems`, {observe: 'response', params})
+    .pipe(
+      map((response: HttpResponse<IItem[]>) => {
+        if (response.body) {
+          paginatedResult.result = response.body;
+        }
+        if (response.headers.get('Pagination') != null) {
+          paginatedResult.pagination = JSON.parse(response.headers.get('Pagination') || '');
+        }
+        return paginatedResult;
+      })
+    );
+  }
+
+  getItemForCustomer(itemTypeId: number, itemId: number) {
+    return this.http.get<IItem>(CUSTOMER_URL.BASE_URL + `/${itemTypeId}/Items/${itemId}`);
+  }
+
+  getItemsForCustomer(itemParams: ItemParams, page?: number, itemsPerPage?: number) {
+    const paginatedResult: PaginationResult<IItem[]> = new PaginationResult<IItem[]>();
+  
+    let params = new HttpParams();
+  
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page.toString());
+      params = params.append('pageSize', itemsPerPage.toString());
+    }
+  
+    if (itemParams.itemTypeId !=  null) {
+      params = params.append('itemTypeId', itemParams.itemTypeId.toString());
+    }
+
+    if (itemParams.categoryId !=  null) {
+      params = params.append('categoryId', itemParams.categoryId.toString());
+    }
+
+    if (itemParams.search !=  null) {
+      params = params.append('searchString', itemParams.search);
+    }
+
+    if (itemParams.sort) {
+      params = params.append('sort', itemParams.sort);
+    }
+  
+  
+    return this.http.get<IItem[]>(CUSTOMER_URL.BASE_URL + `/Items`, {observe: 'response', params})
     .pipe(
       map((response: HttpResponse<IItem[]>) => {
         if (response.body) {

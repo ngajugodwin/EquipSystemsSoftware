@@ -2,6 +2,7 @@
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Persistence.Contexts;
+using ItemBookingApp_API.Resources.CustomerQueries;
 using ItemBookingApp_API.Resources.Query;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
     public class CategoryRepository : BaseRepository, ICategoryRepository
     {
         public CategoryRepository(ApplicationDbContext context)
-            :base(context)
+            : base(context)
         {
 
         }
@@ -30,6 +31,13 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return (category) ? true : false;
         }
 
+        public async Task<PagedList<Category>> CustomerListAsync(CustomerCategoryQuery customerCategoryQuery)
+        {
+            var categories = _context.Categories.AsQueryable()
+               .Where(c=> c.Status == EntityStatus.Active).AsNoTracking();
+
+            return await PagedList<Category>.CreateAsync(categories, customerCategoryQuery.PageNumber, customerCategoryQuery.PageSize);
+        }
         public async Task<PagedList<Category>> ListAsync(CategoryQuery categoryQuery)
         {
             var categories = Enumerable.Empty<Category>().AsQueryable();

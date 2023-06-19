@@ -14,6 +14,10 @@ namespace ItemBookingApp_API.EntityConfiguration
                 .IsRequired()
                 .HasMaxLength(50);
 
+            builder.Property(i => i.Price)
+                .HasPrecision(18, 4)
+               .IsRequired();
+
             builder.Property(i => i.ItemState)
                 .HasDefaultValue(ItemState.Available);
 
@@ -27,6 +31,11 @@ namespace ItemBookingApp_API.EntityConfiguration
              .WithMany(i => i.Items)
              .HasForeignKey(b => b.ItemTypeId)
              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(b => b.Category)         
+            .WithMany(i => i.Items)
+            .HasForeignKey(b => b.CategoryId)        
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

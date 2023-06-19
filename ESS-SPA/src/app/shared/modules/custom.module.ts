@@ -2,24 +2,33 @@
 import { NgModule } from '@angular/core';
 import {StatusFilterComponent} from '../components/status-filter/status-filter.component';
 import { CommonModule } from '@angular/common';
-import { ModalModule, PaginationModule } from '@coreui/angular';
+import { ModalModule } from '@coreui/angular';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 // import { SmartPaginationModule } from '@coreui/angular';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import {PagerPaginationComponent} from '../../../app/views/post-login/pager-pagination/pager-pagination.component';
+import {PagingHeaderComponent} from '../../views/post-login/paging-header/paging-header.component';
+
 @NgModule({
     imports: [
         CommonModule,
-        PaginationModule,
         RouterModule,
         FormsModule,
-        ModalModule
+        ModalModule,
+        PaginationModule.forRoot()
     ],
     exports: [
         // PagerPaginationComponent,
         StatusFilterComponent,
+        PaginationModule,
+        PagerPaginationComponent,
+        PagingHeaderComponent
     ],
     declarations: [
         StatusFilterComponent,
+        PagerPaginationComponent,
+        PagingHeaderComponent
     ],
     providers: [
         // BsModalRef,

@@ -18,6 +18,10 @@ export const MASTER_ADMIN_URL = {
     MANAGE_ITEM: `${SUPER_ADMIN_SERVER_END_POINT}`
 }
 
+export const CUSTOMER_URL = {
+    BASE_URL: `${SERVER_END_POINT}`
+}
+
 export const USER_URL = {
     SUPER_ADMIN_BASE_URL: `${SUPER_ADMIN_SERVER_END_POINT}/manageusers/`
 }

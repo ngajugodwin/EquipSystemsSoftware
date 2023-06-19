@@ -31,6 +31,14 @@ $enable-rtl: true;
 
 @import '../../node_modules/ngx-modalview//styles/ngx-modal.scss';
 
+// Variable overrides first
+$primary: #900;
+$enable-shadows: true;
+$prefix: "mo-";
+
+// Then import Bootstrap
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
 .modal-content {
   position: absolute;
   top: 30%;

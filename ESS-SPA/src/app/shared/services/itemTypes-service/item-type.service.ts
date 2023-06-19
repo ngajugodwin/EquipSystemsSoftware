@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {IItemType} from '../../../entities/models/itemType';
 import { PaginationResult } from 'src/app/entities/models/pagination';
-import { MASTER_ADMIN_URL } from 'src/app/constants/api.constant';
+import { CUSTOMER_URL, MASTER_ADMIN_URL } from 'src/app/constants/api.constant';
 import { map } from 'rxjs/internal/operators/map';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
@@ -62,6 +62,42 @@ getItemTypes(categoryId: number, page?: number, itemsPerPage?: number, itemTypes
   }
 
   return this.http.get<IItemType[]>(MASTER_ADMIN_URL.MANAGE_ITEM_TYPES + `/${categoryId}/ManageItemTypes`, {observe: 'response', params})
+  .pipe(
+    map((response: HttpResponse<IItemType[]>) => {
+      if (response.body) {
+        paginatedResult.result = response.body;
+      }
+      if (response.headers.get('Pagination') != null) {
+        paginatedResult.pagination = JSON.parse(response.headers.get('Pagination') || '');
+      }
+      return paginatedResult;
+    })
+  );
+}
+
+getItemTypeForCustomer(categoryId: number, itemTypeId: number) {
+  return this.http.get<IItemType>(CUSTOMER_URL.BASE_URL + `/Items${itemTypeId}`);
+}
+
+getItemTypesForCustomer(categoryId: number, page?: number, itemsPerPage?: number, itemsParams?: any) {
+  const paginatedResult: PaginationResult<IItemType[]> = new PaginationResult<IItemType[]>();
+
+  let params = new HttpParams();
+
+  if (page != null && itemsPerPage != null) {
+    params = params.append('pageNumber', page.toString());
+    params = params.append('pageSize', itemsPerPage.toString());
+  }
+
+  if (itemsParams !=  null) {
+    params = params.append('searchString', itemsParams.searchString);
+
+    if (itemsParams.status !=  null) {
+      params = params.append('status', itemsParams.status);
+    }
+  }
+
+  return this.http.get<IItemType[]>(CUSTOMER_URL.BASE_URL + `/ItemTypes`, {observe: 'response', params})
   .pipe(
     map((response: HttpResponse<IItemType[]>) => {
       if (response.body) {

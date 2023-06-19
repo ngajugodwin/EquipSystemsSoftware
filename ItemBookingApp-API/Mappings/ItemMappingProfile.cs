@@ -3,6 +3,7 @@ using ItemBookingApp_API.Areas.Resources.Item;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Extension;
+using ItemBookingApp_API.Resources.CustomerQueries;
 
 namespace ItemBookingApp_API.Mappings
 {
@@ -31,6 +32,14 @@ namespace ItemBookingApp_API.Mappings
                 });
 
             CreateMap<ItemQueryResource, ItemQuery>();
+
+            CreateMap<Item, ItemToReturnDto>()
+                 .ForMember(dest => dest.ItemType, opt => {
+                     opt.MapFrom(src => src.ItemType.Name);
+                 })
+                  .ForMember(dest => dest.Category, opt => {
+                      opt.MapFrom(src => src.Category.Name);
+                  });
         }
     }
 }

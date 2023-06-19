@@ -8,10 +8,12 @@
 
         public EntityStatus Status { get; set; }
         public virtual ICollection<ItemType> ItemTypes { get; set; }
+        public virtual ICollection<Item> Items { get; set; }
 
         public Category()
         {
             ItemTypes = new HashSet<ItemType>();
+            Items = new HashSet<Item>();
         }
 
     }

@@ -2,6 +2,7 @@
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Persistence.Contexts;
+using ItemBookingApp_API.Resources.CustomerQueries;
 using ItemBookingApp_API.Resources.Query;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -10,12 +11,10 @@ namespace ItemBookingApp_API.Persistence.Repositories
 {
     public class ItemRepository: BaseRepository, IItemRepository
     {
-      //  private readonly CategoryRepository _categoryRepository;
 
         public ItemRepository(ApplicationDbContext context)
             : base(context)
         {
-          //  _categoryRepository = categoryRepository;
         }
 
         public async Task<IList<Item>> GetAvailableItems(int itemTypeId)
@@ -61,6 +60,58 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return status;
         }
 
+
+        public async Task<PagedList<Item>> GetAvailableItemsForCustomerListAsync(CustomerItemQuery customerItemQuery)
+        {
+
+            var result = _context.Items.Include(c => c.Category)
+                .Include(i => i.ItemType)
+                .Where(x => x.IsActive == true).OrderBy(x => x.Name).AsQueryable().AsNoTracking();
+
+            if (customerItemQuery.CategoryId > 0)
+            {
+                result = result.Where(x => x.CategoryId == customerItemQuery.CategoryId);
+            }
+
+            if (customerItemQuery.ItemTypeId > 0)
+            {
+                result = result.Where(x => x.ItemTypeId == customerItemQuery.ItemTypeId);
+            }            
+
+            if (!string.IsNullOrWhiteSpace(customerItemQuery.Sort))
+            {
+                switch (customerItemQuery.Sort)
+                {
+                    case "priceAsc":
+                        result = result.OrderByDescending(x => x.Price).Reverse();
+                            break;
+                    case "priceDesc":
+                        result = result.OrderByDescending(x => x.Price);
+                        break;
+                    default:
+                        result = result.OrderBy(x => x.Name);
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(customerItemQuery.SearchString))
+            {
+                result = result.Where(x => x.Name.Contains(customerItemQuery.SearchString));
+            }
+
+           
+            return await PagedList<Item>.CreateAsync(result, customerItemQuery.PageNumber, customerItemQuery.PageSize);
+        }
+
+        public async Task<Item> GetItemAsync(int itemId)
+        {
+            var result =  await _context.Items.Where(x => x.Id == itemId && x.IsActive == true)
+                .Include(c => c.Category)
+                .Include(i => i.ItemType).FirstAsync();
+
+            return result;
+        }
+
         public async Task<PagedList<Item>> ListAsync(ItemQuery itemQuery, int itemTypeId)
         {
             var items = Enumerable.Empty<Item>().AsQueryable();
@@ -89,10 +140,6 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         public async Task<IEnumerable<Item>> ListAsync(int itemTypeId, int[] itemIds = null)
         {
-            // var result = await _categoryRepository.IsValid(categoryId);
-
-            //if (result)
-            //    return new List<Item>();
             
             if (itemIds == null)
                 return await _context.Items.ToListAsync();

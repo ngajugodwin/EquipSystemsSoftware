@@ -3,6 +3,7 @@ using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Domain.Services.Communication;
+using ItemBookingApp_API.Resources.CustomerQueries;
 using ItemBookingApp_API.Resources.Query;
 
 namespace ItemBookingApp_API.Services
@@ -42,6 +43,11 @@ namespace ItemBookingApp_API.Services
 
             return new CategoryResponse(categoryFromRepo);
 
+        }
+
+        public async Task<PagedList<Category>> CustomerListAsync(CustomerCategoryQuery customerCategoryQuery)
+        {
+            return await _categoryRepository.CustomerListAsync(customerCategoryQuery);
         }
 
         public async Task<PagedList<Category>> ListAsync(CategoryQuery categoryQuery)
