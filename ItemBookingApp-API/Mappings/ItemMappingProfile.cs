@@ -24,6 +24,12 @@ namespace ItemBookingApp_API.Mappings
 
             CreateMap<UpdateItemResource, Item>();
 
+            CreateMap<ChangeItemImageResource, Item>()
+                .ForMember(dest => dest.Id, opt =>
+                {
+                    opt.MapFrom(src => src.ItemId);
+                });
+
             CreateMap<ItemQueryResource, ItemQuery>();
         }
     }

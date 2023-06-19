@@ -13,6 +13,7 @@ import { ConfirmComponent } from './confirm/confirm.component';
 import { IModalDialogOptions, ModalDialogService } from 'ngx-modal-dialog';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { NgxModalService } from "ngx-modalview";
+import { DataUploadComponent } from '../../../data-upload/data-upload.component';
 
 @Component({
   selector: 'app-items',
@@ -117,6 +118,29 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
       error: ((error: ErrorResponse) => {
         console.log(error); //TODO: show error toaster
       })
+    });
+  }
+
+  onChangeItemPhoto(item: IItem) {
+    this.$disposable = this.NgxModalService.addModal(DataUploadComponent, {
+      title: 'Change Item Image',
+      message: '',
+      data: item
+    })
+    .subscribe((file: any)=>{
+        if(file) {
+            this.itemService.changeItemImage(this.currentItemType.id, item.id, file).subscribe({
+              next: (res: IItem) => {
+                if (res){
+                  this.getItems(this.itemParams.status);
+                  console.log('Item image changed successfully');
+                }
+              },
+              error: (err: ErrorResponse) => {
+                console.log(err);
+              }
+            })           
+        }
     });
   }
 

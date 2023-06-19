@@ -44,10 +44,14 @@ class="mb-0 border"
 <tbody>
 <tr class="clickable" *ngFor="let item of items; let i = index">            
 <td class="text-center">
-  <c-avatar
+  <!-- <c-avatar
     size="md"
     src="./assets/img/avatars/2.jpg"
     status="danger"
+  ></c-avatar> -->
+  <c-avatar
+    size="md"
+    [src]="item.url === null ? './assets/img/avatars/2.jpg' : item.url "
   ></c-avatar>
 </td>
 <td>
@@ -67,6 +71,7 @@ class="mb-0 border"
     </a>
     <ul cDropdownMenu>                    
       <li><a (click)="onEditItem(item)" cDropdownItem>Edit</a></li>
+      <li><a (click)="onChangeItemPhoto(item)" cDropdownItem type="file" #fileInput>Change Item Image</a></li>
       <li *ngIf="item.status.toLowerCase() === 'active'"><a (click)="onEnableDisableItem(item.id, false)" cDropdownItem>Disable</a></li>
       <li *ngIf="item.status.toLowerCase() === 'inactive'"><a (click)="onEnableDisableItem(item.id, true)" cDropdownItem>Enable</a></li>
     </ul>

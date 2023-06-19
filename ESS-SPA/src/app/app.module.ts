@@ -64,6 +64,11 @@ import {CustomModule} from './shared/modules/custom.module';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalDialogModule } from 'ngx-modal-dialog';
 import { DefaultNgxModalOptionConfig, NgxModalView, defaultNgxModalOptions } from 'ngx-modalview';
+import { FileUploadModule } from 'ng2-file-upload';
+// import { FileUploadModule } from 'ng2-file-upload/file-upload/file-upload.module';
+// import { FileUploadModule } from '../../node_modules/ng2-file-upload/file-upload/file-upload.module';
+
+import { UploaderModule } from "angular-uploader";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -110,6 +115,8 @@ const APP_CONTAINERS = [
     CardModule,
     HttpClientModule,
     CustomModule,
+    UploaderModule,
+    FileUploadModule,
     NgxModalView.forRoot({container: 'modal-container'}, {...defaultNgxModalOptions, ...{
       closeOnEscape: true,
       closeOnClickOutside: true,

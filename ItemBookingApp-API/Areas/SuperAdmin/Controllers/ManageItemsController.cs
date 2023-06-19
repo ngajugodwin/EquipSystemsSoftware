@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using ItemBookingApp_API.Areas.Resources.Item;
 using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Extension;
+using ItemBookingApp_API.Helpers;
 using ItemBookingApp_API.Services.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 {
@@ -18,16 +22,24 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
     {
         private readonly IGenericRepository _genericRepository;
         private readonly IItemRepository _itemRepository;
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private Cloudinary _cloudinary;
         public ManageItemsController(IMapper mapper, IUnitOfWork unitOfWork,
             IGenericRepository genericRepository,
-            IItemRepository itemRepository)
+            IItemRepository itemRepository,
+            IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _genericRepository = genericRepository;
             _itemRepository = itemRepository;
+            _cloudinaryConfig = cloudinaryConfig;
+
+            Account acct = new Account(_cloudinaryConfig.Value.CloudName, _cloudinaryConfig.Value.ApiKey, _cloudinaryConfig.Value.ApiSecret);
+
+            _cloudinary = new Cloudinary(acct);
         }
 
         [HttpGet("{itemId}", Name = "GetItemAsync")]
@@ -43,8 +55,91 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             return Ok(itemToReturn);
         }
 
+        private async void DeleteFileFromCloudindary(string publicId)
+        {
+            try
+            {
+                var deletionParams = new DeletionParams(publicId)
+                {
+                    ResourceType = ResourceType.Image,
+                    PublicId = publicId,
+                    Type = "upload",
+                };
+
+                var results = await _cloudinary.DestroyAsync(deletionParams);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+           
+            
+        }
+
+        [HttpPut("{itemId}/changeItemImage")]
+        public async Task<IActionResult> ChangeItemImage([FromForm] ChangeItemImageResource changeItemImageResource)
+        {
+            var item = await _genericRepository.FindAsync<Item>(x => x.Id == changeItemImageResource.ItemId);
+
+            if (item == null)
+                return BadRequest("Item not found!");
+
+
+            if (!string.IsNullOrWhiteSpace(item.PublicId))
+            {
+                DeleteFileFromCloudindary(item.PublicId);
+            }
+
+
+            var file = changeItemImageResource.File;
+
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using (var stream = file.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(file.Name, stream),
+                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
+                    };
+
+                    uploadResult = _cloudinary.Upload(uploadParams);
+                }
+            }           
+
+
+            changeItemImageResource.Url = uploadResult.Url.ToString();
+            changeItemImageResource.PublicId = uploadResult.PublicId;
+
+
+            var itemToUpdate = _mapper.Map<ChangeItemImageResource, Item>(changeItemImageResource);
+
+            item.Url = itemToUpdate.Url;
+            item.PublicId = itemToUpdate.PublicId;
+
+            try
+            {
+                _genericRepository.UpdateAsync<Item>(item);
+                await _unitOfWork.CompleteAsync();
+
+                var updatedItemToReturn = _mapper.Map<ItemResource>(item);
+
+                return Ok(updatedItemToReturn);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+        }
+
+
         [HttpPost]
-        public async Task<IActionResult> CreateItemAsync([FromBody] SaveItemResource saveItemResource)
+        public async Task<IActionResult> CreateItemAsync([FromForm] SaveItemResource saveItemResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
@@ -54,8 +149,32 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             if (result)
                 return BadRequest("An item with the same name of serial number exist");
 
-            var itemToSave = _mapper.Map<SaveItemResource, Item>(saveItemResource);
+            //var itemToSave = _mapper.Map<SaveItemResource, Item>(saveItemResource);
 
+
+            var file = saveItemResource.File;
+
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length> 0)
+            {
+                using(var stream = file.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(file.Name, stream),
+                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
+                    };
+
+                    uploadResult = _cloudinary.Upload(uploadParams);
+                }
+            }
+
+            saveItemResource.Url = uploadResult.Url.ToString();
+            saveItemResource.PublicId = uploadResult.PublicId;
+
+
+            var itemToSave = _mapper.Map<SaveItemResource, Item>(saveItemResource);
 
             try
             {
@@ -135,7 +254,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             return BadRequest("Only item marked as NOT AVAILABLE can be deleted");
         }
 
-        [HttpPut("changeItemStatus")]
+        [HttpPut("{itemId}/changeItemStatus")]
         public async Task<IActionResult> ActivateOrDisableItem(int itemId, bool itemStatus)
         {
             var item = await _genericRepository.FindAsync<Item>(i => i.Id == itemId);

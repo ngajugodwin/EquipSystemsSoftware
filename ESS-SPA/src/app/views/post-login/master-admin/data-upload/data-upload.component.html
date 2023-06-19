@@ -1,0 +1,18 @@
+<c-col class="modal-content">
+  <c-card>
+    <c-card-header ngPreserveWhitespaces>
+      <strong>{{title}} - {{data.name}}</strong>
+    </c-card-header>
+    <c-card-body>  
+      <c-col [xs]="6">
+        <label cLabel>Select File</label>
+        <input (change)="onFileChanged($event)" style="padding-bottom: 33px;" class="form-control" style="color: red;"  accept=".jpg" type="file" id="myFile" name="filename" #fileInput />
+      </c-col>         
+    </c-card-body>
+    <c-card-footer>
+      <div class="center-action-button">
+        <button (click)="save()" style="margin-right: 10px;" type="submit"  form="itemForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save  </button>
+        <button type="reset" (click)="this.close()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+      </div>    
+    </c-card-footer>
+  </c-card>

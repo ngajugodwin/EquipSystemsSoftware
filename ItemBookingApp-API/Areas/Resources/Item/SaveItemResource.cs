@@ -17,6 +17,12 @@ namespace ItemBookingApp_API.Areas.Resources.Item
         [Required]
         public string SerialNumber { get; set; }
 
+        public string? Url { get; set; }
+
+        public IFormFile File { get; set; }
+
+        public string? PublicId { get; set; }
+
 
         public SaveItemResource()
         {

@@ -125,12 +125,7 @@ export class ItemTypesComponent implements OnInit, OnDestroy {
   onSelectedItemType(itemType: IItemType) {
     
     this.itemTypesService.getItemType(this.currentCategory.id, itemType.id).subscribe((res: IItemType) => {
-      this.setItemTypeId(res)
-      // if (res.status === 'deleted'){
-      //   this.setItemTypeId(null);
-      // }else {
-      //   this.setItemTypeId(res);
-      // }
+      this.setItemTypeId(res);
     })
   }
 

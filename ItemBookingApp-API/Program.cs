@@ -3,6 +3,7 @@ using ItemBookingApp_API.Domain.Models.Identity;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Extension;
+using ItemBookingApp_API.Helpers;
 using ItemBookingApp_API.Mappings;
 using ItemBookingApp_API.Persistence.Contexts;
 using ItemBookingApp_API.Persistence.Repositories;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 
@@ -32,6 +34,7 @@ builder.Services.AddSwaggerGen();
 builder.Services
     .AddDbContext<ApplicationDbContext>(g => g.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 #region Repository and Services DI Registration
 

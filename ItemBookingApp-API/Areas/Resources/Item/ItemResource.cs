@@ -15,5 +15,9 @@
         public string ItemState { get; set; }
 
         public string SerialNumber { get; set; }
+
+        public string? Url { get; set; }
+
+        public string? PublicId { get; set; }
     }
 }

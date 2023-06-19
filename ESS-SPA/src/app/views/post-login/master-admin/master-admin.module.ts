@@ -19,6 +19,9 @@ import { ItemTypeResolver } from 'src/app/shared/resolvers/item-type.resolver';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 import {ConfirmComponent} from './manage-categories/item-types/items/confirm/confirm.component';
+import {DataUploadComponent} from './data-upload/data-upload.component';
+import { UploaderModule } from 'angular-uploader';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
 
@@ -40,6 +43,8 @@ import {ConfirmComponent} from './manage-categories/item-types/items/confirm/con
         BadgeModule,
         FormsModule,
         CardModule,
+        UploaderModule,
+        FileUploadModule,
         NgxSmartModalModule.forRoot()
     ], 
     exports:[
@@ -56,7 +61,8 @@ import {ConfirmComponent} from './manage-categories/item-types/items/confirm/con
         ItemTypeComponent,
         ItemComponent,
         ItemsComponent,
-        ConfirmComponent
+        ConfirmComponent,
+        DataUploadComponent
     ],
     providers:[
         CategoryResolver,

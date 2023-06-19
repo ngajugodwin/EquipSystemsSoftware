@@ -3,29 +3,201 @@
       <c-card-header ngPreserveWhitespaces>
         <strong>{{title}}</strong>
       </c-card-header>
-      <c-card-body>      
-        <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="itemForm" id="itemForm">
-          <c-col [xs]="12">
-            <label cLabel>Item Name</label>
-            <input type="text" cFormControl placeholder="" 
-                [ngClass]="{'is-invalid' : itemForm.get('name')?.errors && itemForm.get('name')?.touched}"
-                formControlName="name"/>
-                <div class="invalid-feedback" *ngIf="itemForm.get('name')?.hasError('required') && itemForm.get('name')?.touched">Item name is required</div>
-          </c-col>
-          <c-col [xs]="12">
-            <label cLabel>Serial Number</label>
-            <input type="text" cFormControl placeholder="" 
-                [ngClass]="{'is-invalid' : itemForm.get('serialNumber')?.errors && itemForm.get('serialNumber')?.touched}"
-                formControlName="serialNumber"/>
-                <div class="invalid-feedback" *ngIf="itemForm.get('serialNumber')?.hasError('required') && itemForm.get('serialNumber')?.touched">Serial number is required</div>
-          </c-col>
-          </form>
+      <c-card-body>    
+          <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="itemForm" id="itemForm">
+            <c-col [xs]="12">
+              <label cLabel>Item Name</label>
+              <input type="text" cFormControl placeholder="" 
+                  [ngClass]="{'is-invalid' : itemForm.get('name')?.errors && itemForm.get('name')?.touched}"
+                  formControlName="name"/>
+                  <div class="invalid-feedback" *ngIf="itemForm.get('name')?.hasError('required') && itemForm.get('name')?.touched">Item name is required</div>
+            </c-col>
+            <c-col [xs]="12">
+              <label cLabel>Serial Number</label>
+              <input type="text" cFormControl placeholder="" 
+                  [ngClass]="{'is-invalid' : itemForm.get('serialNumber')?.errors && itemForm.get('serialNumber')?.touched}"
+                  formControlName="serialNumber"/>
+                  <div class="invalid-feedback" *ngIf="itemForm.get('serialNumber')?.hasError('required') && itemForm.get('serialNumber')?.touched">Serial number is required</div>
+            </c-col>
+            <c-col [xs]="6">
+              <label cLabel>Select File</label>
+              <input  (change)="onFileChanged($event)" formControlName="file" style="color: red;"  accept=".jpg" type="file" id="myFile" name="filename">
+            </c-col>
+            <c-col [xs]="6" *ngIf="currentPhoto">
+              <c-avatar
+                size="lg"
+                [src]="currentPhoto"
+  ></c-avatar>
+            </c-col>
+            </form>
       </c-card-body>
+
+      
+      <!-- <c-card-body>
+        <c-container>
+          <c-row>
+            <c-col xs="3">
+              <h3>Add Photo</h3>
+              <div ng2FileDrop
+                  [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+                  (fileOver)="fileOverBase($event)"
+                  [uploader]="uploader">
+                  <i class="fa fa-upload fa-3x"></i>
+                  Drop photo here
+              </div>
+              Single
+              <input type="file" ng2FileSelect [uploader]="uploader" />
+            </c-col>
+            <c-col>
+              <h3>Upload queue</h3>
+              <p>Queue length: {{ uploader?.queue?.length }}</p>
+
+              <table
+              [hover]="true"
+              [responsive]="true"
+              [striped]="true"
+              cTable
+              class="mb-0 border"
+              >
+              
+              <thead cTableColor="light">
+                <tr>
+                  <th width="50%">Name</th>
+                  <th>Size</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of uploader.queue">
+                    <td><strong>{{ item?.file?.name }}</strong></td>
+                    <td *ngIf="uploader.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                   
+                </tr>
+                </tbody>            
+              </table>
+              <div>
+                <div>
+                    Queue progress:
+                    <div class="progress mb-4">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-success btn-s"
+                        (click)="test()" [disabled]="!uploader.getNotUploadedItems().length">
+                    <span class="fa fa-upload"></span> Upload
+                </button>
+                <button type="button" class="btn btn-success btn-s"
+                        (click)="save()">
+                    <span class="fa fa-upload"></span> Upload
+                </button>
+                <button type="button" class="btn btn-warning btn-s"
+                        (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+                    <span class="fa fa-ban"></span> Cancel
+                </button>
+                <button type="button" class="btn btn-danger btn-s"
+                        (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                    <span class="fa fa-trash"></span> Remove
+                </button>
+            </div>
+
+            </c-col>
+
+          </c-row>
+        
+        </c-container>
+      </c-card-body> -->
       <c-card-footer>
-        <div>
+        <div class="center-action-button">
           <button style="margin-right: 10px;" type="submit" [disabled]="!itemForm.valid || isSaving === true" form="itemForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save  </button>
           <button type="reset" (click)="closeDialog()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
         </div>    
       </c-card-footer>
     </c-card>
   </c-col>
+
+<!-- 
+  <div class="row"> 
+    <div class="col-md-3">
+        <h3>Select files</h3>
+        <div ng2FileDrop
+             [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+             (fileOver)="fileOverBase($event)"
+             [uploader]="uploader"
+             class="well my-drop-zone">
+            Base drop zone
+        </div>
+
+       
+
+        Single
+        <input type="file" ng2FileSelect [uploader]="uploader" />
+    </div>
+
+    <div class="col-md-9" style="margin-bottom: 40px">
+
+        <h3>Upload queue</h3>
+        <p>Queue length: {{ uploader?.queue?.length }}</p>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="50%">Name</th>
+                <th>Size</th>
+                <th>Progress</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of uploader.queue">
+                <td><strong>{{ item?.file?.name }}</strong></td>
+                <td *ngIf="uploader.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                <td *ngIf="uploader.options.isHTML5">
+                    <div class="progress" style="margin-bottom: 0;">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                    <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                    <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                </td>
+                <td nowrap>
+                    <button type="button" class="btn btn-success btn-xs"
+                            (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+                        <span class="glyphicon glyphicon-upload"></span> Upload
+                    </button>
+                    <button type="button" class="btn btn-warning btn-xs"
+                            (click)="item.cancel()" [disabled]="!item.isUploading">
+                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger btn-xs"
+                            (click)="item.remove()">
+                        <span class="glyphicon glyphicon-trash"></span> Remove
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div>
+            <div>
+                Queue progress:
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success btn-s"
+                    (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+                <span class="glyphicon glyphicon-upload"></span> Upload all
+            </button>
+            <button type="button" class="btn btn-warning btn-s"
+                    (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+                <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+            </button>
+            <button type="button" class="btn btn-danger btn-s"
+                    (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                <span class="glyphicon glyphicon-trash"></span> Remove all
+            </button>
+        </div>
+
+    </div> -->
