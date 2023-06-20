@@ -27,6 +27,8 @@ namespace ItemBookingApp_API.Domain.Models.Identity
 
         public virtual ICollection<Organisation> ApprovedByUser { get; set; }
 
+        public CustomerBasket CustomerBasket { get; set; }
+
         public AppUser()
         {
             CreatedAt = DateTime.Now;

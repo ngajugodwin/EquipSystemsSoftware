@@ -18,6 +18,10 @@ namespace ItemBookingApp_API.Persistence.Contexts
 
         public DbSet<ItemType> ItemTypes { get; set; }
 
+        public DbSet<CustomerBasket> CustomerBaskets { get; set; }
+
+        public DbSet<BasketItem> BasketItems { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -37,6 +41,9 @@ namespace ItemBookingApp_API.Persistence.Contexts
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());           
             modelBuilder.ApplyConfiguration(new TokenConfiguration());
             modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerBasketConfiguration());
+            modelBuilder.ApplyConfiguration(new BasketItemConfiguration());
+            
         }
 
     }

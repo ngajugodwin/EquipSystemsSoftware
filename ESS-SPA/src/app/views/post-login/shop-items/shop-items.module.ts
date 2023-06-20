@@ -8,6 +8,7 @@ import { ChartjsModule } from '@coreui/angular-chartjs';
 import { IconModule } from '@coreui/icons-angular';
 import {ProductItemComponent} from './product-item/product-item.component';
 import { CustomModule } from 'src/app/shared/modules/custom.module';
+import {ProductDetailsComponent} from './product-details/product-details.component';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import { CustomModule } from 'src/app/shared/modules/custom.module';
     ],
     declarations: [
         ShopItemsComponent,
-        ProductItemComponent
+        ProductItemComponent,
+        ProductDetailsComponent
     ],
     entryComponents: [
     ],

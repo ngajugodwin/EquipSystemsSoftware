@@ -1,0 +1,222 @@
+﻿using ItemBookingApp_API.Domain.Models;
+using ItemBookingApp_API.Domain.Repositories;
+using ItemBookingApp_API.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+
+namespace ItemBookingApp_API.Persistence.Repositories
+{
+    public class BasketRepository : BaseRepository, IBasketRepository
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IItemRepository _itemRepository;
+        public BasketRepository(ApplicationDbContext context, IUnitOfWork unitOfWork, IItemRepository itemRepository)
+           : base(context)
+        {
+            _unitOfWork = unitOfWork;
+            _itemRepository = itemRepository;
+        }
+
+        public async Task<bool> DeleteBasketAsync(long userId, int basketId)
+        {
+            var result = await GetBasketAsync(userId, basketId);
+
+            if (result != null)
+            {
+
+                foreach (var item in result.Items)
+                {
+                    _context.BasketItems.Remove(item);
+                }
+
+                _context.CustomerBaskets.Remove(result);
+                await _unitOfWork.CompleteAsync();
+
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public async Task<CustomerBasket> DeleteOneItem(long userId, int basketId, int itemId)
+        {
+            var customerBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+
+            if (customerBasket != null)
+            {
+                customerBasket.Items.Remove(new BasketItem
+                {
+                    ItemId = itemId,
+                });
+
+                await _unitOfWork.CompleteAsync();
+            }
+
+            return new CustomerBasket();
+        }
+
+        public async Task<CustomerBasket> AddOneItemToExistingBasket(long userId, int basketId, BasketItem basketItem)
+        {
+            var customerBasket = await _context.CustomerBaskets.Include(c => c.Items).Where(x => x.UserId == userId).FirstAsync();
+
+            if (customerBasket != null)
+            {
+                var similarItem = customerBasket.Items.FirstOrDefault(x => x.ItemId == basketItem.ItemId);
+
+                if (similarItem != null)
+                {
+                    similarItem.Quantity = basketItem.Quantity;
+                } 
+                else
+                {
+                    customerBasket.Items.Add(new BasketItem
+                    {
+                        ItemId = basketItem.ItemId,
+                        CustomerBasketId = basketItem.CustomerBasketId,
+                        Quantity = basketItem.Quantity
+                    });
+
+                }                
+              
+
+                await _unitOfWork.CompleteAsync();
+
+                return customerBasket;
+            }
+
+            return new CustomerBasket();
+        }
+
+        public async Task<CustomerBasket> GetBasketAsync(long userId, int basketId)
+        {
+            //var data = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+
+            //if (data != null)
+            //    return data;
+
+            //return null;
+
+            var data = await _context.CustomerBaskets
+                .Include(x => x.Items).ThenInclude(x => x.Item)
+                .Where(x => x.Id == basketId && x.UserId == userId).AsNoTracking().FirstAsync();
+
+            return (data != null) ? data : new CustomerBasket();
+
+        }
+
+        public async Task<CustomerBasket> AddBasketAsync(CustomerBasket basket)
+        {
+            var existingBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.UserId == basket.UserId);
+
+            if (existingBasket != null)
+            {
+                var result = await AddOneItemToExistingBasket(basket.UserId, basket.Id, basket.Items.First());
+
+                return result;
+            }
+
+            await _context.CustomerBaskets.AddAsync(basket);
+
+            await _unitOfWork.CompleteAsync();
+
+            return basket;
+        }
+
+        public async Task<bool> IncreaseItemQuantity(long userId, int basketId, int itemId, int quantity)
+        {
+            var customerBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+
+            var itemFromRepo = await _itemRepository.GetItemAsync(itemId);
+
+
+            if (customerBasket != null)
+            {
+                var item = customerBasket.Items.FirstOrDefault(x => x.ItemId == itemId);
+
+               
+
+                if (item != null)
+                {
+                    if (item.Quantity == itemFromRepo.AvailableQuantity)
+                    {
+                        // reached limit. do not increase item quantity
+                        return false;
+                    }
+
+                   item.Quantity++;                  
+
+                    await _unitOfWork.CompleteAsync();
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DecreaseItemQuantity(long userId, int basketId, int itemId, int quantity)
+        {
+            var customerBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+
+            if (customerBasket != null)
+            {
+                var item = customerBasket.Items.FirstOrDefault(x => x.ItemId == itemId);
+
+                if (item != null)
+                {
+                    if (item.Quantity <= 0)
+                    {
+                        customerBasket.Items.Remove(new BasketItem
+                        {
+                            ItemId = itemId,
+                            CustomerBasketId = basketId,
+                            Quantity = quantity,
+                        });
+                    } 
+                    else
+                    {
+                        item.Quantity--;
+
+                    }
+
+                    await _unitOfWork.CompleteAsync();
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basketToUpdate)
+        {
+            var existingBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(b => b.Id == basketToUpdate.Id);
+
+
+            if (existingBasket != null)
+            {
+                if (existingBasket.Items.Count() > 0)
+                {
+                    foreach (var newItem in basketToUpdate.Items)
+                    {
+                        foreach (var oldItem in existingBasket.Items)
+                        {
+                            if (newItem.ItemId == oldItem.ItemId && newItem.Quantity != oldItem.Quantity)
+                            {
+                                oldItem.Quantity = newItem.Quantity;
+                            }
+                            existingBasket.Items.Add(oldItem);
+                        }
+                    }
+                }
+                _context.CustomerBaskets.Update(existingBasket);
+
+                await _unitOfWork.CompleteAsync();
+
+                return existingBasket;
+            }
+
+            return new CustomerBasket();
+        }
+    }
+}

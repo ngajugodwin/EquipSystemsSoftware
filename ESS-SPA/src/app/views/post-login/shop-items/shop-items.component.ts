@@ -56,6 +56,7 @@ export class ShopItemsComponent implements OnInit {
       .subscribe({
       next: (res) => {
         if (res) {
+          console.log(res);
           this.items = res.result;
           this.totalCount = res.pagination.totalItems;
           this.itemPagination = res.pagination;

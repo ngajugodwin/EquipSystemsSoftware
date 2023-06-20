@@ -25,6 +25,15 @@ namespace ItemBookingApp_API.Domain.Models
         public string? PublicId { get; set; }
 
         public decimal Price { get; set; }
+
+        public int AvailableQuantity { get; set; }
+
+        public virtual ICollection<BasketItem> BasketItems { get; set; }
+
+        public Item()
+        {
+            BasketItems = new HashSet<BasketItem>();
+        }
     }
 
     public enum ItemState 

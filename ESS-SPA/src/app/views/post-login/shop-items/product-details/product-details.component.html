@@ -1,0 +1,32 @@
+<div class="row" *ngIf="item">
+<div class="col-6">
+  <img src="{{item.url}}" alt="{{item.name}}" class="img-fluid w-100">
+</div>
+<div class="col-6">
+  <h3>{{item.name}}</h3>
+  <p>{{item.price | currency}}</p>
+  <!-- <div class="d-flex justify-content-start align-items-center">
+    <button class="btn btn-info">Increase</button>
+    <i class="fa fa-minus-circle text-warning mr-2" style="cursor: pointer; font-size: 2em;" ></i>
+    <span class="font-weight-bold" style="font-size: 1.5em;">2</span>
+    <button class="btn btn-info">Reduce</button>
+    <i class="fa fa-plus-circle text-warning mx-2" style="cursor: pointer; font-size: 2em;"></i>
+    <button class="btn btn-outline-secondary btn-lg ml-4">Add to Cart</button>
+  </div> -->
+  <div>
+    <p>QTY: <strong>2</strong></p>
+    <button class="btn btn-info" style="margin-right: 10px;"><strong>Increase</strong></button>
+    <button class="btn btn-info"><strong>Reduce</strong></button>
+    <div style="margin: 10px;">
+      <button class="btn btn-outline-secondary btn-lg ml-4">Add to Cart</button>
+    </div>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-12 ml-3">
+    <h4>Description</h4>
+    <p>{{item.description}}</p>
+  </div>
+</div>
+</div>
+

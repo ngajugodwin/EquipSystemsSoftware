@@ -99,8 +99,8 @@ export class ItemService {
     );
   }
 
-  getItemForCustomer(itemTypeId: number, itemId: number) {
-    return this.http.get<IItem>(CUSTOMER_URL.BASE_URL + `/${itemTypeId}/Items/${itemId}`);
+  getItemForCustomer(itemId: number) {
+    return this.http.get<IItem>(CUSTOMER_URL.BASE_URL + `/Items/${itemId}`);
   }
 
   getItemsForCustomer(itemParams: ItemParams, page?: number, itemsPerPage?: number) {

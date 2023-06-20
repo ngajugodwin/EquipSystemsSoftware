@@ -4,6 +4,7 @@ using ItemBookingApp_API.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ItemBookingApp_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ItemBookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230620081746_AddCustomerBasket")]
+    partial class AddCustomerBasket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("CustomerBasketId");
 
-                    b.ToTable("BasketItems");
+                    b.ToTable("BasketItem");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Category", b =>
@@ -235,9 +238,6 @@ namespace ItemBookingApp_API.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AvailableQuantity")
-                        .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -483,7 +483,7 @@ namespace ItemBookingApp_API.Migrations
                     b.HasOne("ItemBookingApp_API.Domain.Models.CustomerBasket", "CustomerBasket")
                         .WithMany("Items")
                         .HasForeignKey("CustomerBasketId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ItemBookingApp_API.Domain.Models.Item", "Item")

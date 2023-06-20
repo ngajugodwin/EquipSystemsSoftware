@@ -19,5 +19,7 @@ namespace ItemBookingApp_API.Resources.CustomerQueries
 
         public string? Url { get; set; }
         public string? PublicId { get; set; }
+
+        public string Price { get; set; }
     }
 }

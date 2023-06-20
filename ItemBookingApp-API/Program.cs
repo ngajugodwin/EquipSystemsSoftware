@@ -45,6 +45,7 @@ builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrganisationRepository, OrganisationRepository>();
 builder.Services.AddScoped<IItemTypeRepository, ItemTypeRepository>();
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -65,6 +66,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile(new OrganisationMappingProfile());
     cfg.AddProfile(new RoleMappingProfile());
     cfg.AddProfile(new ItemTypeMappingProfile());
+    cfg.AddProfile(new BasketMappingProfile());
 });
 
 IMapper mapper = config.CreateMapper();

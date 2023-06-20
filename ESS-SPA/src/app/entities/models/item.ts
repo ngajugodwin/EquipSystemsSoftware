@@ -8,5 +8,6 @@ export interface IItem {
     serialNumber: string,
     price: string,
     url: string,
-    file?: FormData
+    file?: FormData,
+    description: string
 }

@@ -1,11 +1,14 @@
 ﻿using ItemBookingApp_API.Areas.Resources.Organisation;
 using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Domain.Models.Identity;
+using ItemBookingApp_API.Persistence.Contexts;
+using ItemBookingApp_API.Persistence.Repositories;
 
 namespace ItemBookingApp_API.Extension
 {
     public static class EntityExtension
     {
+
         public static OrganisationResource GetOrganisation(this Organisation organisation)
         {
             if (organisation != null)
@@ -43,6 +46,15 @@ namespace ItemBookingApp_API.Extension
             }
 
             return result;
+        }
+
+        public static string GetItemName(this Item item)
+        {
+            if (item != null)
+                return item.Name;
+
+            return string.Empty;
+
         }
     }
 }
