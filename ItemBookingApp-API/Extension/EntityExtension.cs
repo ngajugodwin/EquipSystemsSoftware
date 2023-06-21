@@ -56,5 +56,33 @@ namespace ItemBookingApp_API.Extension
             return string.Empty;
 
         }
+
+        public static decimal GetItemPrice(this Item item)
+        {
+            if (item != null)
+                return item.Price;
+
+            return 0;
+
+        }
+
+        public static string GetItemPicture(this Item item)
+        {
+            if (item != null)
+                return item.Url ?? string.Empty;
+
+            return String.Empty;
+
+        }
+
+        public static string GetItemType(this Item item)
+        {
+            if (item != null)
+                return item.ItemType.Name;
+
+            return String.Empty;
+
+        }
+
     }
 }

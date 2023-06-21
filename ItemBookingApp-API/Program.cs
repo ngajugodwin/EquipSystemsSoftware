@@ -92,7 +92,7 @@ builder.Services.AddControllers(options =>
         .Build();
 
     options.Filters.Add(new AuthorizeFilter(policy));
-});
+}).AddNewtonsoftJson();
 
 
 builder.Services.AddCors(opt =>

@@ -8,7 +8,11 @@ namespace ItemBookingApp_API.Resources.Basket
         public int ItemId { get; set; }
         public int CustomerBasketId { get; set; }
 
-        public string Item { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public string Type { get; set; } = string.Empty;
+        public string Picture { get; set; } = string.Empty;
+
 
     }
 

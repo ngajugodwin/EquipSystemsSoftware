@@ -8,27 +8,7 @@ const routes: Routes = [
     {path: '', component: ShopItemsComponent, data: {title: 'Shop Items'}},
     {path: ':id', component: ProductDetailsComponent, data: {title: 'Item Details'}},
     { path: '**', redirectTo: '/404' }
-    // {
-    //   path: '',
-    //   data: {
-    //     title: 'Shop Items'
-    //   },
-      
-    //   children: [
-    //     {
-    //       path: '',
-    //       redirectTo: 'shop-items'
-    //     },
-    //     {
-    //       path: 'shop-items',
-    //       component: ShopItemsComponent,
-    //       data: {
-    //         title: 'Shop Items'
-    //       }
-    //     },
-    //     { path: '**', redirectTo: '/404' }
-    //   ]
-    // }
+    
   ];
   
   @NgModule({

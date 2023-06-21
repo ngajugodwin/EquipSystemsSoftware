@@ -38,26 +38,33 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         }
 
-        public async Task<CustomerBasket> DeleteOneItem(long userId, int basketId, int itemId)
+        public async Task<CustomerBasket> DeleteOneItemFromBasket(long userId, int basketId, int itemId)
         {
-            var customerBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+            var customerBasket = await GetBasketAsync(userId, basketId);
 
             if (customerBasket != null)
             {
-                customerBasket.Items.Remove(new BasketItem
-                {
-                    ItemId = itemId,
-                });
+                var basketItemForRemoval = customerBasket.Items.FirstOrDefault(x => x.ItemId == itemId);
 
-                await _unitOfWork.CompleteAsync();
+                if (basketItemForRemoval != null)
+                {
+                    customerBasket.Items.Remove(basketItemForRemoval);
+                    await _unitOfWork.CompleteAsync();
+                }
+                    
+                return customerBasket;
             }
 
             return new CustomerBasket();
         }
 
+
+
         public async Task<CustomerBasket> AddOneItemToExistingBasket(long userId, int basketId, BasketItem basketItem)
         {
-            var customerBasket = await _context.CustomerBaskets.Include(c => c.Items).Where(x => x.UserId == userId).FirstAsync();
+
+            // return new CustomerBasket();
+            var customerBasket = await GetBasketAsync(userId, basketId);
 
             if (customerBasket != null)
             {
@@ -66,7 +73,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
                 if (similarItem != null)
                 {
                     similarItem.Quantity = basketItem.Quantity;
-                } 
+                }
                 else
                 {
                     customerBasket.Items.Add(new BasketItem
@@ -76,8 +83,8 @@ namespace ItemBookingApp_API.Persistence.Repositories
                         Quantity = basketItem.Quantity
                     });
 
-                }                
-              
+                }
+
 
                 await _unitOfWork.CompleteAsync();
 
@@ -98,7 +105,8 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
             var data = await _context.CustomerBaskets
                 .Include(x => x.Items).ThenInclude(x => x.Item)
-                .Where(x => x.Id == basketId && x.UserId == userId).AsNoTracking().FirstAsync();
+                .ThenInclude(x => x.ItemType)
+                .Where(x => x.Id == basketId && x.UserId == userId).FirstAsync();
 
             return (data != null) ? data : new CustomerBasket();
 
@@ -108,9 +116,11 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
             var existingBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.UserId == basket.UserId);
 
+           
             if (existingBasket != null)
-            {
-                var result = await AddOneItemToExistingBasket(basket.UserId, basket.Id, basket.Items.First());
+            {              
+
+                var result = await AddOneItemToExistingBasket(basket.UserId, existingBasket.Id, basket.Items.First());
 
                 return result;
             }
@@ -122,9 +132,9 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return basket;
         }
 
-        public async Task<bool> IncreaseItemQuantity(long userId, int basketId, int itemId, int quantity)
+        public async Task<CustomerBasket> IncreaseItemQuantity(long userId, int basketId, int itemId)
         {
-            var customerBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+            var customerBasket = await GetBasketAsync(userId, basketId);
 
             var itemFromRepo = await _itemRepository.GetItemAsync(itemId);
 
@@ -132,7 +142,6 @@ namespace ItemBookingApp_API.Persistence.Repositories
             if (customerBasket != null)
             {
                 var item = customerBasket.Items.FirstOrDefault(x => x.ItemId == itemId);
-
                
 
                 if (item != null)
@@ -140,7 +149,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
                     if (item.Quantity == itemFromRepo.AvailableQuantity)
                     {
                         // reached limit. do not increase item quantity
-                        return false;
+                        return customerBasket;
                     }
 
                    item.Quantity++;                  
@@ -148,15 +157,15 @@ namespace ItemBookingApp_API.Persistence.Repositories
                     await _unitOfWork.CompleteAsync();
                 }
 
-                return false;
+                return customerBasket;
             }
 
-            return true;
+            return new CustomerBasket();
         }
 
-        public async Task<bool> DecreaseItemQuantity(long userId, int basketId, int itemId, int quantity)
+        public async Task<CustomerBasket> DecreaseItemQuantity(long userId, int basketId, int itemId)
         {
-            var customerBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+            var customerBasket = await GetBasketAsync(userId, basketId);
 
             if (customerBasket != null)
             {
@@ -170,7 +179,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
                         {
                             ItemId = itemId,
                             CustomerBasketId = basketId,
-                            Quantity = quantity,
+                            Quantity = 1,
                         });
                     } 
                     else
@@ -182,10 +191,10 @@ namespace ItemBookingApp_API.Persistence.Repositories
                     await _unitOfWork.CompleteAsync();
                 }
 
-                return false;
+                return customerBasket;
             }
 
-            return true;
+            return new CustomerBasket();
         }
 
         public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basketToUpdate)

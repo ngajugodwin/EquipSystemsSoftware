@@ -48,6 +48,25 @@ namespace ItemBookingApp_API.Controllers
             return Ok(backetToReturn);
         }
 
+        [HttpPut("{basketId}")]
+        public async Task<IActionResult> IncreaseOrDecreaseItemQuantityAsync(long userId, int basketId, IncreaseDecreaseResource data)
+        {
+            var result = new CustomerBasket();
+
+            if (data.Status)
+            {
+               result = await _basketRepository.IncreaseItemQuantity(userId, basketId, data.ItemId);
+            } 
+            else
+            {
+                result = await _basketRepository.DecreaseItemQuantity(userId, basketId, data.ItemId);
+            }
+
+            var backetToReturn = _mapper.Map<CustomerBasket, CustomerBasketResource>(result);
+
+            return Ok(backetToReturn);
+        }
+
         //[HttpPut("{basketId}")]
         //public async Task<IActionResult> UpdateBasketAsync(long userId, int basketId, UpdateCustomerBasketResource updateCustomerBasketResource)
         //{
@@ -59,6 +78,16 @@ namespace ItemBookingApp_API.Controllers
 
         //    return Ok(basketToReturn ?? new CustomerBasketResource(basketId, userId));
         //}
+
+        [HttpPut("{basketId}/removeOneItemFromBasket/{itemId}")]
+        public async Task<IActionResult> RemoveOneItemFromBasketAsync(long userId, int basketId, int itemId)
+        {
+            var result = await _basketRepository.DeleteOneItemFromBasket(userId, basketId, itemId);
+
+            var backetToReturn = _mapper.Map<CustomerBasket, CustomerBasketResource>(result);
+
+            return Ok(backetToReturn);
+        }
 
 
         [HttpDelete("{basketId}")]

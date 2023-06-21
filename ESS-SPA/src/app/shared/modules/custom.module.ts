@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {PagerPaginationComponent} from '../../../app/views/post-login/pager-pagination/pager-pagination.component';
 import {PagingHeaderComponent} from '../../views/post-login/paging-header/paging-header.component';
+import {OrderTotalsComponent} from '../components/order-totals/order-totals.component';
 
 @NgModule({
     imports: [
@@ -23,12 +24,14 @@ import {PagingHeaderComponent} from '../../views/post-login/paging-header/paging
         StatusFilterComponent,
         PaginationModule,
         PagerPaginationComponent,
-        PagingHeaderComponent
+        PagingHeaderComponent,
+        OrderTotalsComponent
     ],
     declarations: [
         StatusFilterComponent,
         PagerPaginationComponent,
-        PagingHeaderComponent
+        PagingHeaderComponent,
+        OrderTotalsComponent
     ],
     providers: [
         // BsModalRef,

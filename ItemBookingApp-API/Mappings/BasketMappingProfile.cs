@@ -15,14 +15,30 @@ namespace ItemBookingApp_API.Mappings
 
             CreateMap<BasketItemResource, BasketItem>();
 
+            CreateMap<IBasketItem, BasketItem>();
+
             CreateMap<BasketItem, BasketItemResource>()
-                 .ForMember(dest => dest.Item, opt => {
+                 .ForMember(dest => dest.Name, opt =>
+                 {
                      opt.MapFrom(src => src.Item.GetItemName());
-                 });
+                 })
+                .ForMember(dest => dest.Price, opt =>
+                {
+                    opt.MapFrom(src => src.Item.GetItemPrice());
+                })
+                .ForMember(dest => dest.Type, opt =>
+                {
+                    opt.MapFrom(src => src.Item.GetItemType());
+                })
+                .ForMember(dest => dest.Picture, opt =>
+                {
+                    opt.MapFrom(src => src.Item.GetItemPicture());
+                });
 
             CreateMap<CustomerBasketResource, CustomerBasket>();
 
             CreateMap<SaveCustomerBasketResource, CustomerBasket>();
+
 
             CreateMap<UpdateCustomerBasketResource, CustomerBasket>();
         }

@@ -14,11 +14,11 @@
     <button class="btn btn-outline-secondary btn-lg ml-4">Add to Cart</button>
   </div> -->
   <div>
-    <p>QTY: <strong>2</strong></p>
-    <button class="btn btn-info" style="margin-right: 10px;"><strong>Increase</strong></button>
-    <button class="btn btn-info"><strong>Reduce</strong></button>
+    <p>QTY: <strong>{{quantity}}</strong></p>
+    <button (click)="increaseOrDecreaseQuantity(true)" class="btn btn-info" style="margin-right: 10px;"><strong>Increase</strong></button>
+    <button (click)="increaseOrDecreaseQuantity(false)" class="btn btn-info"><strong>Reduce</strong></button>
     <div style="margin: 10px;">
-      <button class="btn btn-outline-secondary btn-lg ml-4">Add to Cart</button>
+      <button (click)="addItemToBasket()" class="btn btn-outline-primary btn-lg ml-4">Add to Cart</button>
     </div>
   </div>
 </div>
