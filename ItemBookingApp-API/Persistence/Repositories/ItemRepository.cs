@@ -148,7 +148,13 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return await _context.Items.Where(x => itemIds.Contains(x.Id)).ToListAsync();
         }
 
-        
+        public async Task<IEnumerable<Item>> GetItemsAsync(int[] itemIds)
+        {
+
+            return await _context.Items.Where(x => itemIds.Contains(x.Id)).ToListAsync();
+        }
+
+
         public bool SetItemState(IEnumerable<Item> itemsToChangeStatus, ItemState itemState)
         {
             if (itemsToChangeStatus.Count() > 0)

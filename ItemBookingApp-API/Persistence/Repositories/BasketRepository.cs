@@ -38,6 +38,25 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         }
 
+        public async Task DeleteBasket(int basketId)
+        {
+            var result = await GetBasketAsync(basketId);
+
+            if (result != null)
+            {
+
+                foreach (var item in result.Items)
+                {
+                    _context.BasketItems.Remove(item);
+                }
+
+                _context.CustomerBaskets.Remove(result);
+
+                await _unitOfWork.CompleteAsync();
+            }
+
+        }
+
         public async Task<CustomerBasket> DeleteOneItemFromBasket(long userId, int basketId, int itemId)
         {
             var customerBasket = await GetBasketAsync(userId, basketId);
@@ -96,17 +115,26 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         public async Task<CustomerBasket> GetBasketAsync(long userId, int basketId)
         {
-            //var data = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.Id == basketId && x.UserId == userId);
+            //var data = await _context.CustomerBaskets
+            //    .Include(x => x.Items).ThenInclude(x => x.Item)
+            //    .ThenInclude(x => x.ItemType)
+            //    .Where(x => x.Id == basketId && x.UserId == userId).FirstAsync();
 
-            //if (data != null)
-            //    return data;
+            var data = await _context.CustomerBaskets
+               .Include(x => x.Items).ThenInclude(x => x.Item)
+               .ThenInclude(x => x.ItemType)
+               .Where(x => x.Id == basketId && x.UserId == userId).FirstAsync();
 
-            //return null;
+            return (data != null) ? data : new CustomerBasket();
 
+        }
+
+        public async Task<CustomerBasket> GetBasketAsync(int basketId)
+        {
             var data = await _context.CustomerBaskets
                 .Include(x => x.Items).ThenInclude(x => x.Item)
                 .ThenInclude(x => x.ItemType)
-                .Where(x => x.Id == basketId && x.UserId == userId).FirstAsync();
+                .Where(x => x.Id == basketId).FirstAsync();
 
             return (data != null) ? data : new CustomerBasket();
 

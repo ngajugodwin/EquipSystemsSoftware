@@ -1,4 +1,6 @@
 ﻿using ItemBookingApp_API.Domain.Models.Identity;
+using ItemBookingApp_API.Domain.Models.OrderAggregate;
+using ItemBookingApp_API.Persistence.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 
@@ -8,15 +10,31 @@ namespace ItemBookingApp_API.Persistence.Seeders
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<Role> _roleManager;
+        private readonly ApplicationDbContext _contex;
 
-        public Seed(UserManager<AppUser> userManager, RoleManager<Role> roleManager)
+        public Seed(UserManager<AppUser> userManager, RoleManager<Role> roleManager, ApplicationDbContext contex)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _contex = contex;
         }
 
         public void SeedUsers()
         {
+            if(!_contex.DeliveryMethods.Any())
+            {
+                var deliveryData = File.ReadAllText("Persistence/Seeders/Data/DeliverySeedData.json");
+
+                var deliveryMethods = JsonConvert.DeserializeObject<List<DeliveryMethod>>(deliveryData);
+
+                foreach (var item in deliveryMethods)
+                {
+                    _contex.DeliveryMethods.Add(item);
+                }
+
+                _contex.SaveChangesAsync();
+            }
+
             if (!_userManager.Users.Any())
             {
                 var path = "Persistence/Seeders/Data/UserSeedData.json";

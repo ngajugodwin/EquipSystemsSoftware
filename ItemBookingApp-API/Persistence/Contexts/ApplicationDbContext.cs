@@ -1,5 +1,6 @@
 ﻿using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Domain.Models.Identity;
+using ItemBookingApp_API.Domain.Models.OrderAggregate;
 using ItemBookingApp_API.EntityConfiguration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -23,6 +24,11 @@ namespace ItemBookingApp_API.Persistence.Contexts
         public DbSet<BasketItem> BasketItems { get; set; }
 
 
+
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -43,7 +49,13 @@ namespace ItemBookingApp_API.Persistence.Contexts
             modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerBasketConfiguration());
             modelBuilder.ApplyConfiguration(new BasketItemConfiguration());
-            
+
+
+            modelBuilder.ApplyConfiguration(new DeliveryMethodConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
+
+
         }
 
     }

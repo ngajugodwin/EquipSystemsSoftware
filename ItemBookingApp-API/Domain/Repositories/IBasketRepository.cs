@@ -11,11 +11,15 @@ namespace ItemBookingApp_API.Domain.Repositories
 
         Task<bool> DeleteBasketAsync(long userId, int basketId);
 
+        Task DeleteBasket(int basketId);
+
         Task<CustomerBasket> AddOneItemToExistingBasket(long userId, int basketId, BasketItem basketItem);
 
         Task<CustomerBasket> DeleteOneItemFromBasket(long userId, int basketId, int itemId);
         Task<CustomerBasket> IncreaseItemQuantity(long userId, int basketId, int itemId);
         Task<CustomerBasket> DecreaseItemQuantity(long userId, int basketId, int itemId);
+
+        Task<CustomerBasket> GetBasketAsync(int basketId);
 
     }
 }

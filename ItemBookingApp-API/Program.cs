@@ -46,12 +46,17 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrganisationRepository, OrganisationRepository>();
 builder.Services.AddScoped<IItemTypeRepository, ItemTypeRepository>();
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOrganisationService, OrganisationService>();
 builder.Services.AddScoped<IManageAdminOrganisationService, ManageAdminOrganisationService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+
 //Services
 #endregion
 
@@ -67,6 +72,7 @@ var config = new MapperConfiguration(cfg =>
     cfg.AddProfile(new RoleMappingProfile());
     cfg.AddProfile(new ItemTypeMappingProfile());
     cfg.AddProfile(new BasketMappingProfile());
+    cfg.AddProfile(new OrderMappingProfile());
 });
 
 IMapper mapper = config.CreateMapper();
@@ -138,10 +144,11 @@ var services = scope.ServiceProvider;
 var userManager = services.GetRequiredService<UserManager<AppUser>>();
 var roleManager = services.GetRequiredService<RoleManager<Role>>();
 var logger = services.GetRequiredService<ILogger<Program>>();
+var dBcontext = services.GetRequiredService<ApplicationDbContext>();
 
 try
 {
-    var seed = new Seed(userManager, roleManager);
+    var seed = new Seed(userManager, roleManager, dBcontext);
     seed.SeedUsers();
 }
 catch (Exception ex)

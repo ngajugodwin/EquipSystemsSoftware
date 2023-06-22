@@ -3,6 +3,7 @@ using ItemBookingApp_API.Areas.Resources.AppUser;
 using ItemBookingApp_API.Domain.Models.Identity;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Extension;
+using ItemBookingApp_API.Resources.Order;
 
 namespace ItemBookingApp_API.Mappings
 {
@@ -34,6 +35,7 @@ namespace ItemBookingApp_API.Mappings
             CreateMap<UpdateUserResource, AppUser>();
 
             CreateMap<UserQueryResource, UserQuery>();
+
         }
     }
 }

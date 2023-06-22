@@ -15,7 +15,7 @@ namespace ItemBookingApp_API.EntityConfiguration
                 .HasMaxLength(50);
 
             builder.Property(i => i.Price)
-                .HasPrecision(18, 4)
+                .HasPrecision(18, 2)
                .IsRequired();
 
             builder.Property(i => i.ItemState)

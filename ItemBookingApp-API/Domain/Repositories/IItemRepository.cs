@@ -21,5 +21,7 @@ namespace ItemBookingApp_API.Domain.Repositories
         Task<bool> ItemIsInUse(int itemId);
 
         Task<bool> IsExist(string itemName, string serialNumber);
+
+        Task<IEnumerable<Item>> GetItemsAsync(int[] itemIds);
     }
 }

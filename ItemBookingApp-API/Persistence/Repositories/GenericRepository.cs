@@ -40,6 +40,11 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return await query.Where<T>(predicate).ToListAsync();
         }
 
+        public async Task<ICollection<T>> ListAsync<T>() where T : class
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+
         public void Remove<T>(T entity) where T : class
         {
             _context.Set<T>().Remove(entity);
