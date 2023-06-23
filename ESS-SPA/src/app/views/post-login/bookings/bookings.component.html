@@ -1,0 +1,69 @@
+
+<c-row>
+  <c-col xs>   
+    <c-card class="mb-4">
+        <c-card-header>
+          <c-container>
+            <c-row  class="align-items-start">
+              <c-col class="table-title" xs="6">My Bookings</c-col>
+            </c-row>            
+          </c-container>
+        </c-card-header>
+        <c-card-body>
+          <c-container>
+            <c-row>
+              <c-col [xs]="7">
+               
+              </c-col>
+              <c-col [xs]="5">
+                <c-row>
+                  <c-col>
+                    <label><span style="font-weight: bold; margin-left: 15px;">Filter By: </span></label>
+                  </c-col>
+                  <c-col>
+                    <div class="selectWrapper">
+                      <!-- <select class="selectBox" (change)="onStatusChange($event)" [value]="filterStatus[0].id">
+                        <option [value]="filter.id" *ngFor="let filter of filterStatus">{{filter.name}}</option>
+                    </select> -->
+                    </div>
+                  </c-col>
+                </c-row>
+              
+              </c-col>
+            </c-row> 
+          </c-container>
+        </c-card-body>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th>Order</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders; let i = index">    
+              <td># EQUP-SYS-00000{{order.id}}</td>
+              <td>{{order.orderDate | date: 'medium'}}</td>
+              <td>{{order.total | currency}}</td>
+              <td>{{order.status}}</td>
+              <td>
+                <button class="btn btn-info" routerLink="/my-bookings/{{order.id}}">View Details</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>       
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+

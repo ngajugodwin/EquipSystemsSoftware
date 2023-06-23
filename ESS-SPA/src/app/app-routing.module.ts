@@ -56,6 +56,10 @@ const routes: Routes = [
           import('./views/pre-login/account.module').then((m) => m.AccountModule)
       },
       {
+        path: 'my-bookings',
+        loadChildren: () => import('./views/post-login/bookings/bookings.module').then(m => m.BookingsModule)
+      },
+      {
         path: 'shop-items',
         loadChildren: () => import('./views/post-login/shop-items/shop-items.module').then(m => m.ShopItemsModule)
       },

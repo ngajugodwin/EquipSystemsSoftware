@@ -15,7 +15,7 @@ export interface IOrder {
     deliveryMethod: string;
     shippingPrice: number;
     orderItems: IOrderItem[];
-    subtotal: number;
+    subTotal: number;
     total: number;
     status: string;
 }
