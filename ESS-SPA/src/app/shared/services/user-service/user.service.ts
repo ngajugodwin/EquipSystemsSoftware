@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { AUTH_URL, USER_URL } from 'src/app/constants/api.constant';
+import { AUTH_URL, CUSTOMER_URL, USER_URL } from 'src/app/constants/api.constant';
 import { PaginationResult } from 'src/app/entities/models/pagination';
 import { IUser } from 'src/app/entities/models/user';
 import { map } from 'rxjs';
 import { UserParams } from 'src/app/entities/models/basequeryParams';
+import { IAddress } from 'src/app/entities/models/address';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,7 @@ createUserAccount(userForCreation: IUser) {
   return this.http.post<IUser>(AUTH_URL.REGISTER, userForCreation,  {params: params});
 }
 
-updateUser(userId: number, userToUpdate: IUser) {
-  // return this.http.put(USER_URL.BASE_URL + userId, userToUpdate);
-}
+
 
 
 getUsers(page?: number, itemsPerPage?: number, userParams?: UserParams): Observable<PaginationResult<IUser[]>> {

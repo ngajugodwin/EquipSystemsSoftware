@@ -22,7 +22,8 @@ namespace ItemBookingApp_API.Controllers
             _mapper = mapper;
             _userService = userService;
         }
-        
+
+              
 
         [HttpPost]
         public async Task<IActionResult> CreateNewAccountAsync([FromBody] SaveUserResource saveUserResource, [FromQuery] bool isExternalReg)

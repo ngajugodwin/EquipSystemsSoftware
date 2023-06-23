@@ -68,6 +68,10 @@ const routes: Routes = [
         loadChildren: () => import('./views/post-login/checkout/checkout.module').then(m => m.CheckOutModule)
       },
       {
+        path: 'checkout-items',
+        loadChildren: () => import('./views/post-login/checkout-items/checkout-items.module').then(m => m.CheckOutItemsModule)
+      },
+      {
         path: 'self-service',
         loadChildren: () => import('./views/post-login/self-service/self-service.module').then(m => m.SelfServiceModule)
       },

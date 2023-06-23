@@ -2,6 +2,7 @@
 import {IOrganisation} from './organisation';
 import {AccountType} from './accountType';
 import {IRole} from './role';
+import {IAddress} from './address';
 
 export interface IUser {
     id: number,
@@ -16,5 +17,5 @@ export interface IUser {
     typeName: string,
     password: string,
     userRoles: IRole[],
-    createdAt: Date
+    createdAt: Date,
 }

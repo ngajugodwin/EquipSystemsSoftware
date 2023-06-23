@@ -1,0 +1,29 @@
+<c-col xxl="12"  class="modal-content">
+  <c-card>
+    <c-card-header ngPreserveWhitespaces>
+      <strong>{{title}}</strong>
+    </c-card-header>
+    <c-card-body>      
+      <c-row>
+        
+        <app-basket-summary
+        (incrementDecrementValue)="increaseOrDecreaseQuantity($event)"
+        (remove)="removeItemFromBasket($event)"
+      ></app-basket-summary>
+   
+
+      </c-row>
+      <!-- <c-row>
+        <c-col [xs]="6"></c-col>      
+        <c-col [xs]="6">
+            <app-order-totals></app-order-totals>         
+        </c-col>
+      </c-row> -->
+    </c-card-body>
+    <c-card-footer>
+      <div class="center-action-button">
+        <button type="reset" (click)="closeDialog()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Close</button>
+      </div>    
+    </c-card-footer>
+  </c-card>
+</c-col>

@@ -18,8 +18,8 @@ export class BasketComponent implements OnInit {
     this.basket$ = this.basketService.basket$;
   }
 
-  increaseOrDecreaseQuantity(itemId: number, status: boolean) {
-    this.basketService.incrementOrDecrementItemQuantity(itemId, status).subscribe({
+  increaseOrDecreaseQuantity(result: any) {
+    this.basketService.incrementOrDecrementItemQuantity(result.itemId, result.status).subscribe({
       next: (res) => {
        console.log(res);
       },

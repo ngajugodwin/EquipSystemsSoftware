@@ -10,59 +10,10 @@
       <div class="container">
         <div class="row">
           <div class="col-12 py-5 mb-1">
-            <div class="table-responsive">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th class="border-0 bg-light" scope="col">
-                      <div class="p-2 px-3 text-uppercase">Item</div>
-                    </th>
-                    <th scope="col" class="boarder-0 bg-light">
-                      <div class="py-2 text-uppercase">Price</div>
-                    </th>
-                    <th scope="col" class="boarder-0 bg-light">
-                      <div class="py-2 text-uppercase">Quantity</div>
-                    </th>
-                    <th scope="col" class="boarder-0 bg-light">
-                      <div class="py-2 text-uppercase">Total</div>
-                    </th>
-                    <th scope="col" class="boarder-0 bg-light">
-                      <div class="py-2 text-uppercase">Remove</div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody >
-                  <tr *ngFor="let item of basket.items">
-                    <th scope="row">
-                      <div class="p-2">
-                        <img src="{{item.picture}}" alt="Item name" class="img-fluid" style="max-height: 50px ;">
-
-                        <!-- <img src="{{}}" alt="{{}}"> -->
-                        <div style="margin-left: 10px;" class="ml-3 d-inline-block align-middle">
-                          <h5 class="mb-0">
-                            <a routerLink="/shop-items/{{item.itemId}}" class="text-dark">{{item.name}}</a>
-                          </h5>
-                          <span class="text-muted font-weight-normal font-italic d-block">Type: {{item.type}}</span>
-                        </div>
-                      </div>
-                    </th>
-                    <td class="align-middle"><strong>{{item.price | currency}}</strong></td>
-                    <td class="align-middle">
-                      <div class="d-flex align-items-center">
-                        <button (click)="increaseOrDecreaseQuantity(item.itemId, true)" style="margin: 8px;"  type="button" class="btn btn-primary fa fa-shopping-cart mr-5">+</button>
-                        <strong>{{item.quantity}}</strong>
-                        <button (click)="increaseOrDecreaseQuantity(item.itemId, false)" style="margin-left: 8px;" routerLinkActive="router-link-active"  type="button" class="btn btn-primary">-</button>
-                      </div>
-                    </td>
-                    <td class="align-middle"><strong>{{item.price * item.quantity | currency}}</strong></td>
-                    <!-- <td class="align-middle"><strong>4,00</strong></td> -->
-                    <td class="align-middle text-center">
-                      <button (click)="removeItemFromBasket(item.itemId)" class="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <app-basket-summary
+              (incrementDecrementValue)="increaseOrDecreaseQuantity($event)"
+              (remove)="removeItemFromBasket($event)"
+            ></app-basket-summary>
           </div>
         </div>
         <div class="row">

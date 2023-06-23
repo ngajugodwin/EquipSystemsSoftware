@@ -7,6 +7,8 @@ namespace ItemBookingApp_API.Domain.Services
 {
     public interface IUserService
     {
+        Task<UserAddress> UpdateUserAddress(long userId, UserAddress userAddressToUpdate);
+        Task<UserAddress> GetUserAddress(long userId);
         Task<PagedList<AppUser>> ListAsync(UserQuery userQuery);
 
         Task<PagedList<AppUser>> ListAsyncV2(UserQuery userQuery);

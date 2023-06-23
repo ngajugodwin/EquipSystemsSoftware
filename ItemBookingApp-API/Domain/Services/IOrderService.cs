@@ -10,7 +10,7 @@ namespace ItemBookingApp_API.Domain.Services
 
         Task<Order> GetOrderByIdAsync(int id, string borrowerEmail);
 
-        Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync();
+        Task<IEnumerable<DeliveryMethod>> GetDeliveryMethodsAsync();
 
     }
 }

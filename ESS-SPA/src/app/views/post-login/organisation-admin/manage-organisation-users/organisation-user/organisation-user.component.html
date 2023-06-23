@@ -7,6 +7,13 @@
       
       <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="userForm" id="userForm">
         <c-col [md]="6">
+          <label cLabel for="inputFirstName">First Name</label>
+          <input cFormControl id="inputEmail4" type="text"
+              [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('firstName')?.touched}"
+              formControlName="firstName"/>
+              <div class="invalid-feedback" *ngIf="userForm.get('firstName')?.hasError('required') && userForm.get('firstName')?.touched">The first name field is required</div>
+          </c-col>
+        <c-col [md]="6">
         <label cLabel for="inputFirstName">First Name</label>
         <input cFormControl id="inputEmail4" type="text"
             [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('firstName')?.touched}"

@@ -58,6 +58,38 @@ namespace ItemBookingApp_API.Services
 
             return new UserResponse("Failed to change password due to password mismatch");
         }
+        
+        public async Task<UserAddress> GetUserAddress(long userId)
+        {
+            var user = await _applicationUserManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                var userAddress = new UserAddress(user.FirstName, user.LastName, user.Street, user.City, user.State, user.ZipCode);
+
+                return userAddress;
+            }
+
+            return null;
+        }
+
+        public async Task<UserAddress> UpdateUserAddress(long userId, UserAddress userAddressToUpdate)
+        {
+            var userFromRepo = await _applicationUserManager.FindByIdAsync(userId);
+
+            if (userFromRepo != null && userAddressToUpdate != null)
+            {
+                userFromRepo.ZipCode = userAddressToUpdate.ZipCode;
+                userFromRepo.Street = userAddressToUpdate.Street;
+                userFromRepo.City = userAddressToUpdate.State;
+
+                await _applicationUserManager.UpdateAsync(userFromRepo);
+
+                return userAddressToUpdate;
+            }
+
+            return null;
+        }
 
         public Task<UserResponse> DeleteByIdAsync(long userId)
         {

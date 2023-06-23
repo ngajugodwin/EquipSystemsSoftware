@@ -6,19 +6,33 @@ import { AuthService } from '../auth-service/auth.service';
 import { BehaviorSubject, map } from 'rxjs';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IItem } from 'src/app/entities/models/item';
+import { IDeliveryMethod } from 'src/app/entities/models/deliveryMethod';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BasketService {
-
-constructor(private http: HttpClient, private authService: AuthService) { }
-
+export class BasketService {  
 emptyBasket = {} as IBasket;
 private basketSource = new BehaviorSubject<IBasket | null>(null);
 private basketTotalSource = new BehaviorSubject<IBasketTotals | null>(null);
 basket$ = this.basketSource.asObservable();
 basketTotal$ = this.basketTotalSource.asObservable();
+shipping = 0;
+
+constructor(private http: HttpClient, private authService: AuthService) { }
+
+
+setShippingPrice(deliveryMethod: IDeliveryMethod) {
+  this.shipping = deliveryMethod.price;
+  this.calculateTotals();
+}
+
+
+deleteLocalBasket(id: number) {
+  this.basketSource.next(null);
+  this.basketTotalSource.next(null);
+  localStorage.removeItem('basket_id');
+}
 
 getBasket(basketId: number) {
   return this.http.get<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket/${basketId}`)
@@ -155,7 +169,7 @@ addItemToBasket(item: number, quantity = 1) {
 
 private calculateTotals() {
   const basket = this.getCurrentBasket();
-  const shipping = 0;
+  const shipping = this.shipping;
 
 
  
@@ -163,7 +177,9 @@ private calculateTotals() {
   const subTotal = Number(basket?.items.reduce((a, b) => (b.price * b.quantity) + a, 0));
 
    const total = shipping + Number(subTotal);
-   this.basketTotalSource.next({shipping, total, subTotal});
+
+
+   this.basketTotalSource.next({shipping, subTotal, total});
 
 }
 

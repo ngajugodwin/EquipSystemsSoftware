@@ -60,7 +60,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MasterAdminModule } from './views/post-login/master-admin/master-admin.module';
 
 import {CustomModule} from './shared/modules/custom.module';
-
+import {CheckoutService} from './shared/services/checkout-service/checkout.service';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalDialogModule } from 'ngx-modal-dialog';
 import { DefaultNgxModalOptionConfig, NgxModalView, defaultNgxModalOptions } from 'ngx-modalview';
@@ -159,6 +159,7 @@ const APP_CONTAINERS = [
     CategoryService,
     ItemTypeService,
     ItemService,
+    CheckoutService,
     JwtInterceptorProvider,
     AuthGuard,
     NgxSmartModalService

@@ -6,7 +6,7 @@
   <ul class="list-unstyled mb-4" *ngIf="(basketTotal$ | async) as totals">
     <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
       <strong class="text-muted">Order subtotal</strong>
-      <strong >{{totals.shipping | currency}}</strong>
+      <strong >{{totals.subTotal | currency}}</strong>
     </li>
     <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
       <strong class="text-muted">Shipping/Handling</strong>

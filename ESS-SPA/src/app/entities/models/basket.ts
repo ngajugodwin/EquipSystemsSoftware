@@ -2,7 +2,8 @@ export interface IBasket {
     id: number;
     userId: number;
     items: IBasketItem[];
-    // items: number[] = [];
+    deliveryMethodId?: number;
+    shippingPrice?: number;
 
 }
 

@@ -74,16 +74,16 @@ namespace ItemBookingApp_API.Services
             
         }
 
-        public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
+        public async Task<IEnumerable<DeliveryMethod>> GetDeliveryMethodsAsync()
         {
-            //var result = await _genericRepository.ListAsync<DeliveryMethod>();
+            var result = await _genericRepository.ListAsync<DeliveryMethod>();
 
             //var d = result.GetType().tol;
 
             ////return (IReadOnlyList)result;
             //return d.Current.;
 
-            return new List<DeliveryMethod>();
+            return result;
         }
 
         public async Task<Order> GetOrderByIdAsync(int id, string borrowerEmail)

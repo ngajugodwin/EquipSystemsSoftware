@@ -6,8 +6,9 @@ import { map } from 'rxjs/operators';
 // import {IUser} from '../../entities/models/user';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
-import { AUTH_URL } from '../../../constants/api.constant';
+import { AUTH_URL, CUSTOMER_URL } from '../../../constants/api.constant';
 import { IUser } from 'src/app/entities/models/user';
+import { IAddress } from 'src/app/entities/models/address';
 
 @Injectable({
   providedIn: 'root'
@@ -107,4 +108,12 @@ export class AuthService {
     this.decodedToken = this.jwtHelper.decodeToken(result.token);
   }
 
+  getUserAddress() {
+    return this.http.get<IAddress>(CUSTOMER_URL.BASE_URL + `/selfservices/getUserAddress/${this.getCurrentUser().id}`);
+  }
+
+  updateUserAddress(address: IAddress) {
+    return this.http.put<IAddress>(CUSTOMER_URL.BASE_URL + `/selfservices/updateUserAddress/${this.getCurrentUser().id}`, address);
+  }
+  
 }
