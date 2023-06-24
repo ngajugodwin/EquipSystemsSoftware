@@ -7,6 +7,7 @@ import { BehaviorSubject, map } from 'rxjs';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IItem } from 'src/app/entities/models/item';
 import { IDeliveryMethod } from 'src/app/entities/models/deliveryMethod';
+import {UpdateDeliveryMethod} from '../../../entities/models/updateDeliveryMethod';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,46 @@ shipping = 0;
 
 constructor(private http: HttpClient, private authService: AuthService) { }
 
+createPaymentIntent(){
+  return this.http.post<IBasket>(CUSTOMER_URL.BASE_URL + `/payments/${this.getCurrentBasket()?.id}`, {})
+    .pipe(
+      map((basket:IBasket) => {
+        this.basketSource.next(basket);
+        console.log(this.getCurrentBasket());
+      })
+    );
+}
 
 setShippingPrice(deliveryMethod: IDeliveryMethod) {
   this.shipping = deliveryMethod.price;
-  this.calculateTotals();
+  const basket = this.getCurrentBasket();
+  if (basket) {
+    basket.deliveryMethodId = deliveryMethod.id;
+    basket.shippingPrice = deliveryMethod.price;
+    this.calculateTotals();
+    let updateDeliveryMethod = new UpdateDeliveryMethod(basket.id, basket.deliveryMethodId);
+    this.updateDeliveryMethod(updateDeliveryMethod);
+
+    //this.setBasket(basket);
+  }
 }
 
+
+
+updateDeliveryMethod(data: UpdateDeliveryMethod) {
+ 
+  return this.http.put<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket/setDeliveryMethod/${data.basketId}/${data.deliveryMethodId}`, {}).subscribe({
+    next: (res) => {
+      if (res) {
+        this.updateBasketSource(res);
+      }
+    },
+    error: (err: ErrorResponse) => {
+      console.log(err);
+    }
+  })
+    
+}
 
 deleteLocalBasket(id: number) {
   this.basketSource.next(null);
@@ -38,7 +73,11 @@ getBasket(basketId: number) {
   return this.http.get<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket/${basketId}`)
     .pipe(
       map((basket: IBasket) => {
+        console.log(basket);
         this.basketSource.next(basket);
+        if (basket.shippingPrice) {
+          this.shipping = basket.shippingPrice;
+        }
        this.calculateTotals();
       })
     );
@@ -49,17 +88,10 @@ getBasket(basketId: number) {
 // }
 
 setBasket(basket: IBasket) {
-
-
-
   return this.http.post<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket`, basket)
       .subscribe({
         next: (basket: IBasket) => {
-          this.basketSource.next(basket);
-          this.calculateTotals();
-          if (!localStorage.getItem('basket_id')){
-            localStorage.setItem('basket_id', basket.id.toString());
-          }
+          this.updateBasketSource(basket);
         },
         error: (err: ErrorResponse) => {
           console.log(err);
@@ -167,19 +199,29 @@ addItemToBasket(item: number, quantity = 1) {
 //   this.setBasket(basket);
 // }
 
+private updateBasketSource(basket: IBasket){
+  this.basketSource.next(basket);
+  this.calculateTotals();
+  if (!localStorage.getItem('basket_id')){
+    localStorage.setItem('basket_id', basket.id.toString());
+  }
+}
+
+
 private calculateTotals() {
   const basket = this.getCurrentBasket();
   const shipping = this.shipping;
 
-
  
   //  const subTotal = basket?.items.reduce((a, b) => (b.price * b.quantity) + a, 0);
-  const subTotal = Number(basket?.items.reduce((a, b) => (b.price * b.quantity) + a, 0));
+  let subTotal = basket?.items.reduce((a, b) => (b.price * b.quantity) + a, 0);
 
-   const total = shipping + Number(subTotal);
+   const total = shipping + subTotal!;
 
 
-   this.basketTotalSource.next({shipping, subTotal, total});
+  if (subTotal) {
+    this.basketTotalSource.next({shipping, subTotal, total});
+  }
 
 }
 

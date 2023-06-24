@@ -19,6 +19,10 @@ namespace ItemBookingApp_API.EntityConfiguration
                 .WithOne(b => b.CustomerBasket)
                 .HasForeignKey(b => b.CustomerBasketId);
 
+            builder.Property(i => i.ShippingPrice)
+                    .HasPrecision(18, 2)
+                   .IsRequired(false);
+
         }
     }
 }

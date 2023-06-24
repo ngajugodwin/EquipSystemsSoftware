@@ -9,6 +9,8 @@ import { IDeliveryMethod } from 'src/app/entities/models/deliveryMethod';
 import { CheckoutService } from 'src/app/shared/services/checkout-service/checkout.service';
 import { BasketService } from 'src/app/shared/services/basket-service/basket.service';
 import { IBasket } from 'src/app/entities/models/basket';
+import { Router } from '@angular/router';
+import { PaymentComponent } from './payment/payment.component';
 
 @Component({
   selector: 'app-checkout-items',
@@ -22,7 +24,8 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
 
   checkoutForm: FormGroup
 
-  constructor(private fb: FormBuilder, 
+  constructor(private fb: FormBuilder,
+    private router: Router, 
     private checkoutService: CheckoutService,
     private basketService: BasketService,
     private NgxModalService:NgxModalService,
@@ -32,6 +35,7 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
     this.createCheckoutForm();
     this.getUserAddress();
     this.getDeliveryMethods();
+    this.getDeliveryMethodValue();
   }
 
   ngOnDestroy(): void {
@@ -47,21 +51,37 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
         city: [null, Validators.required],
         state: [null, Validators.required],
         zipCode: [null, Validators.required],
-
-      }),
-      deliveryForm: this.fb.group({
         deliveryMethod: [null, Validators.required]
       }),
+      // deliveryForm: this.fb.group({
+      //   deliveryMethod: [null, Validators.required]
+      // }),
       paymentForm: this.fb.group({
         nameOnCard: [null, Validators.required]
       })
     });
   }
 
+  createPaymentIntent() {
+    let yy = this.checkoutForm.get('addressForm')?.get('deliveryMethod');
+
+    if (yy?.status === "INVALID") {
+      alert('Please select at least one delivery method');
+      return;
+    }
+      return this.basketService.createPaymentIntent().subscribe({
+      next: (res) => {
+        this.createOrder();
+      },
+      error: (err: ErrorResponse) => {
+        console.log(err);
+      }
+    })
+  }
+
   getUserAddress() {
     this.authService.getUserAddress().subscribe({
       next: (res) => {
-        console.log(res);
         if (res) {
           this.checkoutForm.get('addressForm')?.patchValue(res);
         }
@@ -84,13 +104,23 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
     })
   }
 
+  getDeliveryMethodValue() {
+    const basket = this.basketService.getCurrentBasket();
+    console.log(basket);
+    if(basket?.deliveryMethodId !== null) {
+      console.log(basket);
+      this.checkoutForm.get('addressForm')?.get('deliveryMethod')?.patchValue(basket?.deliveryMethodId);
+    }
+  }
+
 
   setTheShippingPrice(selectedMethod: any) {
     var result = this.filterDeliverMethods(Number(selectedMethod.target.value));
+    console.log(result);
     
     if (result !== null) {
       this.basketService.setShippingPrice(result);
-      this.checkoutForm.get('deliveryForm')?.get('deliveryMethod')?.patchValue(result.id)
+      this.checkoutForm.get('addressForm')?.get('deliveryMethod')?.patchValue(result.id)
     }
     
   }
@@ -111,32 +141,53 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
     });
   }
 
-  createOrder() {
+
+  createOrder () {
     const basket = this.basketService.getCurrentBasket();
+    let orderToCreate: any
     if (basket) {
-      const orderToCreate = this.getOrderToCreate(basket);
-
-      console.log(orderToCreate);
-
-      this.checkoutService.createOrder(orderToCreate).subscribe({
-        next: (res) => {
-          if (res) {
-            this.basketService.deleteLocalBasket(res.basketId);
-          }
-        },
-        error: (err: ErrorResponse) => {
-          console.log(err);
-        }
-      })
+      orderToCreate = this.getOrderToCreate(basket);
     }
+
+    this.$disposable = this.NgxModalService.addModal(PaymentComponent, {
+      title: 'Payment',
+      message: '',
+      data: {
+        orderToCreate,
+        basket
+      }
+    })
+    .subscribe((res: IBasket)=>{
+      this.router.navigate(['/my-bookings']);
+    });
   }
+
+  // createOrder() {
+  //   const basket = this.basketService.getCurrentBasket();
+  //   if (basket) {
+  //     const orderToCreate = this.getOrderToCreate(basket);
+
+  //     console.log(orderToCreate);
+
+  //     this.checkoutService.createOrder(orderToCreate).subscribe({
+  //       next: (res) => {
+  //         if (res) {
+  //           this.basketService.deleteLocalBasket(res.basketId);
+  //         }
+  //       },
+  //       error: (err: ErrorResponse) => {
+  //         console.log(err);
+  //       }
+  //     })
+  //   }
+  // }
 
   cancel() {}
 
   private getOrderToCreate(basket: IBasket) {
     return {
       basketId: basket.id,
-      deliveryMethodId: Number(this.checkoutForm.get('deliveryForm')?.get('deliveryMethod')?.value),
+      deliveryMethodId: basket.deliveryMethodId,
       shipToAddress: this.checkoutForm.get('addressForm')?.value
     };
   }

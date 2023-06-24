@@ -4,6 +4,7 @@ namespace ItemBookingApp_API.Domain.Repositories
 {
     public interface IBasketRepository
     {
+        Task<CustomerBasket> UpdateDeliveryMethod(int basketId, int deliveryMethodId);
         Task<CustomerBasket> GetBasketAsync(long userId, int basketId);
         Task<CustomerBasket> AddBasketAsync(CustomerBasket basket);
 

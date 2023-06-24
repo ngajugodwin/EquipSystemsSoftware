@@ -50,7 +50,9 @@ namespace ItemBookingApp_API.Services
             var subTotal = items.Sum(item => item.Price * item.Quantity);
 
             var order = new Order(items, borrowerEmail, shippingAddress, deliveryMethods, subTotal);
-            order.PaymentItentId = "02";
+
+            if (basket.PaymentIntentId != null)
+                order.PaymentItentId = basket.PaymentIntentId;
 
             await _genericRepository.AddAsync<Order>(order);
 
@@ -61,7 +63,7 @@ namespace ItemBookingApp_API.Services
                 await _unitOfWork.CompleteAsync();
 
                 //delete basket
-                await _basketRepository.DeleteBasket(basketId);
+             //   await _basketRepository.DeleteBasket(basketId);
                 
                // return processed order to client
                 return order;

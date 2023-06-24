@@ -10,7 +10,7 @@ namespace ItemBookingApp_API.Resources.Basket
     }
     public class SaveCustomerBasketResource
     {
-        //  public int Id { get; set; }
+        public int Id { get; set; }
         //  public List<BasketItemResource> Items { get; set; } = new List<BasketItemResource>();
 
         public IEnumerable<IBasketItem> Items { get; set; }

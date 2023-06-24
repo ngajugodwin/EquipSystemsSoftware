@@ -1,0 +1,54 @@
+<c-col xs="6" class="modal-content">
+  <c-card>
+    <c-card-header ngPreserveWhitespaces>
+      <strong>Payment Form </strong>
+    </c-card-header>
+    <c-card-body>      
+      <form cForm class="row g-3"  (ngSubmit)="save()" [formGroup]="paymentForm" id="paymentForm">
+        <c-row>
+          <div class="col-12" style="margin-top: 10px;">
+            <div class="form-floating">
+                <input formControlName="nameOnCard" cFormControl type="text" placeholder="Card Name">
+                <label>Account Name</label>
+            </div>
+          </div>
+          <div class="col-12" style="margin-top: 10px;">
+            <div class="form-floating">
+                <div class="form-control" #cardNumber></div>
+                <label>Card Number</label>
+                <span class="text-danger">{{cardErrors}}</span>
+            </div>
+          </div>
+          <div class="col-6" style="margin-top: 10px;">
+            <div class="form-floating">
+                <div class="form-control" #cardExpiry></div>
+                <label>Card Expiry</label>
+                <!-- <span *ngIf="cardErrors" class="text-danger">{{cardErrors}}</span> -->
+            </div>
+          </div>
+          <div class="col-6" style="margin-top: 10px;">
+            <div class="form-floating">
+                <div class="form-control" #cardCvc></div>
+                <label>Card Cvc</label>
+                <!-- <span class="text-danger">{{cardErrors}}</span> -->
+            </div>
+          </div>
+        </c-row>
+        </form>
+    </c-card-body>
+    <c-card-footer>
+      <div class="center-action-button">
+        <button (click)="save()" style="margin-right: 10px;" type="button" form="paymentForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save  </button>
+        <!-- <button type="reset" (click)="closeDialog()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button> -->
+      </div>    
+    </c-card-footer>
+  </c-card>
+</c-col>
+
+
+
+
+
+
+
+

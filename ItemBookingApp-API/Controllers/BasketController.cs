@@ -48,6 +48,17 @@ namespace ItemBookingApp_API.Controllers
             return Ok(backetToReturn);
         }
 
+        [HttpPut("setDeliveryMethod/{basketId}/{deliveryMethodId}")]
+        public async Task<IActionResult> UpdateDeliveryMethodAsync(int basketId, int deliveryMethodId)
+        {
+
+            var basket = await _basketRepository.UpdateDeliveryMethod(basketId, deliveryMethodId);
+
+            var backetToReturn = _mapper.Map<CustomerBasket, CustomerBasketResource>(basket);
+
+            return Ok(backetToReturn);
+        }
+
         [HttpPut("{basketId}")]
         public async Task<IActionResult> IncreaseOrDecreaseItemQuantityAsync(long userId, int basketId, IncreaseDecreaseResource data)
         {

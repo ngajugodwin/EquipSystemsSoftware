@@ -4,6 +4,7 @@ using ItemBookingApp_API.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ItemBookingApp_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ItemBookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230624120736_UpdateShippingPriceType")]
+    partial class UpdateShippingPriceType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,6 +87,7 @@ namespace ItemBookingApp_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("ShippingPrice")
+                        .IsRequired()
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 

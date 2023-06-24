@@ -26,12 +26,18 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initCustomerBasket();
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
     });
 
+
+   
+  }
+
+  initCustomerBasket() {
     const basketId = localStorage.getItem('basket_id');
 
     if (basketId) {
@@ -44,4 +50,7 @@ export class AppComponent implements OnInit {
       })
     }
   }
+
+
+
 }
