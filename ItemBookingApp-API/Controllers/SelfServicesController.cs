@@ -1,12 +1,18 @@
 ﻿using AutoMapper;
+using ItemBookingApp_API.Areas.Resources.AppUser;
 using ItemBookingApp_API.Domain.Models.Identity;
 using ItemBookingApp_API.Domain.Services;
+using ItemBookingApp_API.Extension;
+using ItemBookingApp_API.Resources.SelfService;
+using ItemBookingApp_API.Services.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 namespace ItemBookingApp_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users/{userId}/[controller]")]
     [ApiController]
+    [Authorize(Policy = PermissionSystemName.HasUserRole)]
     public class SelfServicesController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -19,7 +25,7 @@ namespace ItemBookingApp_API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("getUserAddress/{userId}")]
+        [HttpGet("getUserAddress")]
         public async Task<IActionResult> GetUserAddress(long userId)
         {
             var userAddressToReturn = await _userService.GetUserAddress(userId);
@@ -27,7 +33,7 @@ namespace ItemBookingApp_API.Controllers
             return Ok(userAddressToReturn);
         }
 
-        [HttpPut("updateUserAddress/{userId}")]
+        [HttpPut("updateUserAddress")]
         public async Task<IActionResult> UpdateUserAddress(long userId, UserAddress userAddress)
         {
             var updatedUserAddress = await _userService.UpdateUserAddress(userId, userAddress);
@@ -36,12 +42,35 @@ namespace ItemBookingApp_API.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetUserProfile(int userId)
+        [HttpGet("getUserProfile")]
+        public async Task<IActionResult> GetUserProfile(long userId)
         {
-            int [] marks = new int[]  { 99,  98, 92, 97, 95, 20};
-            
-            return Ok(marks.ToList());
+            var result = await _userService.GetUserByIdAsync(userId);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var userToReturn = _mapper.Map<UserResource>(result.Resource);
+
+            return Ok(userToReturn);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ChangePasswordAsync(long userId, PasswordUpdateResource passwordUpdateResource)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
+
+            var result = await _userService.ChangePassword(userId, passwordUpdateResource.OldPassword, passwordUpdateResource.NewPassword, false);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var userToReturn = _mapper.Map<UserResource>(result.Resource);
+
+            return Ok(userToReturn);
         }
 
     }

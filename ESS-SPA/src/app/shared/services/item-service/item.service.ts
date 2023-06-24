@@ -48,7 +48,10 @@ export class ItemService {
       formData.append('File', file, file.name);
       formData.append('Name', itemToCreate.name);
       formData.append('itemTypeId', itemToCreate.itemTypeId.toString());
+      formData.append('categoryId', itemToCreate.categoryId.toString());
       formData.append('serialNumber', itemToCreate.serialNumber);
+      formData.append('availableQuantity', itemToCreate.availableQuantity.toString());
+      formData.append('price', itemToCreate.price.toString());
       
     }
     const httpOptions = { headers: headers };

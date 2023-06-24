@@ -6,6 +6,7 @@ import { SelfServiceRoutingModule } from './self-service-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { CustomModule } from '../../../shared/modules/custom.module';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { CardModule, FormModule, GridModule } from '@coreui/angular';
 
 
 @NgModule({
@@ -14,7 +15,11 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     SelfServiceRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    CustomModule
+    FormModule,
+    GridModule,
+    CustomModule,
+    CardModule,
+    ReactiveFormsModule
   ],
   declarations: [
       SelfServiceComponent,

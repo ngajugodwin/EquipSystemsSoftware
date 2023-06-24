@@ -214,6 +214,8 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             itemFromRepo.Name = item.Name;
             itemFromRepo.ItemTypeId = item.ItemTypeId;
             itemFromRepo.SerialNumber = item.SerialNumber;
+            itemFromRepo.AvailableQuantity = item.AvailableQuantity;
+            itemFromRepo.Price = item.Price;
             itemFromRepo.ItemState = (ItemState)updateItemResource.ItemStateId;
 
             try

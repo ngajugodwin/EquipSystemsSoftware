@@ -69,7 +69,7 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
       title: 'New Item',
       message: '',
       data: {
-        currentItemType: this.currentItemType
+        currentItemType: this.currentItemType,
       }
     })
     .subscribe((res: IItem)=>{

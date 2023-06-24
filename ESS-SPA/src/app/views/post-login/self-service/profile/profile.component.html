@@ -1,3 +1,35 @@
-<p>
-  profile works!
-</p>
+<div *ngIf="user">
+  <div class="card">
+    <div class="card-header">
+      <i></i><span class="table-title">Personal Information</span>
+    </div>
+    <div class="card-body">
+      <table class="table table-responsive-sm table-striped">
+        <tbody>
+          <tr>
+            <td><strong>FULL NAME :</strong></td>
+            <td>{{user.firstName + ' ' + user.lastName}}</td>
+          </tr>
+          <tr>
+            <td><strong>EMAIL :</strong></td>
+            <td>{{user.email}}</td>
+          </tr>
+          <tr>
+            <td><strong>USERNAME :</strong></td>
+            <td>{{user.userName}}</td>
+          </tr>        
+          <tr>
+            <td><strong>ROLES :</strong></td>
+            <td>{{user.userRoles.join(' | ') | uppercase}}</td>
+          </tr>
+          <tr>
+            <td><strong>CREATED AT :</strong></td>
+            <td>{{user.createdAt | date}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+    </div>
+  </div>
+</div>

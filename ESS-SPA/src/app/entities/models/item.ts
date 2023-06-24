@@ -6,8 +6,10 @@ export interface IItem {
     createdAt: Date,
     itemTypeId: number,
     serialNumber: string,
-    price: string,
+    price: number,
     url: string,
     file?: FormData,
-    description: string
+    description: string,
+    availableQuantity: number,
+    categoryId: number;
 }

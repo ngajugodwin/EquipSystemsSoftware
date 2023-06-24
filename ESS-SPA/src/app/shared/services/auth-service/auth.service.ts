@@ -109,11 +109,11 @@ export class AuthService {
   }
 
   getUserAddress() {
-    return this.http.get<IAddress>(CUSTOMER_URL.BASE_URL + `/selfservices/getUserAddress/${this.getCurrentUser().id}`);
+    return this.http.get<IAddress>(CUSTOMER_URL.BASE_URL + `/users/${this.getCurrentUser().id}/selfservices/getUserAddress`);
   }
 
   updateUserAddress(address: IAddress) {
-    return this.http.put<IAddress>(CUSTOMER_URL.BASE_URL + `/selfservices/updateUserAddress/${this.getCurrentUser().id}`, address);
+    return this.http.put<IAddress>(CUSTOMER_URL.BASE_URL + `/users/${this.getCurrentUser().id}/selfservices/updateUserAddress`, address);
   }
   
 }

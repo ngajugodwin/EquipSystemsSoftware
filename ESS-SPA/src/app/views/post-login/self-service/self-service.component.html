@@ -1,3 +1,26 @@
-<p>
-  self-service works!
-</p>
+
+<c-row>
+  <c-col xs>   
+    <c-card class="mb-4">
+        <!-- <c-card-header>Users</c-card-header>
+        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
+        <c-card-header>
+          <c-container>
+            <i></i><span class="table-title">Account Information</span>
+          </c-container>
+        </c-card-header>
+        <c-card-body>
+          <c-row>
+            <c-col [xs]="7">
+              <app-profile [user]="currentUser"></app-profile>
+            </c-col>
+            <c-col [xs]="5">
+              <app-change-password></app-change-password>
+            </c-col>
+          </c-row>
+        </c-card-body>
+      
+    </c-card>
+  </c-col>
+</c-row>
+

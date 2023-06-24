@@ -7,6 +7,10 @@ namespace ItemBookingApp_API.Areas.Resources.Item
         [Required]
         public string Name { get; set; }
 
+        public decimal Price { get; set; }
+
+        public int AvailableQuantity { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public bool IsActive { get; set; }
@@ -22,6 +26,8 @@ namespace ItemBookingApp_API.Areas.Resources.Item
         public IFormFile File { get; set; }
 
         public string? PublicId { get; set; }
+
+        public int CategoryId { get; set; }
 
 
         public SaveItemResource()

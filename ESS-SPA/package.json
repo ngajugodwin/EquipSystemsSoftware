@@ -44,6 +44,7 @@
     "ngx-modalview": "^16.0.1",
     "ngx-perfect-scrollbar": "^10.1.1",
     "ngx-smart-modal": "^7.4.1",
+    "ngx-toastr": "^16.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.4.1",
     "uploader": "^3.37.0",

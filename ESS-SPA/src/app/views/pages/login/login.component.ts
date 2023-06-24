@@ -4,6 +4,7 @@ import { AccountType } from 'src/app/entities/models/accountType';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { AuthService } from 'src/app/shared/services/auth-service/auth.service';
 import { BasketService } from 'src/app/shared/services/basket-service/basket.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,9 @@ export class LoginComponent {
   isProcessing = false;
   accountType: AccountType;
 
-  constructor(private authService: AuthService, private router: Router, private basketService: BasketService) { }
+  constructor(private authService: AuthService, 
+    private toasterService: ToasterService,
+    private router: Router, private basketService: BasketService) { }
 
   login() {
     this.authService.clearStorage();
@@ -24,11 +27,12 @@ export class LoginComponent {
       next: (response) => {
         this.initCustomerBasket();
         this.router.navigate(['/dashboard']);
-      console.log('Login successfully');
+      this.toasterService.showSuccess('SUCCESS', 'Authentication Successful')
       console.log(response);
       }, error: (error: ErrorResponse) => {
         this.isProcessing = false;
-        console.log(error);
+        this.toasterService.showError(error.title, error.message);
+
       }
     });
   }
@@ -41,7 +45,8 @@ export class LoginComponent {
         next: (res) => {
             console.log('Init Basket');
         }, error: (err: ErrorResponse) => {
-          console.log(err);
+          this.toasterService.showError(err.title, err.message);
+
         }
       })
     }

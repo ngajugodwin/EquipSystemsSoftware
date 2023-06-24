@@ -7,5 +7,11 @@
         public int ItemTypeId { get; set; }
         public int ItemStateId { get; set; }
         public string SerialNumber { get; set; } = string.Empty;
+
+        public decimal Price { get; set; }
+
+        public int AvailableQuantity { get; set; }
+
+        public int CategoryId { get; set; }
     }
 }

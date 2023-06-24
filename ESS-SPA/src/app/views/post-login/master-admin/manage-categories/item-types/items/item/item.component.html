@@ -13,6 +13,20 @@
                   <div class="invalid-feedback" *ngIf="itemForm.get('name')?.hasError('required') && itemForm.get('name')?.touched">Item name is required</div>
             </c-col>
             <c-col [xs]="12">
+              <label cLabel>Price</label>
+              <input type="number" cFormControl placeholder="" 
+                  [ngClass]="{'is-invalid' : itemForm.get('price')?.errors && itemForm.get('price')?.touched}"
+                  formControlName="price"/>
+                  <div class="invalid-feedback" *ngIf="itemForm.get('price')?.hasError('required') && itemForm.get('price')?.touched">Price is required</div>
+            </c-col>
+            <c-col [xs]="12">
+              <label cLabel>Available Quantity</label>
+              <input type="number" cFormControl placeholder="" 
+                  [ngClass]="{'is-invalid' : itemForm.get('availableQuantity')?.errors && itemForm.get('availableQuantity')?.touched}"
+                  formControlName="availableQuantity"/>
+                  <div class="invalid-feedback" *ngIf="itemForm.get('availableQuantity')?.hasError('required') && itemForm.get('availableQuantity')?.touched">Quantity available is required</div>
+            </c-col>
+            <c-col [xs]="12">
               <label cLabel>Serial Number</label>
               <input type="text" cFormControl placeholder="" 
                   [ngClass]="{'is-invalid' : itemForm.get('serialNumber')?.errors && itemForm.get('serialNumber')?.touched}"

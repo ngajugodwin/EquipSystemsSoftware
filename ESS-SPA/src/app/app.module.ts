@@ -61,15 +61,18 @@ import { MasterAdminModule } from './views/post-login/master-admin/master-admin.
 
 import {CustomModule} from './shared/modules/custom.module';
 import {CheckoutService} from './shared/services/checkout-service/checkout.service';
+import {ToasterService} from './shared/services/toaster-service/toaster.service';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalDialogModule } from 'ngx-modal-dialog';
 import { DefaultNgxModalOptionConfig, NgxModalView, defaultNgxModalOptions } from 'ngx-modalview';
 import { FileUploadModule } from 'ng2-file-upload';
 // import { FileUploadModule } from 'ng2-file-upload/file-upload/file-upload.module';
 // import { FileUploadModule } from '../../node_modules/ng2-file-upload/file-upload/file-upload.module';
+import {SelfService} from './shared/services/self-service/self.service';    
 
 import { UploaderModule } from "angular-uploader";
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ToastrModule } from 'ngx-toastr';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -117,6 +120,10 @@ const APP_CONTAINERS = [
     HttpClientModule,
     CustomModule,
     UploaderModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true
+    }),
     PaginationModule.forRoot(),
     FileUploadModule,
     NgxModalView.forRoot({container: 'modal-container'}, {...defaultNgxModalOptions, ...{
@@ -151,6 +158,8 @@ const APP_CONTAINERS = [
     Title,
 
     // Code
+    SelfService,
+    ToasterService,
     AuthService,
     UserService,
     OrganisationService,

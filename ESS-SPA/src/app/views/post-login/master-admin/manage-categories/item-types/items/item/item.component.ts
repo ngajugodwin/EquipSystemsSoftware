@@ -38,6 +38,7 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
 
   checkForEditAction() {
     if (this.data.item) {
+      console.log(this.data.item);
       this.assignValuesToControl(this.data.item);
     }
   }
@@ -48,6 +49,8 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
     this.itemForm.patchValue({
       id: item.id,
       name: item.name,
+      price: item.price,
+      availableQuantity: item.availableQuantity,
       serialNumber: item.serialNumber,
       file: ''      
     });
@@ -61,6 +64,8 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
       id: [null],
       name: ['', Validators.required],
       serialNumber: ['', Validators.required],
+      price: ['', Validators.required],
+      availableQuantity: ['', Validators.required],
       url: [''],
       file: ['', Validators.required]
     })
@@ -95,6 +100,7 @@ console.log(data.target.value);
    
     const item: IItem = Object.assign({}, this.itemForm.value);
     item.itemTypeId = this.data.currentItemType.id;
+    item.categoryId = this.data.currentItemType.categoryId;
 
     if (this.itemForm.valid) {
        if (this.itemForm.value['id'] !== null) {
@@ -110,6 +116,7 @@ console.log(data.target.value);
           }
         })
        } else {      
+        console.log(item);
         this.itemService.createItem(this.data.currentItemType.id, item, this.selectedFile).subscribe({
           next: (newItem: IItem) => {
             if (newItem) {
