@@ -14,6 +14,7 @@ import { IModalDialogOptions, ModalDialogService } from 'ngx-modal-dialog';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { NgxModalService } from "ngx-modalview";
 import { DataUploadComponent } from '../../../data-upload/data-upload.component';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-items',
@@ -29,6 +30,7 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
   pagination: Pagination;
   
   constructor(private itemService: ItemService,
+    private toasterService: ToasterService,
     private NgxModalService:NgxModalService) { }
 
   ngOnInit() {
@@ -53,7 +55,7 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
         this.pagination = res.pagination;
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+       this.toasterService.showError(err.title, err.message);
       }
     })
    }
@@ -75,6 +77,7 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
     .subscribe((res: IItem)=>{
         if(res) {
             this.getItems(this.itemParams.status);
+            this.toasterService.showSuccess('SUCCESS', 'New item created successfully');
         }
     });
   }
@@ -91,6 +94,7 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
     .subscribe((res: IItem)=>{
         if(res) {
             this.getItems(this.itemParams.status);
+            this.toasterService.showInfo('SUCCESS', 'Item updated successfully');
         }
     });
   }
@@ -111,12 +115,12 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
         console.log(res);
          this.items.splice(this.items.findIndex(c => c.id === res.id), 1);
          if (res.status.toLocaleLowerCase() === 'active'){
-          console.log('Item enabled successfully'); //TODO: show success toaster
+          this.toasterService.showInfo('SUCCESS', 'Item enabled successfully'); //TODO: show success toaster
          }
-         console.log('Item disabled successfully'); //TODO: show success toaster
+         this.toasterService.showInfo('SUCCESS', 'Item disabled successfully'); //TODO: show success toaster
       }),
       error: ((error: ErrorResponse) => {
-        console.log(error); //TODO: show error toaster
+        this.toasterService.showError(error.title, error.message);
       })
     });
   }
@@ -133,11 +137,11 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
               next: (res: IItem) => {
                 if (res){
                   this.getItems(this.itemParams.status);
-                  console.log('Item image changed successfully');
+                  this.toasterService.showInfo('SUCCESS', 'Item image changed successfully');
                 }
               },
               error: (err: ErrorResponse) => {
-                console.log(err);
+                this.toasterService.showError(err.title, err.message);
               }
             })           
         }

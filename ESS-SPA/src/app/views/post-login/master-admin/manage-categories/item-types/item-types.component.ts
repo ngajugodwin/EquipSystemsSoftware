@@ -12,6 +12,7 @@ import { CategoryService } from 'src/app/shared/services/category-service/catego
 import { ItemTypeService } from 'src/app/shared/services/itemTypes-service/item-type.service';
 import { NgxModalService } from "ngx-modalview";
 import { ItemTypeComponent } from './item-type/item-type.component';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-item-types',
@@ -29,6 +30,7 @@ export class ItemTypesComponent implements OnInit, OnDestroy {
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, 
     private NgxModalService:NgxModalService,
+    private toasterService: ToasterService,
       private itemTypesService: ItemTypeService) { }
 
   ngOnInit() {   
@@ -59,7 +61,7 @@ export class ItemTypesComponent implements OnInit, OnDestroy {
         this.pagination = res.pagination;
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }
@@ -75,6 +77,8 @@ export class ItemTypesComponent implements OnInit, OnDestroy {
     .subscribe((res: IItemType)=>{
         if(res) {
             this.getItemTypes(this.itemTypeParams.status);
+        this.toasterService.showSuccess('SUCCESS', 'Item type created successfully');
+
         }
     });
   }
@@ -91,12 +95,13 @@ export class ItemTypesComponent implements OnInit, OnDestroy {
     .subscribe((res: IItemType)=>{
         if(res) {
             this.getItemTypes(this.itemTypeParams.status);
+        this.toasterService.showSuccess('SUCCESS', 'Item type updated successfully');
+
         }
     });
   }
 
   onEnableDisableItemType(itemTypeId: number, status: boolean) {
-
     var res = (status) ? 'enable' : 'disable';
     let result = confirm(
       `Are you sure you want to ${res} this item type?`
@@ -111,19 +116,18 @@ export class ItemTypesComponent implements OnInit, OnDestroy {
         console.log(res);
          this.itemTypes.splice(this.itemTypes.findIndex(c => c.id === res.id), 1);
          if (res.status.toLocaleLowerCase() === 'active'){
-          console.log('Item type enabled successfully'); //TODO: show success toaster
+          this.toasterService.showInfo('SUCCESS', 'Item type enabled successfully'); 
          }
-         console.log('Item type disabled successfully'); //TODO: show success toaster
+         this.toasterService.showInfo('SUCCESS', 'Item type disabled successfully'); 
       }),
       error: ((error: ErrorResponse) => {
-        console.log(error); //TODO: show error toaster
+       this.toasterService.showError(error.title, error.message);
       })
     });
   }
 
  
-  onSelectedItemType(itemType: IItemType) {
-    
+  onSelectedItemType(itemType: IItemType) {    
     this.itemTypesService.getItemType(this.currentCategory.id, itemType.id).subscribe((res: IItemType) => {
       this.setItemTypeId(res);
     })

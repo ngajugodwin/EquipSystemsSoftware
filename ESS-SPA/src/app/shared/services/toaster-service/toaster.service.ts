@@ -16,4 +16,8 @@ export class ToasterService {
     this.toastr.error(message, title)
   }
 
+  showInfo(title: string, message: string) {
+    this.toastr.info(message, title)
+  }
+
 }

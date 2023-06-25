@@ -22,6 +22,13 @@ export class BookingsComponent implements OnInit {
     this.getUserOrders();
   }
 
+  getNextPage(currentPage: number) {
+    if (this.pagination.currentPage != currentPage) {
+      this.pagination.currentPage = currentPage;
+      this.getUserOrders();
+    }
+  }
+
   getUserOrders() {
     this.checkOutService.getOrdersForUser().subscribe({
       next: (res) => {

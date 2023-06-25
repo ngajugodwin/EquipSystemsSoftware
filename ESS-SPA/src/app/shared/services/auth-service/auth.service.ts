@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { AUTH_URL, CUSTOMER_URL } from '../../../constants/api.constant';
 import { IUser } from 'src/app/entities/models/user';
 import { IAddress } from 'src/app/entities/models/address';
+import { ToasterService } from '../toaster-service/toaster.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class AuthService {
   currentUser: IUser;
   organisationId: number;
 
- constructor(private http: HttpClient,
+ constructor(private http: HttpClient, private toasterService: ToasterService,
     private router: Router) { }
 
   login(model: any) {
@@ -56,7 +57,7 @@ export class AuthService {
   logout() {
     this.clearStorage();
     this.router.navigate(['/login']);
-    // this.pnotifyService.info('Authentication', 'Logout successfully!');
+    this.toasterService.showInfo('Authentication', 'Logout successfully!');
   }
 
   roleMatch(allowedRoles: Array<string>): boolean {
@@ -65,6 +66,8 @@ export class AuthService {
    if (!this.decodedToken) {
      this.logout();
    }
+
+   
 
    const userRoles = this.decodedToken.role as Array<string>;
 
@@ -78,6 +81,26 @@ export class AuthService {
 
     return isMatch;
   }
+
+  // roleMatch(allowedRoles: Array<string>): boolean {
+  //   let isMatch = false;
+
+  //  if (!this.decodedToken) {
+  //    this.logout();
+  //  }
+
+  //  const userRoles = this.decodedToken.role as Array<string>;
+
+  //  console.log(userRoles);
+  //   allowedRoles.forEach(element => {
+  //     if (userRoles.includes(element)) {
+  //       isMatch = true;
+  //       return;
+  //     }
+  //   });
+
+  //   return isMatch;
+  // }
 
   getOrganisationId(): number{
     const userData: IUser = JSON.parse(localStorage.getItem('user') || "{}");

@@ -10,8 +10,8 @@ import { INavData } from '@coreui/angular';
 })
 export class DefaultLayoutComponent implements OnInit {
 
-   public navItems = navItems;
-  //public navItems: INavData[] = [];
+   // public navItems = navItems;
+  public navItems: INavData[] = [];
   SUPER_ADMIN_ROLE: string = SUPER_ADMIN_ROLE;
 
   public perfectScrollbarConfig = {
@@ -22,20 +22,31 @@ export class DefaultLayoutComponent implements OnInit {
 
 
   ngOnInit(): void {
- //  this.initMenu();
+   this.initMenu();
   }
 
-
-  
   initMenu() {
     const roles = [SUPER_ADMIN_ROLE];
     console.log(roles);
     const menus = this.menuService.getMenus();
     this.navItems = menus;
     if (this.authService.roleMatch(roles)) {
-      this.navItems = menus;
+      this.navItems = menus.filter(menu => menu.name?.toLowerCase() !== 'organisation settings')
     } else {
-       this.navItems = menus.filter(menu => menu.name !== 'Settings');
+       this.navItems = menus.filter(menu => menu.name?.toLowerCase() !== 'master settings');
     }
   }
+
+  
+  // initMenu() {
+  //   const roles = [SUPER_ADMIN_ROLE];
+  //   console.log(roles);
+  //   const menus = this.menuService.getMenus();
+  //   this.navItems = menus;
+  //   if (this.authService.roleMatch(roles)) {
+  //     this.navItems = menus
+  //   } else {
+  //      this.navItems = menus.filter(menu => menu.name?.toLowerCase() !== 'Master Settings');
+  //   }
+  // }
 }

@@ -3,12 +3,14 @@ import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
 // import { AuthService } from '../services/auth-service/auth.service';
 import {AuthService} from '../services/auth-service/auth.service';
 import { INavData } from '@coreui/angular';
+import { ToasterService } from '../services/toaster-service/toaster.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
     constructor(private authService: AuthService,
+      private toasterService: ToasterService,
         private router: Router) {}
 
     canActivate(next: ActivatedRouteSnapshot): boolean {
@@ -20,7 +22,7 @@ export class AuthGuard implements CanActivate {
           return true;
         } else {
           this.router.navigate(['/dashboard']);
-          console.log('You do not have permission to access this area');
+          this.toasterService.showError('Auth', 'You do not have sufficient permission to access this area');
         }
       }
 

@@ -6,6 +6,87 @@ import { INavData } from '@coreui/angular';
 })
 export class MenuService {
 
+  navItemsV2: INavData[] = [
+  {
+    name: 'Dashboard',
+    url: '/dashboard',
+    iconComponent: { name: 'cil-speedometer' },
+    badge: {
+      color: 'info',
+      text: ''
+      // text: 'NEW'
+    }
+  },
+  {
+    title: true,
+    name: 'User'
+  },
+  {
+    name: 'My Bookings',
+    url: '/my-bookings',
+    iconComponent: { name: 'cil-notes' }
+  },
+  {
+    name: 'Checkout Items',
+    url: '/checkout-items',
+    iconComponent: { name: 'cil-align-left' }
+  },
+  {
+    name: 'Basket',
+    url: '/basket',
+    iconComponent: { name: 'cil-dollar' }
+  },
+  {
+    name: 'Shop Items',
+    url: '/shop-items',
+    iconComponent: { name: 'cil-align-right' }
+  },
+  {
+    name: 'Self Service',
+    url: '/self-service',
+    iconComponent: { name: 'cil-pencil' }
+  },
+  {
+    name: 'Organisation Settings',
+    url: '/organisation-admin',
+    iconComponent: { name: 'cil-ApplicationsSettings'},
+    children: [
+      {
+        name: 'Users',
+        url: 'organisation-admin/manage-organisation-users',
+        iconComponent: {name: 'cil-User'}
+      }
+    ]
+  },
+  {
+    name: 'Master Settings',
+    url: '/master-admin',
+    iconComponent: { name: 'cil-ApplicationsSettings'},
+    children: [
+      {
+        name: 'Users',
+        url: 'master-admin/manage-users',
+        iconComponent: {name: 'cil-User'}
+      },
+      {
+        name: 'Organisations',
+        url: 'master-admin/manage-organisations',
+        iconComponent: {name: 'cil-people'}
+      },
+      {
+        name: 'Categories & Items',
+        url: 'master-admin/manage-categories',
+        iconComponent: {name: 'cil-settings'}
+      },
+      {
+        name: 'Manage Bookings',
+        url: 'master-admin/manage-bookings',
+        iconComponent: {name: 'cil-bookmark'}
+      }
+    ]
+  }
+];
+
   navItems: INavData[] = [
     {
       name: 'Dashboard',
@@ -74,6 +155,6 @@ export class MenuService {
   constructor() { }
 
   getMenus() {
-    return this.navItems;
+    return this.navItemsV2;
   }
 }

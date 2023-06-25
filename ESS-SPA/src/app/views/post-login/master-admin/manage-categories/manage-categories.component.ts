@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { NgxModalService } from "ngx-modalview";
 import { CategoryComponent } from './category/category.component';
 import { Subscription } from 'rxjs';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class ManageCategoriesComponent implements OnInit, OnDestroy {
 
   constructor(private categoryService: CategoryService, 
     private NgxModalService:NgxModalService,
+    private toasterService: ToasterService,
     private router: Router) { }
 
   ngOnInit() {
@@ -43,7 +45,7 @@ export class ManageCategoriesComponent implements OnInit, OnDestroy {
         }
       },
       error: (error: ErrorResponse) => {
-        console.log(error);
+        this.toasterService.showError(error.title, error.message);
       }
     });
   }
@@ -69,6 +71,7 @@ export class ManageCategoriesComponent implements OnInit, OnDestroy {
     .subscribe((res: ICategory)=>{
         if(res) {
             this.getCategories(this.categoryParams.status);
+            this.toasterService.showSuccess('SUCCESS', 'Category created successfully');
         }
     });
     
@@ -83,6 +86,7 @@ export class ManageCategoriesComponent implements OnInit, OnDestroy {
     .subscribe((res: ICategory)=>{
         if(res) {
             this.getCategories(this.categoryParams.status);
+            this.toasterService.showSuccess('SUCCESS', 'Category updated successfully');
         }
     });
   }
@@ -107,12 +111,12 @@ export class ManageCategoriesComponent implements OnInit, OnDestroy {
       next: ((res) => {
          this.categories.splice(this.categories.findIndex(c => c.id === res.id), 1);
          if (res.status.toLocaleLowerCase() === 'active'){
-          console.log('Category enabled successfully'); //TODO: show success toaster
+          this.toasterService.showSuccess('SUCCESS', 'Category enabled successfully'); //TODO: show success toaster
          }
-         console.log('Category disabled successfully'); //TODO: show success toaster
+         this.toasterService.showInfo('SUCCESS', 'Category disabled successfully'); //TODO: show success toaster
       }),
       error: ((error: ErrorResponse) => {
-        console.log(error); //TODO: show error toaster
+       this.toasterService.showError(error.title, error.message);
       })
     });
   }
