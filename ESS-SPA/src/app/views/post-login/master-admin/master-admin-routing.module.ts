@@ -10,7 +10,7 @@ import {ItemComponent} from "./manage-categories/item-types/items/item/item.comp
 import { ItemTypeComponent } from "./manage-categories/item-types/item-type/item-type.component";
 import { ItemResolver } from "src/app/shared/resolvers/item.resolver";
 import { ItemTypeResolver } from "src/app/shared/resolvers/item-type.resolver";
-
+import {ManageBookingsComponent} from './manage-bookings/manage-bookings.component';
 const routes: Routes = [
     {
         path: 'manage-users',
@@ -25,6 +25,11 @@ const routes: Routes = [
         path: 'manage-categories', 
         component: ManageCategoriesComponent, 
         data: {title: 'Categories'}
+    },
+    {
+        path: 'manage-bookings', 
+        component: ManageBookingsComponent, 
+        data: {title: 'Manage Bookings'}
     },
     // {
     //     path: 'manage-categories/new', 

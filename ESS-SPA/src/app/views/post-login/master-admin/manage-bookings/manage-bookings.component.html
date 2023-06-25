@@ -1,0 +1,132 @@
+
+<c-row>
+  <c-col xs>   
+    <c-card class="mb-4">
+        <!-- <c-card-header>Users</c-card-header>
+        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
+        <c-card-header>
+          <c-container>
+            <c-row  class="align-items-start">
+              <c-col class="table-title" xs="6">Manage Bookings</c-col>             
+              <c-col class="table-title" xs="6">
+                <div class="search" style="float: right;">
+                  <form #form="ngForm" (ngSubmit)="getAllOrders()">
+                    <input class="form-control form-control-sm input-search-box"
+                      type="search"
+                      placeholder="Search user"
+                      name="search"
+                      [(ngModel)]="orderParams.searchString"
+                      autocomplete="off">
+                  </form>
+                </div>
+              </c-col>              
+            </c-row>            
+          </c-container>
+        </c-card-header>
+      <c-card-body>
+        <c-row>
+          <c-col xs="4"></c-col>
+          <c-col xs="4">
+            <c-row>
+              <c-col  xs="6">
+                <div style="float: right;">
+                  <p ><strong>Payment Filter</strong></p>
+                </div>
+              </c-col>
+              <c-col xs="6">
+                <div class="selectWrapper" style="float: left;">
+                  <select class="selectBox" (change)="onPaymentStatusChange($event)" [value]="paymentStatus[0].id">
+                    <option [value]="filter.id" *ngFor="let filter of paymentStatus">{{filter.name}}</option>
+                </select>
+                </div>
+              </c-col>
+            </c-row>
+          </c-col>
+          <c-col xs="4">
+            <c-row>
+              <c-col xs="6">
+                <div style="float: right;">
+                  <p ><strong>Booking Filter</strong></p>
+                </div>
+              </c-col>
+              <c-col xs="6">
+                <div class="selectWrapper" style="float: left;">
+                  <select class="selectBox" (change)="onBookingStatusChange($event)" [value]="bookingStatus[0].id">
+                    <option [value]="filter.id" *ngFor="let filter of bookingStatus">{{filter.name}}</option>
+                </select>
+                </div>
+              </c-col>
+            </c-row>
+          </c-col>
+        </c-row>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">
+                <svg cIcon name="cilPeople"></svg>
+              </th>
+              <th>Name</th>
+              <th>Duration</th>
+              <th>Payment Status</th>
+              <th>Booking Status</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders; let i = index">            
+              <td class="text-center">
+                <c-avatar
+                  size="md"
+                  src="./assets/img/avatars/2.jpg"
+                  status="danger"
+                ></c-avatar>
+              </td>
+              <td>
+                {{order.shipToAddress.firstName}}  {{order.shipToAddress.lastName}}
+              </td>
+              <td>
+                {{order.bookingInformation.startDate | date}} - {{order.bookingInformation.endDate | date}}
+              </td>
+              <td>
+                <c-badge *ngIf="order.status.toLowerCase() === 'pending' || order.status.toLowerCase() === 'payment received' || order.status.toLowerCase() === 'approved' " color="success">{{order.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="order.status.toLowerCase() === 'payment failed' " color="danger">{{order.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="order.status.toLowerCase() === 'closed' " color="info">{{order.status.toUpperCase()}}</c-badge>
+              </td>     
+              <td>
+                <c-badge *ngIf="order.bookingInformation.bookingStatus.toLowerCase() === 'pending' " color="info">{{order.bookingInformation.bookingStatus.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="order.bookingInformation.bookingStatus.toLowerCase() === 'approved' " color="success">{{order.bookingInformation.bookingStatus.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="order.bookingInformation.bookingStatus.toLowerCase() === 'closed' " color="info">{{order.bookingInformation.bookingStatus.toUpperCase()}}</c-badge>
+              </td>
+              <td>
+                {{order.orderDate | date}}
+              </td>
+              <td>
+                <c-dropdown>
+                  <a cButton cDropdownToggle color="info">
+                    Actions
+                  </a>
+                  <ul cDropdownMenu>                    
+                    <li><a [disabled]="order.bookingInformation.bookingStatus.toLowerCase()== 'approved' || order.bookingInformation.bookingStatus.toLowerCase()== 'closed'" (click)="onApproveOrder(order)" cDropdownItem>Approve Booking</a></li>
+                    <li><a [disabled]="order.bookingInformation.bookingStatus.toLowerCase()== 'closed' || order.bookingInformation.bookingStatus.toLowerCase()== 'approved'" (click)="onDenyOrder(order)" cDropdownItem>Reject Booking</a></li>
+                    <li><a [disabled]="order.bookingInformation.bookingStatus.toLowerCase()== 'pending'|| order.bookingInformation.bookingStatus.toLowerCase()== 'closed'" (click)="onCloseOrder(order)" cDropdownItem>Close Booking</a></li>
+                  </ul>
+                </c-dropdown>
+              </td>
+            </tr>
+          </tbody>
+        </table>       
+      </c-card-body>
+      <div class="center-pagination">
+        <app-pager-pagination [pagination]="pagination" (nextPage)="getNextPage($event)"></app-pager-pagination>
+      </div>
+    </c-card>
+  </c-col>
+</c-row>
+

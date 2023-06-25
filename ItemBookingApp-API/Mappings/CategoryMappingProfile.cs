@@ -13,7 +13,7 @@ namespace ItemBookingApp_API.Mappings
             CreateMap<Category, CategoryResource>()
                 .ForMember(dest => dest.Status, opt => {
                     opt.MapFrom(src => src.Status.ToDescriptionString());
-                }); ;
+                });
 
             CreateMap<SaveCategoryResource, Category>();
 

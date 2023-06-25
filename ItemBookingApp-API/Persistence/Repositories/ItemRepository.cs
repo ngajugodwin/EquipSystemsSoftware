@@ -137,9 +137,9 @@ namespace ItemBookingApp_API.Persistence.Repositories
             items = items.OrderByDescending(c => c.CreatedAt).AsNoTracking();
 
             return await PagedList<Item>.CreateAsync(items, itemQuery.PageNumber, itemQuery.PageSize);
-        }       
+        }      
 
-        public async Task<IEnumerable<Item>> ListAsync(int itemTypeId, int[] itemIds = null)
+        public async Task<IEnumerable<Item>> ListAsync(int[] itemIds = null)
         {
             
             if (itemIds == null)

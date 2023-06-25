@@ -32,7 +32,9 @@ namespace ItemBookingApp_API.Controllers
 
             var address = _mapper.Map<AddressDto, Domain.Models.OrderAggregate.Address>(orderDto.ShipToAddress);
 
-            var order = await _orderService.CreateOrderAsync(email, orderDto.DeliveryMethodId, orderDto.BasketId, address);
+            var bookingInfo = _mapper.Map<BookingInfoDto, Domain.Models.OrderAggregate.BookingInformation>(orderDto.BookingInfoDto);
+
+            var order = await _orderService.CreateOrderAsync(email, orderDto.DeliveryMethodId, orderDto.BasketId, address, bookingInfo);
 
             if (order == null) return BadRequest("Problem create your request");
 

@@ -12,12 +12,20 @@ export interface IOrder {
     borrowerEmail: string;
     orderDate: string;
     shipToAddress: IAddress;
+    bookingInformation: IBookingInformation;
     deliveryMethod: string;
     shippingPrice: number;
     orderItems: IOrderItem[];
     subTotal: number;
     total: number;
-    status: string;
+    status: string;    
+}
+
+export interface IBookingInformation {
+    bookingStatus: string;
+    startDate: string;
+    endDate: string;
+    returnedDate: string;
 }
 
 export interface IOrderItem {
@@ -26,4 +34,16 @@ export interface IOrderItem {
     pictureUrl: string;
     price: number;
     quantity: number;
+}
+
+export enum OrderPaymentStatus{
+    Pending,
+    PaymentReceived,
+    PaymentFailed,
+}
+
+export enum OrderBookingStatus{
+    Pending,
+    Approved,
+    Closed
 }

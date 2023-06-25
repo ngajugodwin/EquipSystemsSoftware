@@ -15,6 +15,8 @@ namespace ItemBookingApp_API.Domain.Services
 
         Task<UserResponse> GetUserByIdAsync(long id);
 
+        Task<AppUser> GetUserByEmailAsync(string email);
+
         Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password);
 
         Task<UserResponse> UpdateAsync(long userId, AppUser user, List<string> userRoles);

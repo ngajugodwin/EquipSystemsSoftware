@@ -45,6 +45,11 @@ $prefix: "mo-";
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.center-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .center-action-button {
   display: flex;
   justify-content: center;

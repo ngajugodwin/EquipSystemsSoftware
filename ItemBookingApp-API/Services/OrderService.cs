@@ -24,7 +24,7 @@ namespace ItemBookingApp_API.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Order> CreateOrderAsync(string borrowerEmail, int deliveryMethodId, int basketId, Address shippingAddress)
+        public async Task<Order> CreateOrderAsync(string borrowerEmail, int deliveryMethodId, int basketId, Address shippingAddress, BookingInformation bookingInfo)
         {
             // get basket
             var basket = await _basketRepository.GetBasketAsync(basketId);
@@ -49,7 +49,7 @@ namespace ItemBookingApp_API.Services
             // calc subtotal
             var subTotal = items.Sum(item => item.Price * item.Quantity);
 
-            var order = new Order(items, borrowerEmail, shippingAddress, deliveryMethods, subTotal);
+            var order = new Order(items, borrowerEmail, shippingAddress, deliveryMethods, subTotal, bookingInfo);
 
             if (basket.PaymentIntentId != null)
                 order.PaymentItentId = basket.PaymentIntentId;

@@ -137,6 +137,11 @@ export const navItems: INavData[] = [
         name: 'Categories & Items',
         url: 'master-admin/manage-categories',
         iconComponent: {name: 'cil-User'}
+      },
+      {
+        name: 'Manage Bookings',
+        url: 'master-admin/manage-bookings',
+        iconComponent: {name: 'cil-User'}
       }
     ]
   }

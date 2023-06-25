@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace ItemBookingApp_API.Domain.Models.OrderAggregate
 {
@@ -11,6 +12,19 @@ namespace ItemBookingApp_API.Domain.Models.OrderAggregate
         PaymentReceived,
 
         [EnumMember(Value ="Payment Failed")]
-        PaymentFailed
+        PaymentFailed,
+      
+    }
+
+    public enum ApprovalStatus
+    {
+        [Description("Pending")]
+        Pending,
+
+        [Description("Approved")]
+        Approved,
+
+        [Description("Closed")]
+        Closed
     }
 }

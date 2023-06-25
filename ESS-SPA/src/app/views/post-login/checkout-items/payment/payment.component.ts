@@ -114,7 +114,8 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
             }).then(res => {
               if(res.paymentIntent) {       
                 this.basketService.deleteBasket(basket.id);        
-               this.basketService.deleteLocalBasket(basket.id);               
+               this.basketService.deleteLocalBasket(basket.id);  
+               this.result = basket;             
                this.close()             
               } else {
                 console.log('Payment failed')

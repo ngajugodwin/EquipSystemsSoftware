@@ -20,7 +20,7 @@ import { PaymentComponent } from './payment/payment.component';
 export class CheckoutItemsComponent implements OnInit, OnDestroy {
   private $disposable = new Subscription;
   deliveryMethods: IDeliveryMethod[];
-
+  hasBasket = false;;
 
   checkoutForm: FormGroup
 
@@ -32,10 +32,23 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
     private authService: AuthService) { }
 
   ngOnInit() {
+    this.getBasket();
     this.createCheckoutForm();
     this.getUserAddress();
     this.getDeliveryMethods();
     this.getDeliveryMethodValue();
+  }
+
+  getBasket() {
+    this.basketService.basket$.subscribe(res => {
+      if (res?.items) {
+        this.hasBasket = true;
+      }else{
+        this.hasBasket = false;
+      }
+    })
+
+    console.log(this.hasBasket);
   }
 
   ngOnDestroy(): void {
@@ -44,6 +57,10 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
 
   createCheckoutForm() {
     this.checkoutForm = this.fb.group({
+      bookingForm: this.fb.group({
+        startDate: [null, Validators.required],
+        endDate: [null, Validators.required]
+      }),
       addressForm: this.fb.group({
         firstName: [null, Validators.required],
         lastName: [null, Validators.required],
@@ -65,10 +82,14 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
   createPaymentIntent() {
     let yy = this.checkoutForm.get('addressForm')?.get('deliveryMethod');
 
+   // let bookingForm = this.checkoutForm.get('bookingForm')?.get('deliveryMethod');
+
     if (yy?.status === "INVALID") {
       alert('Please select at least one delivery method');
       return;
     }
+
+
       return this.basketService.createPaymentIntent().subscribe({
       next: (res) => {
         this.createOrder();
@@ -158,7 +179,9 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
       }
     })
     .subscribe((res: IBasket)=>{
-      this.router.navigate(['/my-bookings']);
+      if (res) {
+        this.router.navigate(['/my-bookings']);
+      }
     });
   }
 
@@ -182,13 +205,16 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  cancel() {}
+  cancel() {
+    this.router.navigate(['/shop-items'])
+  }
 
   private getOrderToCreate(basket: IBasket) {
     return {
       basketId: basket.id,
       deliveryMethodId: basket.deliveryMethodId,
-      shipToAddress: this.checkoutForm.get('addressForm')?.value
+      shipToAddress: this.checkoutForm.get('addressForm')?.value,
+      bookingInfoDto: this.checkoutForm.get('bookingForm')?.value
     };
   }
 

@@ -7,8 +7,9 @@
 
         }
         public Order(IReadOnlyList<OrderItem> orderItems, string borrowerEmail, Address shipToAddress, 
-            DeliveryMethod deliveryMethod, 
-            decimal subTotal)
+            DeliveryMethod deliveryMethod,           
+            decimal subTotal, 
+            BookingInformation bookingInformation)
         {
             //Id = id;
             BorrowerEmail = borrowerEmail;
@@ -16,6 +17,7 @@
             DeliveryMethod = deliveryMethod;
             OrderItems = orderItems;
             SubTotal = subTotal;
+            BookingInformation = bookingInformation;
         }
 
         public int Id { get; set; }
@@ -31,6 +33,11 @@
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
         public string PaymentItentId { get; set; }
+
+        public BookingInformation BookingInformation { get; set; }
+
+      
+
 
         public decimal GetTotal () 
         {

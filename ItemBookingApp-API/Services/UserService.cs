@@ -111,6 +111,13 @@ namespace ItemBookingApp_API.Services
             return new UserResponse(user);
         }
 
+        public async Task<AppUser> GetUserByEmailAsync(string email)
+        {
+            var user = await _applicationUserManager.FindByEmailAsync(email);
+
+            return user ?? null;
+        }
+
         public Task<UserResponse> ImportUsersAsync(IFormFile file)
         {
             throw new NotImplementedException();

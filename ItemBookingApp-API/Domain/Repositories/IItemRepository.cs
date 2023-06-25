@@ -12,7 +12,7 @@ namespace ItemBookingApp_API.Domain.Repositories
         Task<PagedList<Item>> GetAvailableItemsForCustomerListAsync(CustomerItemQuery customerItemQuery);
         Task<PagedList<Item>> ListAsync(ItemQuery itemQuery, int itemTypeId);
 
-        Task<IEnumerable<Item>> ListAsync(int categoryId, int[] itemIds = null);
+        Task<IEnumerable<Item>> ListAsync(int[] itemIds = null);
 
         Task<IList<Item>> GetAvailableItems(int itemTypeId);
 

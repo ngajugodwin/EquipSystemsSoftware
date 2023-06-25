@@ -9,6 +9,8 @@ namespace ItemBookingApp_API.Resources.Order
         public DateTimeOffset OrderDate { get; set; }
 
         public Address ShipToAddress { get; set; }
+
+        public BookingInfoDto BookingInformation { get; set; }
         public string DeliveryMethod { get; set; }
         public decimal ShippingPrice { get; set; }
 
@@ -18,5 +20,11 @@ namespace ItemBookingApp_API.Resources.Order
         public string Status { get; set; }
 
         public decimal Total { get; set; }
+
+        //public string BookingStatus { get; set; } = string.Empty;
+
+        //public DateTimeOffset StartDate { get; set; }
+
+        //public DateTimeOffset EndDate { get; set; }
     }
 }

@@ -14,6 +14,11 @@ namespace ItemBookingApp_API.EntityConfiguration
                 a.WithOwner();
             });
 
+            builder.OwnsOne(x => x.BookingInformation, a =>
+            {
+                a.WithOwner();
+            });
+
             builder.Property(s => s.Status)
                 .HasConversion(
                 o => o.ToString(),

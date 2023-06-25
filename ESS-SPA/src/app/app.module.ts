@@ -61,6 +61,7 @@ import { MasterAdminModule } from './views/post-login/master-admin/master-admin.
 
 import {CustomModule} from './shared/modules/custom.module';
 import {CheckoutService} from './shared/services/checkout-service/checkout.service';
+import {OrderService} from './shared/services/order-service/order.service';
 import {ToasterService} from './shared/services/toaster-service/toaster.service';
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalDialogModule } from 'ngx-modal-dialog';
@@ -162,6 +163,7 @@ const APP_CONTAINERS = [
     ToasterService,
     AuthService,
     UserService,
+    OrderService,
     OrganisationService,
     ManageAdminOrganisationService,
     RoleService,

@@ -1,5 +1,6 @@
 using AutoMapper;
 using ItemBookingApp_API.Domain.Models.Identity;
+using ItemBookingApp_API.Domain.Notification;
 using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Extension;
@@ -56,11 +57,16 @@ builder.Services.AddScoped<IOrganisationService, OrganisationService>();
 builder.Services.AddScoped<IManageAdminOrganisationService, ManageAdminOrganisationService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IManageOrderService, ManageOrderService>();
+
 
 //Services
 #endregion
 
-
+#region Mail Configuration
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddSingleton<INotificationService<Mail>, MailService>();
+#endregion
 
 #region Automapper Configuration
 var config = new MapperConfiguration(cfg =>

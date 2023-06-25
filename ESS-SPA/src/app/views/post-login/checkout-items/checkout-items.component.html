@@ -7,6 +7,30 @@
       
       <form cForm class="row g-3"  (ngSubmit)="createOrder()" [formGroup]="checkoutForm" id="checkoutForm">
        
+          <c-container formGroupName="bookingForm">
+            <c-row>
+              <c-col xs="6">
+               <c-row>
+                <c-col [xs]="12">
+                  <h6>Booking Information</h6>                    
+                </c-col>
+                <c-col [xs]="6">
+                  <label cLabel for="inputStartDate">Start Date</label>
+                  <input placeholder="Start Date" cFormControl id="inputStartDate" type="date"
+                      formControlName="startDate"/>
+                </c-col>
+                <c-col [xs]="6">
+                  <label cLabel for="inputFirstName">End Date</label>
+                  <input placeholder="End Date" cFormControl id="inputEndDate" type="date"
+                      formControlName="endDate"/>
+                </c-col>
+               </c-row>
+
+              </c-col>
+
+            </c-row>
+
+          </c-container>
           <c-container formGroupName="addressForm">           
              <c-row>
               <c-col [xs]="6">
@@ -68,10 +92,10 @@
     </c-card-body>
     <c-card-footer>
           <div class="center-action-button">
-            <button (click)="createPaymentIntent()" style="margin-right: 10px;" type="button" form="checkoutForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Create Payment Intent</button>
+            <button [disabled]="!hasBasket || !this.checkoutForm.get('bookingForm')?.valid" (click)="createPaymentIntent()" style="margin-right: 10px;" type="button" form="checkoutForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> >> PAY</button>
 
             <!-- <button (click)="createOrder()" style="margin-right: 10px;" type="button" form="checkoutForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Create Booking</button> -->
-      <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+      <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> >> Shop </button>
           </div>
     </c-card-footer>
   </c-card>
