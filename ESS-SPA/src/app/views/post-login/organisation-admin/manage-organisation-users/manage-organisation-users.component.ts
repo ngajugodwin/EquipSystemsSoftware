@@ -7,6 +7,7 @@ import { Pagination } from 'src/app/entities/models/pagination';
 import { IUser } from 'src/app/entities/models/user';
 import { AuthService } from 'src/app/shared/services/auth-service/auth.service';
 import { ManageAdminOrganisationService } from 'src/app/shared/services/manage-admin-organisaton-service/manage-admin-organisation.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-manage-organisation-users',
@@ -20,9 +21,15 @@ export class ManageOrganisationUsersComponent implements OnInit {
   users: IUser[] = [];
   userState = false;
 
-  constructor(private authService: AuthService, private router: Router, private manageAdminOrganisationService: ManageAdminOrganisationService) { }
+  constructor(private authService: AuthService, private router: Router, 
+    private toasterService: ToasterService,
+    private manageAdminOrganisationService: ManageAdminOrganisationService) { }
 
   ngOnInit() {
+    if (this.authService.getCurrentUser().typeName.toLowerCase() === 'individual') {
+      this.toasterService.showError('ERROR', 'You do not have sufficient permission to view this page');
+      this.router.navigate(['/dashboard']);
+    }
     this.initUserParams()
     this.initFilter(EntityStatus);
     this.getOrganisationUsers(this.userParams.status);
@@ -34,13 +41,12 @@ export class ManageOrganisationUsersComponent implements OnInit {
     this.userParams.status = currentStatus === undefined ? this.userParams.status : currentStatus;
     this.manageAdminOrganisationService
       .getOrganisationUsers(this.authService.getOrganisationId(), this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams).subscribe({
-        next: (res) => {
-          console.log(res);
+        next: (res) => {        
           this.users = res.result;
           this.pagination = res.pagination;
         },
         error: (error: ErrorResponse) => {
-          console.log(error); //TOD: show error toaster message
+          this.toasterService.showError(error.title, error.message);
         }
       });
   }
@@ -71,12 +77,12 @@ export class ManageOrganisationUsersComponent implements OnInit {
       next: ((res) => {
          this.users.splice(this.users.findIndex(c => c.id === res.id), 1);
          if (res.status.toLocaleLowerCase() === 'active'){
-          console.log('User enabled successfully'); //TODO: show success toaster
+          this.toasterService.showInfo('SUCCESS', 'User enabled successfully'); 
          }
-         console.log('User disabled successfully'); //TODO: show success toaster
+         this.toasterService.showInfo('SUCCESS', 'User disabled successfully'); 
       }),
       error: ((error: ErrorResponse) => {
-        console.log(error); //TODO: show error toaster
+        this.toasterService.showError(error.title, error.message);
       })
     });
   }

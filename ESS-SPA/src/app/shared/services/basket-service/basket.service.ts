@@ -8,6 +8,7 @@ import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IItem } from 'src/app/entities/models/item';
 import { IDeliveryMethod } from 'src/app/entities/models/deliveryMethod';
 import {UpdateDeliveryMethod} from '../../../entities/models/updateDeliveryMethod';
+import { ToasterService } from '../toaster-service/toaster.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ basket$ = this.basketSource.asObservable();
 basketTotal$ = this.basketTotalSource.asObservable();
 shipping = 0;
 
-constructor(private http: HttpClient, private authService: AuthService) { }
+constructor(private http: HttpClient, private authService: AuthService, private toasterService: ToasterService) { }
 
 createPaymentIntent(){
   return this.http.post<IBasket>(CUSTOMER_URL.BASE_URL + `/payments/${this.getCurrentBasket()?.id}`, {})
@@ -57,7 +58,7 @@ updateDeliveryMethod(data: UpdateDeliveryMethod) {
       }
     },
     error: (err: ErrorResponse) => {
-      console.log(err);
+      this.toasterService.showError(err.title, err.message);
     }
   })
     
@@ -67,6 +68,21 @@ deleteLocalBasket(id: number) {
   this.basketSource.next(null);
   this.basketTotalSource.next(null);
   localStorage.removeItem('basket_id');
+}
+
+getCurrentLoggedInUserBasket(userId: number) {
+  return this.http.get<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket`)
+  .subscribe({
+    next: (basket: IBasket) => {
+      if (basket) {
+        this.basketSource.next(basket);
+        localStorage.setItem('basket_id', basket.id.toString());
+      }
+    },
+    error: (err: ErrorResponse) => {
+      this.toasterService.showError(err.title, err.message);
+    }
+  })
 }
 
 getBasket(basketId: number) {
@@ -94,7 +110,7 @@ setBasket(basket: IBasket) {
           this.updateBasketSource(basket);
         },
         error: (err: ErrorResponse) => {
-          console.log(err);
+          this.toasterService.showError(err.title, err.message);
         }
       })
 }
@@ -111,7 +127,7 @@ increateItemQuantity(isIncrease: boolean, itemId: number) {
           this.basketSource.next(basket);
         },
         error: (err: ErrorResponse) => {
-          console.log(err);
+          this.toasterService.showError(err.title, err.message);
         }
       })
 }
@@ -127,7 +143,7 @@ decreaseItemQuantity(isDecreaseIncrease: boolean, itemId: number) {
           this.basketSource.next(basket);
         },
         error: (err: ErrorResponse) => {
-          console.log(err);
+      this.toasterService.showError(err.title, err.message);
         }
       })
 }

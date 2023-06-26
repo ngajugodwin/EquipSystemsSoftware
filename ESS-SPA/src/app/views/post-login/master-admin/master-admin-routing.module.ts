@@ -2,15 +2,10 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from '@angular/router';
 import { ManageOrganisationsComponent} from './manage-organisations/manage-organisations.component';
 import {ManageCategoriesComponent} from './manage-categories/manage-categories.component';
-import {CategoryComponent} from './manage-categories/category/category.component';
 import { CategoryResolver } from "src/app/shared/resolvers/category.resolver";
 import { ItemTypesComponent } from "./manage-categories/item-types/item-types.component";
-import { ItemsComponent } from "./manage-categories/item-types/items/items.component";
-import {ItemComponent} from "./manage-categories/item-types/items/item/item.component";
-import { ItemTypeComponent } from "./manage-categories/item-types/item-type/item-type.component";
-import { ItemResolver } from "src/app/shared/resolvers/item.resolver";
-import { ItemTypeResolver } from "src/app/shared/resolvers/item-type.resolver";
 import {ManageBookingsComponent} from './manage-bookings/manage-bookings.component';
+import { DetailsComponent } from "./manage-bookings/details/details.component";
 const routes: Routes = [
     {
         path: 'manage-users',
@@ -29,6 +24,11 @@ const routes: Routes = [
     {
         path: 'manage-bookings', 
         component: ManageBookingsComponent, 
+        data: {title: 'Manage Bookings'}
+    },
+    {
+        path: 'manage-bookings/:id', 
+        component: DetailsComponent, 
         data: {title: 'Manage Bookings'}
     },
     // {

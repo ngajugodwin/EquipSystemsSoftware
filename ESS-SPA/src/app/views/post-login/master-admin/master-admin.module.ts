@@ -23,6 +23,7 @@ import {DataUploadComponent} from './data-upload/data-upload.component';
 import { UploaderModule } from 'angular-uploader';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ManageBookingsComponent } from './manage-bookings/manage-bookings.component';
+import {DetailsComponent} from './manage-bookings/details/details.component';
 
 @NgModule({
 
@@ -64,7 +65,8 @@ import { ManageBookingsComponent } from './manage-bookings/manage-bookings.compo
         ItemsComponent,
         ConfirmComponent,
         DataUploadComponent,
-        ManageBookingsComponent
+        ManageBookingsComponent,
+        DetailsComponent
     ],
     providers:[
         CategoryResolver,

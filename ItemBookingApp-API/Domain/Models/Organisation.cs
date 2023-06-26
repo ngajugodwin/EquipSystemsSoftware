@@ -14,7 +14,7 @@ namespace ItemBookingApp_API.Domain.Models
 
         public long? ApprovedByUserId { get; set; }
 
-        public virtual AppUser ApprovedByUser { get; set; }
+        public virtual AppUser? ApprovedByUser { get; set; }
 
         public EntityStatus Status { get; set; }
 

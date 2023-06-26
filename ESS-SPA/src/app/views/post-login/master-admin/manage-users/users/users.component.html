@@ -29,7 +29,7 @@
                   </form>
                 </div>
               </c-col>
-              <c-col xs="2"><button cButton color="primary" [routerLink]="['/master-admin/manage-users/new']">New User</button></c-col>
+              <!-- <c-col xs="2"><button cButton color="primary" [routerLink]="['/master-admin/manage-users/new']">New User</button></c-col> -->
             </c-row>
           </c-container>
         </c-card-header>
@@ -47,7 +47,7 @@
               <c-col xs="3">
                 <div class="search">
                   <form #form="ngForm" (ngSubmit)="getUsers()">
-                    <input class="form-control form-control-sm input-search-box"
+                    <input [disabled]="userParams.accountType !== '2'" class="form-control form-control-sm input-search-box"
                       type="search"
                       placeholder="Search Organisation Name"
                       name="search"
@@ -110,10 +110,10 @@
                     Actions
                   </a>
                   <ul cDropdownMenu>                    
-                    <!-- <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onApproveOrganisation(org.id)" cDropdownItem>Approve</a></li>
-                    <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onRejectOrganisation(org.id)" cDropdownItem>Reject</a></li>
-                    <li *ngIf="user.status.toLowerCase() === 'disabled'"><a (click)="onEnableDisableOrganisation(org.id, true)" cDropdownItem>Enable</a></li>
-                    <li *ngIf="user.status.toLowerCase() === 'active'"><a (click)="onEnableDisableOrganisation(org.id, false)" cDropdownItem>Disable</a></li> -->
+                    <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onApproveUser(user)" cDropdownItem>Approve</a></li>
+                    <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onRejectUser(user)" cDropdownItem>Reject</a></li>
+                    <li *ngIf="user.status.toLowerCase() === 'disabled'"><a (click)="onEnableDisableUser(user, true)" cDropdownItem>Enable</a></li>
+                    <li *ngIf="user.status.toLowerCase() === 'active'"><a (click)="onEnableDisableUser(user, false)" cDropdownItem>Disable</a></li>
                   </ul>
                 </c-dropdown>
               </td>

@@ -33,14 +33,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initCustomerBasket();
+
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
     });
-
-this.initUserProfile();
+    this.initUserProfile();
+    this.initCustomerBasket();
    
   }
 
@@ -60,6 +60,10 @@ this.initUserProfile();
 
   initUserProfile() {
     const token = localStorage.getItem('token');
+
+    if(!token)
+      return;
+
     const user: IUser = JSON.parse(localStorage.getItem('user') || '');
     if (token) {
       this.authService.decodedToken = this.jwtHelper.decodeToken(token);

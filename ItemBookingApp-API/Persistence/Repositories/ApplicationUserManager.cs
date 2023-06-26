@@ -234,7 +234,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
                     users = users.Include(x => x.Organisation)
                        .Where(u => u.Status == query.Status
                        && u.AccountType == query.AccountType
-                       && u.Organisation.Name.Contains(query.AccountTypeName)).AsQueryable().AsNoTracking();
+                       || u.Organisation.Name.Contains(query.AccountTypeName)).AsQueryable().AsNoTracking();
                 }
 
 
@@ -254,6 +254,9 @@ namespace ItemBookingApp_API.Persistence.Repositories
             {
                 switch (userQuery.Status)
                 {
+                    case EntityStatus.Pending:
+                        users = ApplyCustomFilter(users, userQuery);
+                        break;
                     case EntityStatus.Active:
                         users = ApplyCustomFilter(users, userQuery);
                         break;

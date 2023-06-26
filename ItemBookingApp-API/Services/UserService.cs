@@ -58,7 +58,42 @@ namespace ItemBookingApp_API.Services
 
             return new UserResponse("Failed to change password due to password mismatch");
         }
-        
+
+        public async Task<UserResponse> RejectUser(long userId)
+        {
+            var userFromRepo = await _applicationUserManager.FindByIdAsync(userId);
+
+            if (userFromRepo == null)
+                return new UserResponse("User not found!");
+
+            var result = await _applicationUserManager.DeleteAsync(userFromRepo);
+
+            if (result.Succeeded)
+                return new UserResponse(userFromRepo);
+
+            return new UserResponse("Failed to delete user account");
+
+        }
+
+        public async Task<UserResponse> ApproveUser(long userId)
+        {
+            var userFromRepo = await _applicationUserManager.FindByIdAsync(userId);
+
+            if (userFromRepo == null)
+                return new UserResponse("User not found!");
+
+
+            userFromRepo.Status = EntityStatus.Active;
+
+            var result = await _applicationUserManager.UpdateAsync(userFromRepo);
+
+            if (result.Succeeded)
+                return new UserResponse(userFromRepo);
+
+            return new UserResponse("Failed to approve user account");
+
+        }
+
         public async Task<UserAddress> GetUserAddress(long userId)
         {
             var user = await _applicationUserManager.FindByIdAsync(userId);
@@ -280,15 +315,44 @@ namespace ItemBookingApp_API.Services
         {
             var createdUser = new AppUser();
 
-            if (user.AccountType == AccountType.Organisation && user.Organisation != null)
+            try
             {
-                var orgResponse = await _organisationService.SaveAsync(user.Organisation);
-
-                if (orgResponse.Success)
+                if (user.AccountType == AccountType.Organisation && user.Organisation != null)
                 {
-                    user.IsPrimaryOrganisationContact = true;
+                    var orgResponse = await _organisationService.SaveAsync(user.Organisation);
 
+                    if (orgResponse.Success)
+                    {
+                        user.IsPrimaryOrganisationContact = true;
+
+                        user.Status = EntityStatus.Pending;
+                        userRoles.Clear();
+                        userRoles.Add(RoleName.Owner);
+
+                        return await CreateUser(user, password, userRoles);
+                    }
+
+                    return new UserResponse("Failed to create user");
+                }
+
+
+                return await CreateUser(user, password, userRoles);
+            }
+            catch (Exception ex)
+            {
+
+                return new UserResponse($"Failed to create user: {ex.Message}");
+            }
+        }
+
+        private async Task<UserResponse> CreateIndividualAccount(AppUser user, string password, List<string> userRoles)
+        {
+            try
+            {
+                if (user != null && user.AccountType == AccountType.Individual)
+                {
                     user.Status = EntityStatus.Pending;
+                    user.OrganisationId = null;
                     userRoles.Clear();
                     userRoles.Add(RoleName.Owner);
 
@@ -297,23 +361,12 @@ namespace ItemBookingApp_API.Services
 
                 return new UserResponse("Failed to create user");
             }
-
-
-            return await CreateUser(user, password, userRoles);
-        }
-
-        private async Task<UserResponse> CreateIndividualAccount(AppUser user, string password, List<string> userRoles)
-        {
-            if (user != null && user.AccountType == AccountType.Individual)
+            catch (Exception ex)
             {
-                user.Status = EntityStatus.Pending;
-                userRoles.Clear();
-                userRoles.Add(RoleName.Owner);
 
-                return await CreateUser(user, password, userRoles);
+                return new UserResponse($"Failed to create user: {ex.Message}");
             }
-
-            return new UserResponse("Failed to create user");
+          
         }
 
         private async Task<UserResponse> CreateUser(AppUser user, string password, List<string> userRoles)

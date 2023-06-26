@@ -167,8 +167,8 @@ namespace ItemBookingApp_API.Services
 
         public async Task<UserResponse> UpdateUserAsync(int organisationId, long userId, AppUser user, List<string> userRoles)
         {
-            if (user.OrganisationId != organisationId)
-                return new UserResponse("You can only create a user in your Tenant");
+            //if (user.OrganisationId != organisationId)
+            //    return new UserResponse("You can only create a user in your Tenant");
 
             var userFromRepo = await _applicationUserManager.FindByIdAsync(userId);
             var currentUserRoles = await _applicationUserManager.GetRolesAsync(userFromRepo);
@@ -179,6 +179,7 @@ namespace ItemBookingApp_API.Services
 
             userFromRepo.FirstName = user.FirstName;
             userFromRepo.LastName = user.LastName;
+            userFromRepo.UserName = user.UserName;
 
             try
             {

@@ -31,6 +31,12 @@ namespace ItemBookingApp_API.Areas.Resources.AppUser
 
         public int AccountType { get; set; }
 
+        public string City { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+
+        public string Street { get; set; } = string.Empty;
+
+
         // public SaveOrganisationResource SaveOrganisationResource { get; set; }
 
 

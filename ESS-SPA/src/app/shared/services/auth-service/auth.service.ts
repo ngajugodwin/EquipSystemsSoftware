@@ -65,13 +65,10 @@ export class AuthService {
 
    if (!this.decodedToken) {
      this.logout();
-   }
-
-   
+   }  
 
    const userRoles = this.decodedToken.role as Array<string>;
 
-   console.log(userRoles);
     allowedRoles.forEach(element => {
       if (userRoles.includes(element)) {
         isMatch = true;
@@ -117,6 +114,7 @@ export class AuthService {
   clearStorage()
   {
     localStorage.removeItem('token');
+    localStorage.removeItem('basket_id');
     localStorage.removeItem('user');
     localStorage.removeItem('refreshToken');
     this.currentUser = null!;

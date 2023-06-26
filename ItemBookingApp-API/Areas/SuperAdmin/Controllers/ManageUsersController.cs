@@ -113,6 +113,39 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         }
 
 
+        [HttpPut("{userId}/approveUser")]
+        public async Task<IActionResult> ApproveUser(long userId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
+
+            var result = await _userService.ApproveUser(userId);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var userToReturn = _mapper.Map<UserResource>(result.Resource);
+
+            return Ok(userToReturn);
+        }
+
+        [HttpPut("{userId}/rejectUser")]
+        public async Task<IActionResult> RejectUser(long userId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessages());
+
+            var result = await _userService.RejectUser(userId);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var userToReturn = _mapper.Map<UserResource>(result.Resource);
+
+            return Ok(userToReturn);
+        }
+
+
         [HttpPut("{userId}/changeUserPassword")]
         public async Task<IActionResult> ChangeUserPassword(long userId, [FromBody] PasswordUpdateResource passwordUpdateResource)
         {

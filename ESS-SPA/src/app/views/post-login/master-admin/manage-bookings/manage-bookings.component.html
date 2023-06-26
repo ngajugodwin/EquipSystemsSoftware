@@ -112,7 +112,8 @@
                   <a cButton cDropdownToggle color="info">
                     Actions
                   </a>
-                  <ul cDropdownMenu>                    
+                  <ul cDropdownMenu>     
+                    <li><a routerLink="/master-admin/manage-bookings/{{order.id}}"  cDropdownItem>View Details</a></li>
                     <li><a [disabled]="order.bookingInformation.bookingStatus.toLowerCase()== 'approved' || order.bookingInformation.bookingStatus.toLowerCase()== 'closed'" (click)="onApproveOrder(order)" cDropdownItem>Approve Booking</a></li>
                     <li><a [disabled]="order.bookingInformation.bookingStatus.toLowerCase()== 'closed' || order.bookingInformation.bookingStatus.toLowerCase()== 'approved'" (click)="onDenyOrder(order)" cDropdownItem>Reject Booking</a></li>
                     <li><a [disabled]="order.bookingInformation.bookingStatus.toLowerCase()== 'pending'|| order.bookingInformation.bookingStatus.toLowerCase()== 'closed'" (click)="onCloseOrder(order)" cDropdownItem>Close Booking</a></li>

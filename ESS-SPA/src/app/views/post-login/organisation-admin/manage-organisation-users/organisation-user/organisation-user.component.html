@@ -13,13 +13,13 @@
               formControlName="firstName"/>
               <div class="invalid-feedback" *ngIf="userForm.get('firstName')?.hasError('required') && userForm.get('firstName')?.touched">The first name field is required</div>
           </c-col>
-        <c-col [md]="6">
+        <!-- <c-col [md]="6">
         <label cLabel for="inputFirstName">First Name</label>
         <input cFormControl id="inputEmail4" type="text"
             [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('firstName')?.touched}"
             formControlName="firstName"/>
             <div class="invalid-feedback" *ngIf="userForm.get('firstName')?.hasError('required') && userForm.get('firstName')?.touched">The first name field is required</div>
-        </c-col>
+        </c-col> -->
         <c-col [md]="6">
         <label cLabel for="inputLastName">Last Name</label>
         <input cFormControl id="inputPassword4" type="text" 
@@ -76,7 +76,7 @@
           </div>
         </c-col>
         <c-col [xs]="12">
-        <button [disabled]="!userForm.valid" form="userForm" cButton type="submit">Create New User</button>
+        <button [disabled]="!userForm.valid" form="userForm" cButton type="submit">Save</button>
         </c-col>
         </form>
     </c-card-body>

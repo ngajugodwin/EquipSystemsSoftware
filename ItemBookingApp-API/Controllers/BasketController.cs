@@ -36,6 +36,18 @@ namespace ItemBookingApp_API.Controllers
             return Ok(backetToReturn ?? new CustomerBasketResource(basketId, userId));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentBasket(long userId)
+        {
+            var basket = await _basketRepository.GetCurrentBasket(userId);
+
+            var backetToReturn = _mapper.Map<CustomerBasket, CustomerBasketResource>(basket);
+
+            return Ok(backetToReturn ?? null);
+        }
+
+
+
         [HttpPost]
         public async Task<IActionResult> AddBasketAsync(SaveCustomerBasketResource saveCustomerBasketResource)
         {

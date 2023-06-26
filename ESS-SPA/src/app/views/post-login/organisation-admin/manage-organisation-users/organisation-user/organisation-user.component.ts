@@ -8,6 +8,7 @@ import { ManageAdminOrganisationService } from 'src/app/shared/services/manage-a
 import { RoleService } from 'src/app/shared/services/role-service/role.service';
 import { filter, map } from 'rxjs';
 import { AccountType } from 'src/app/entities/models/accountType';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-organisation-user',
@@ -26,6 +27,7 @@ export class OrganisationUserComponent implements OnInit {
   constructor(private fb: FormBuilder, 
       private router: Router, 
       private roleService: RoleService,
+      private toasterService: ToasterService,
       private manageAdminOrganisationService: ManageAdminOrganisationService,
       private activatedRoute: ActivatedRoute,
       private authService: AuthService) { }
@@ -34,7 +36,6 @@ export class OrganisationUserComponent implements OnInit {
     this.initUserForm();
     this.getRoles();
     this.currentOrganisationId = this.authService.getOrganisationId();
-    console.log('orgId' + this.currentOrganisationId);
   }
 
   get userFormGroups () {
@@ -59,8 +60,8 @@ export class OrganisationUserComponent implements OnInit {
   }
 
   getRoles() {
-    this.roleService.getRoles().subscribe((res) => {
-      this.roles = res;
+    this.roleService.getRoles().subscribe((res) => {     
+      this.roles = res.filter(x => x.name?.toLowerCase() !== 'owner'&& x.name?.toLowerCase() !== 'superadmin');
       this.getUser();
     });
 
@@ -95,6 +96,8 @@ export class OrganisationUserComponent implements OnInit {
     const userRoles = user.userRoles;
     const availableRoles = this.roles;
 
+    console.log(availableRoles);
+
     if (user) {
       for (let i = 0; i < availableRoles.length; i++) {
         let isMatch = false;
@@ -125,12 +128,13 @@ export class OrganisationUserComponent implements OnInit {
    assignValuesToControl(user: IUser) {
     this.userForm.patchValue({
       id: user.id,
-      username: user.userName,
+      userName: user.userName,
       email: user.email || '',
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       userRoles: user.userRoles
     });
+    this.userForm.controls['email'].disable();
   }
 
   getSelectedRoleName() {
@@ -157,23 +161,23 @@ export class OrganisationUserComponent implements OnInit {
        if (this.userForm.value['id'] !== null) {
         this.manageAdminOrganisationService.updateOrganisationUser(this.currentOrganisationId, user.id, user).subscribe({
           next: (updatedUser) => {
-            console.log('User updated successfully' + updatedUser) //TODO show success toaster message 
+            this.toasterService.showInfo('SUCCESS', 'User updated successfully');
             this.router.navigate(['/organisation-admin/manage-organisation-users']);
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
        } else {      
         this.manageAdminOrganisationService.createOrganisationUserAccount(this.currentOrganisationId, user).subscribe({
           next: (newUser: IUser) => {
             if (newUser) {
-              console.log(newUser) //TODO show success toaster
+              this.toasterService.showSuccess('SUCCESS', 'New organisation user created successfully'); //TODO show success toaster
               this.router.navigate(['/organisation-admin/manage-organisation-users']);
             }
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
        }

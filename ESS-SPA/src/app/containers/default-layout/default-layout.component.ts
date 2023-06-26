@@ -27,7 +27,6 @@ export class DefaultLayoutComponent implements OnInit {
 
   initMenu() {
     const roles = [SUPER_ADMIN_ROLE];
-    console.log(roles);
     const menus = this.menuService.getMenus();
     this.navItems = menus;
     if (this.authService.roleMatch(roles)) {

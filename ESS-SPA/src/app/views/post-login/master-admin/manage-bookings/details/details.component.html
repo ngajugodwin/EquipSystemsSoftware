@@ -1,0 +1,82 @@
+
+<c-row *ngIf="order">
+  <c-col xs>   
+    <c-card class="mb-4">
+        <c-card-header>
+          <c-container>
+            <c-row  class="align-items-start">
+              <c-col class="table-title" xs="6">Booking Details</c-col>
+              <c-col class="table-title" xs="6">
+                <button   routerLink="/master-admin/manage-bookings"  class="btn btn-primary" style="float: right;">Back</button>
+              </c-col>
+            </c-row>            
+          </c-container>
+        </c-card-header>
+        <c-card-body>
+          
+        </c-card-body>
+      <c-card-body>
+       <c-row>
+        <c-col xs="8">
+          <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th>Items</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of order.orderItems; let i = index">    
+              <!-- <td>{{order.pictureUrl}}</td> -->
+              <td>
+                <c-row>
+                  <img src="{{item.pictureUrl}}" alt="{{item.pictureUrl}}" class="img-fluid" style="max-height: 50px; max-width: 100px;">
+                  <div class="ml-3 d-inline-block align-middle">
+                    <h5 style="margin-bottom: 0%;">{{item.itemName}}</h5>
+                  </div>
+                </c-row>
+              </td>
+
+              <td>{{item.price | currency}}</td>
+              <td>{{item.quantity | currency}}</td>
+              <td>{{item.price * item.quantity}}</td>
+            </tr>
+          </tbody>
+        </table>       
+        </c-col>
+        <c-col xs="4">
+          <div class="bg-light px-4 py-3 text-uppercase font-weight-bold">
+            Order Summary
+          </div>
+          <div class="p-4">
+            <p class="font-italic mb-4">Transaction Summary</p>
+            <ul class="list-unstyled mb-4">
+              <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
+                <strong class="text-muted">Order subtotal</strong>
+                <strong >{{order.subTotal | currency}}</strong>
+              </li>
+              <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
+                <strong class="text-muted">Shipping/Handling</strong>
+                <strong >{{order.shippingPrice | currency}}</strong>
+              </li>  
+              <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
+                <strong class="text-muted">Total:</strong>
+                <strong >{{order.total | currency}}</strong>
+              </li>
+            </ul>
+          </div>
+        </c-col>
+       </c-row>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+

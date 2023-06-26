@@ -48,6 +48,16 @@ namespace ItemBookingApp_API.Services
             if (user == null)
                 return new AuthResponse("Invalid email or password");
 
+            switch (user.Status)
+            {
+                case EntityStatus.Pending:
+                    return new AuthResponse("You account is pending activation");                    
+                case EntityStatus.Disabled:
+                    return new AuthResponse("You account has been disabled. Please contact support");
+                default:
+                    break;
+            }
+
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
             if (result.Succeeded)

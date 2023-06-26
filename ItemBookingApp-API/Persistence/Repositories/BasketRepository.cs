@@ -152,6 +152,18 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         }
 
+        public async Task<CustomerBasket> GetCurrentBasket(long userId)
+        {
+            var userBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if (userBasket != null)
+            {
+                return userBasket;
+            }
+
+            return null;
+        }
+
         public async Task<CustomerBasket> GetBasketAsync(int basketId)
         {
             var data = await _context.CustomerBaskets

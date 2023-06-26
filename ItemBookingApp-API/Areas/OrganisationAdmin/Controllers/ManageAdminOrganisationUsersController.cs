@@ -15,7 +15,7 @@ namespace ItemBookingApp_API.Areas.OrganisationAdmin.Controllers
 {
     [Route("organisation-admin/api/[controller]/{organisationId}")]
     [ApiController]
-    [Authorize(Policy = PermissionSystemName.AccessOrganizationOwnerArea)]
+    [Authorize(Policy = PermissionSystemName.AccessOrganisationAdminRole)]
     public class ManageAdminOrganisationUsersController : ControllerBase
     {
         private readonly IMapper _mapper;

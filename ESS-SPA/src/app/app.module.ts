@@ -75,6 +75,10 @@ import { UploaderModule } from "angular-uploader";
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ToastrModule } from 'ngx-toastr';
 
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };

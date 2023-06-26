@@ -44,6 +44,7 @@
                     placeholder="Organisation Address" />
                     <div class="invalid-feedback" *ngIf="userForm.controls['organisation'].get('address')?.hasError('required') && userForm.controls['organisation'].get('address')?.touched">The org address field is required</div>
                 </c-input-group>
+                
                 <c-input-group class="mb-3">
                   <span cInputGroupText>
                     <svg cIcon name="cilUser"></svg>
@@ -53,6 +54,7 @@
                     formControlName="dateOfIncoporation"                   
                     autoComplete="dateOfIncoporation" 
                     cFormControl
+                    placeholder="Date of Incorporation"
                     [ngClass]="{'is-invalid' : userForm.controls['organisation'].get('dateOfIncoporation')?.errors && userForm.controls['organisation'].get('dateOfIncoporation')?.touched}"
                     placeholder="Organisation Incoporation Date" />
                     <div class="invalid-feedback" *ngIf="userForm.controls['organisation'].get('dateOfIncoporation')?.hasError('required') && userForm.controls['organisation'].get('dateOfIncoporation')?.touched">The date of incoporation field is required</div>
@@ -93,6 +95,42 @@
                     [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('lastName')?.touched}"
                     placeholder="Last Name" />
                     <div class="invalid-feedback" *ngIf="userForm.get('lastName')?.hasError('required') && userForm.get('lastName')?.touched">The last name field is required</div>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilUser"></svg>
+                </span>
+                <input
+                    formControlName="street"                   
+                    autoComplete="street" 
+                    cFormControl
+                    [ngClass]="{'is-invalid' : userForm.get('street')?.errors && userForm.get('street')?.touched}"
+                    placeholder="Street" />
+                    <div class="invalid-feedback" *ngIf="userForm.get('street')?.hasError('required') && userForm.get('street')?.touched">The street field is required</div>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilUser"></svg>
+                </span>
+                <input
+                    formControlName="city"                   
+                    autoComplete="city" 
+                    cFormControl
+                    [ngClass]="{'is-invalid' : userForm.get('city')?.errors && userForm.get('city')?.touched}"
+                    placeholder="City" />
+                    <div class="invalid-feedback" *ngIf="userForm.get('city')?.hasError('required') && userForm.get('city')?.touched">The city field is required</div>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilUser"></svg>
+                </span>
+                <input
+                    formControlName="state"                   
+                    autoComplete="state" 
+                    cFormControl
+                    [ngClass]="{'is-invalid' : userForm.get('state')?.errors && userForm.get('state')?.touched}"
+                    placeholder="State" />
+                    <div class="invalid-feedback" *ngIf="userForm.get('state')?.hasError('required') && userForm.get('state')?.touched">The state field is required</div>
               </c-input-group>
               <c-input-group class="mb-3">
                 <span cInputGroupText>@</span>

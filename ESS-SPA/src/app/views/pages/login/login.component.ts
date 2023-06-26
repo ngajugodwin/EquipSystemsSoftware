@@ -37,20 +37,22 @@ export class LoginComponent {
     });
   }
 
+  // initCustomerBasket() {
+  //   const basketId = localStorage.getItem('basket_id');
+
+  //   if (basketId) {
+  //     this.basketService.getBasket(Number(basketId)).subscribe({
+  //       next: (res) => {
+  //           console.log('Init Basket');
+  //       }, error: (err: ErrorResponse) => {
+  //         this.toasterService.showError(err.title, err.message);
+
+  //       }
+  //     })
+  //   }
+  // }
+
   initCustomerBasket() {
-    const basketId = localStorage.getItem('basket_id');
-
-    if (basketId) {
-      this.basketService.getBasket(Number(basketId)).subscribe({
-        next: (res) => {
-            console.log('Init Basket');
-        }, error: (err: ErrorResponse) => {
-          this.toasterService.showError(err.title, err.message);
-
-        }
-      })
-    }
+    this.basketService.getCurrentLoggedInUserBasket(this.authService.getCurrentUser().id);
   }
-
-
 }

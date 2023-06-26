@@ -77,7 +77,7 @@ const routes: Routes = [
       },
       {
         path: 'master-admin',
-        data: {roles: ['SuperAdmin']},
+    //    data: {roles: ['SuperAdmin']},
         loadChildren: () => import('./views/post-login/master-admin/master-admin.module').then(m => m.MasterAdminModule)
       },
       {

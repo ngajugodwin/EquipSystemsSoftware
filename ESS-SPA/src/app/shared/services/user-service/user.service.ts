@@ -22,7 +22,20 @@ createUserAccount(userForCreation: IUser) {
   return this.http.post<IUser>(AUTH_URL.REGISTER, userForCreation,  {params: params});
 }
 
+approveUser(user: IUser) {
+  return this.http.put<IUser>(USER_URL.SUPER_ADMIN_BASE_URL + `${user.id}/approveUser`, {});
+}
 
+rejectUser(user: IUser) {
+  return this.http.put<IUser>(USER_URL.SUPER_ADMIN_BASE_URL + `${user.id}/rejectUser`, {});
+}
+
+
+onEnableDisableUser(userId: number, newStatus: boolean): Observable<IUser> {
+  let params = new HttpParams();
+  params = new HttpParams().set('userStatus', newStatus);
+  return this.http.put<IUser>(USER_URL.SUPER_ADMIN_BASE_URL + `${userId}/activateOrDisableUser`, {}, {params: params});
+}
 
 
 getUsers(page?: number, itemsPerPage?: number, userParams?: UserParams): Observable<PaginationResult<IUser[]>> {

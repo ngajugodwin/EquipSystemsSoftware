@@ -9,6 +9,9 @@ export interface IUser {
     firstName: string,
     lastName: string,
     userName: string,
+    city: string,
+    state: string,
+    street: string,
     email: string,
     organisationId: number;
     organisation: IOrganisation;

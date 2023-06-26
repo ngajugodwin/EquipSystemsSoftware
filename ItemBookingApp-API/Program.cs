@@ -93,7 +93,7 @@ builder.Services.AddAuthorization(opt =>
 {
     opt.AddPolicy(PermissionSystemName.AccessSuperAdminArea, policy => policy.RequireRole("SuperAdmin"));
     opt.AddPolicy(PermissionSystemName.HasUserRole, policy => policy.RequireRole("User", "Admin", "Owner", "SuperAdmin"));
-    opt.AddPolicy(PermissionSystemName.AccessOrganizationOwnerArea, policy => policy.RequireRole("Owner"));
+    opt.AddPolicy(PermissionSystemName.AccessOrganizationOwnerArea, policy => policy.RequireRole("Owner", "Admin"));
     opt.AddPolicy(PermissionSystemName.AccessOrganisationAdminRole, policy => policy.RequireRole("Admin", "Owner"));
 });
 
