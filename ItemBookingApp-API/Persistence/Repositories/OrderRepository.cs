@@ -57,8 +57,28 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return orders;
         }
 
-        public async Task<PagedList<Order>> GetOrdersListForModerationAsync(OrderQuery orderQuery)
+        public async Task<PagedList<Order>> GetOrderReport(OrderReportQuery orderReportQuery)
         {
+            var orders = Enumerable.Empty<Order>().AsQueryable();
+
+            if (orderReportQuery.StartDate.HasValue && orderReportQuery.EndDate.HasValue)
+            {
+                orders = _context.Orders
+                              .Include(d => d.DeliveryMethod)
+                              .Include(o => o.OrderItems).ThenInclude(i => i.ItemOrdered)
+                              .Where(b => b.OrderDate.Date >= orderReportQuery.StartDate.Value.Date
+                              && b.OrderDate.Date <= orderReportQuery.EndDate.Value.Date)
+                              .AsQueryable().AsNoTracking();
+            }
+
+            orders = orders.OrderBy(b => b.OrderDate);
+
+            return await PagedList<Order>.CreateAsync(orders, orderReportQuery.PageNumber, orderReportQuery.PageSize);
+        }
+
+
+       public async Task<PagedList<Order>> GetOrdersListForModerationAsync(OrderQuery orderQuery)
+       {
             var orders = _context.Orders
                                 .Include(d => d.DeliveryMethod)
                                 .Include(o => o.OrderItems).ThenInclude(i => i.ItemOrdered)

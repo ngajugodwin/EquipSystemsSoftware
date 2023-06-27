@@ -40,7 +40,6 @@ namespace ItemBookingApp_API.Services
 
                 shippingPrice = deliveryMethod.Price;
 
-
             }
 
             foreach (var item in basket.Items)

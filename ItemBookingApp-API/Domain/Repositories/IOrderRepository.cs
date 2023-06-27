@@ -6,6 +6,7 @@ namespace ItemBookingApp_API.Domain.Repositories
 {
     public interface IOrderRepository
     {
+        Task<PagedList<Order>> GetOrderReport(OrderReportQuery orderReportQuery);
         Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string borrowerEmail);
 
         Task<Order> GetOrderByIdAsync(int id, string borrowerEmail);

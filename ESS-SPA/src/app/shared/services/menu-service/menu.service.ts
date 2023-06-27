@@ -74,6 +74,11 @@ export class MenuService {
         iconComponent: {name: 'cil-people'}
       },
       {
+        name: 'Reports',
+        url: 'master-admin/reports',
+        iconComponent: {name: 'cil-address-book'}
+      },
+      {
         name: 'Categories & Items',
         url: 'master-admin/manage-categories',
         iconComponent: {name: 'cil-settings'}

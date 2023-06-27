@@ -6,6 +6,8 @@ import { CategoryResolver } from "src/app/shared/resolvers/category.resolver";
 import { ItemTypesComponent } from "./manage-categories/item-types/item-types.component";
 import {ManageBookingsComponent} from './manage-bookings/manage-bookings.component';
 import { DetailsComponent } from "./manage-bookings/details/details.component";
+import {ReportsComponent} from "./reports/reports.component";
+
 const routes: Routes = [
     {
         path: 'manage-users',
@@ -24,6 +26,11 @@ const routes: Routes = [
     {
         path: 'manage-bookings', 
         component: ManageBookingsComponent, 
+        data: {title: 'Manage Bookings'}
+    },
+    {
+        path: 'reports', 
+        component: ReportsComponent, 
         data: {title: 'Manage Bookings'}
     },
     {

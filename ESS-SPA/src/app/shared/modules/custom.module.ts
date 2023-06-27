@@ -15,6 +15,7 @@ import {StepperComponent} from '../components/stepper/stepper.component';
 import {TextInputComponent} from '../components/text-input/text-input.component';
 // import {CdkStepperModule} from '@angular/cdk/stepper';
 import {BasketSummaryComponent} from '../components/basket-summary/basket-summary.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
     imports: [
@@ -25,12 +26,14 @@ import {BasketSummaryComponent} from '../components/basket-summary/basket-summar
         CdkStepperModule,
         ReactiveFormsModule,
         CdkStepperModule,
-        PaginationModule.forRoot()
+        PaginationModule.forRoot(),
+        BsDatepickerModule.forRoot(),
     ],
     exports: [
         // PagerPaginationComponent,
         StatusFilterComponent,
         PaginationModule,
+        BsDatepickerModule,
         PagerPaginationComponent,
         PagingHeaderComponent,
         OrderTotalsComponent,

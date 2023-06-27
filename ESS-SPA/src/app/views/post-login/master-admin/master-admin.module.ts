@@ -24,6 +24,8 @@ import { UploaderModule } from 'angular-uploader';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ManageBookingsComponent } from './manage-bookings/manage-bookings.component';
 import {DetailsComponent} from './manage-bookings/details/details.component';
+import { ReportsComponent } from './reports/reports.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
 
@@ -47,6 +49,7 @@ import {DetailsComponent} from './manage-bookings/details/details.component';
         CardModule,
         UploaderModule,
         FileUploadModule,
+       // BsDatepickerModule.forRoot(),
         NgxSmartModalModule.forRoot()
     ], 
     exports:[
@@ -66,7 +69,8 @@ import {DetailsComponent} from './manage-bookings/details/details.component';
         ConfirmComponent,
         DataUploadComponent,
         ManageBookingsComponent,
-        DetailsComponent
+        DetailsComponent,
+        ReportsComponent
     ],
     providers:[
         CategoryResolver,

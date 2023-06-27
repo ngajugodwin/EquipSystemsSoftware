@@ -58,6 +58,7 @@ builder.Services.AddScoped<IManageAdminOrganisationService, ManageAdminOrganisat
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IManageOrderService, ManageOrderService>();
+builder.Services.AddScoped<IReportOrderService, ReportOrderService>();
 
 
 //Services
