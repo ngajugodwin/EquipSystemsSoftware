@@ -13,12 +13,12 @@
                     <svg cIcon name="cilUser"></svg>
                   </span>
                   <input
-                    formControlName="username"                   
+                    formControlName="userName"                   
                     autoComplete="name" 
                     cFormControl
-                    [ngClass]="{'is-invalid' : userForm.get('username')?.errors && userForm.get('username')?.touched}"
+                    [ngClass]="{'is-invalid' : userForm.get('userName')?.errors && userForm.get('userName')?.touched}"
                     placeholder="Username" />
-                    <div class="invalid-feedback" *ngIf="userForm.get('username')?.hasError('required') && userForm.get('username')?.touched">The username field is required</div>
+                    <div class="invalid-feedback" *ngIf="userForm.get('userName')?.hasError('required') && userForm.get('userName')?.touched">The username field is required</div>
                 </c-input-group>
               </div>
               <c-input-group class="mb-3">
@@ -114,8 +114,14 @@
                   autoComplete="new-password" cFormControl placeholder="Confirm Password" type="password" />
                   <div class="invalid-feedback" *ngIf="userForm.get('confirmPassword')?.hasError('required') && userForm.get('confirmPassword')?.touched">Confirm Password is required</div>
                   <div class="invalid-feedback" *ngIf="userForm.hasError('mismatch') && userForm.get('confirmPassword')?.touched">Passwords does not match</div>
-              </c-input-group>              
-              <div class="d-grid">
+              </c-input-group>
+              <div>
+                <c-col [xs]="6">
+                  <label cLabel>Means of Identification</label>
+                  <input  (change)="onFileChanged($event)" formControlName="file" style="color: red;"  accept=".jpg" type="file" id="myFile" name="filename">
+                </c-col>
+              </div>       
+              <div class="d-grid" style="padding-top: 10px;">
                 <button [disabled]="!userForm.valid" type="submit" cButton color="success">Create Account</button>
               </div>
             </form>
@@ -125,3 +131,11 @@
     </c-row>
   </c-container>
 </div>
+
+
+<!-- <div>
+  <c-col [xs]="6">
+    <label cLabel>Select File</label>
+    <input  (change)="onFileChanged($event)" formControlName="file" style="color: red;"  accept=".jpg" type="file" id="myFile" name="filename">
+  </c-col>
+</div> -->

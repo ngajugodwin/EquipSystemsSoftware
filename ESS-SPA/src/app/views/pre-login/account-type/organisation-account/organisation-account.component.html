@@ -51,13 +51,13 @@
                   </span>
                   <input
                   type="date"
-                    formControlName="dateOfIncoporation"                   
-                    autoComplete="dateOfIncoporation" 
+                    formControlName="dateOfIncorporation"                   
+                    autoComplete="dateOfIncorporation" 
                     cFormControl
                     placeholder="Date of Incorporation"
-                    [ngClass]="{'is-invalid' : userForm.controls['organisation'].get('dateOfIncoporation')?.errors && userForm.controls['organisation'].get('dateOfIncoporation')?.touched}"
-                    placeholder="Organisation Incoporation Date" />
-                    <div class="invalid-feedback" *ngIf="userForm.controls['organisation'].get('dateOfIncoporation')?.hasError('required') && userForm.controls['organisation'].get('dateOfIncoporation')?.touched">The date of incoporation field is required</div>
+                    [ngClass]="{'is-invalid' : userForm.controls['organisation'].get('dateOfIncorporation')?.errors && userForm.controls['organisation'].get('dateOfIncorporation')?.touched}"
+                    placeholder="Organisation Incorporation Date" />
+                    <div class="invalid-feedback" *ngIf="userForm.controls['organisation'].get('dateOfIncorporation')?.hasError('required') && userForm.controls['organisation'].get('dateOfIncorporation')?.touched">The date of incoporation field is required</div>
                 </c-input-group>                
               </div>
               <c-input-group class="mb-3">
@@ -65,12 +65,12 @@
                   <svg cIcon name="cilUser"></svg>
                 </span>
                 <input
-                  formControlName="username"                   
+                  formControlName="userName"                   
                   autoComplete="name" 
                   cFormControl
-                  [ngClass]="{'is-invalid' : userForm.get('username')?.errors && userForm.get('username')?.touched}"
+                  [ngClass]="{'is-invalid' : userForm.get('userName')?.errors && userForm.get('userName')?.touched}"
                   placeholder="Username" />
-                  <div class="invalid-feedback" *ngIf="userForm.get('username')?.hasError('required') && userForm.get('username')?.touched">The username field is required</div>
+                  <div class="invalid-feedback" *ngIf="userForm.get('userName')?.hasError('required') && userForm.get('userName')?.touched">The username field is required</div>
               </c-input-group>
               <c-input-group class="mb-3">
                 <span cInputGroupText>
@@ -92,7 +92,7 @@
                     formControlName="lastName"                   
                     autoComplete="lastName" 
                     cFormControl
-                    [ngClass]="{'is-invalid' : userForm.get('firstName')?.errors && userForm.get('lastName')?.touched}"
+                    [ngClass]="{'is-invalid' : userForm.get('lastName')?.errors && userForm.get('lastName')?.touched}"
                     placeholder="Last Name" />
                     <div class="invalid-feedback" *ngIf="userForm.get('lastName')?.hasError('required') && userForm.get('lastName')?.touched">The last name field is required</div>
               </c-input-group>
@@ -165,8 +165,14 @@
                   autoComplete="new-password" cFormControl placeholder="Confirm Password" type="password" />
                   <div class="invalid-feedback" *ngIf="userForm.get('confirmPassword')?.hasError('required') && userForm.get('confirmPassword')?.touched">Confirm Password is required</div>
                   <div class="invalid-feedback" *ngIf="userForm.hasError('mismatch') && userForm.get('confirmPassword')?.touched">Passwords does not match</div>
-              </c-input-group>              
-              <div class="d-grid">
+              </c-input-group>      
+              <div>
+                <c-col [xs]="6">
+                  <label cLabel>Means of Identification</label>
+                  <input  (change)="onFileChanged($event)" formControlName="file" style="color: red;"  accept=".jpg" type="file" id="myFile" name="filename">
+                </c-col>
+              </div>           
+              <div class="d-grid" style="padding-top: 10px;">
                 <button [disabled]="!userForm.valid" type="submit" cButton color="success">Create Account</button>
               </div>
             </form>

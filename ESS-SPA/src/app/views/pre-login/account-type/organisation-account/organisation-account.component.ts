@@ -14,6 +14,7 @@ import { UserService } from 'src/app/shared/services/user-service/user.service';
   styleUrls: ['./organisation-account.component.css']
 })
 export class OrganisationAccountComponent implements OnInit {
+  selectedFile: any;
   userForm: FormGroup;
   user: IUser;
 
@@ -25,12 +26,17 @@ export class OrganisationAccountComponent implements OnInit {
     this.initUserForm();
   }
 
+  onFileChanged(event: any) {
+    this.selectedFile = event.target.files[0]
+  }
+
   save() {
     if (this.userForm.valid) {
       const user: IUser = Object.assign({}, this.userForm.value);
       user.accountType = AccountType.Organisation     
       user.organisation = Object.assign({}, this.userForm.controls['organisation'].value);
-      this.userService.createUserAccount(user).subscribe({
+      console.log(user);
+      this.userService.createUserAccountV2(user, this.selectedFile).subscribe({
         next: ((res) => {
           if (res) {
             this.toasterService.showSuccess('SUCCESS', "New Organisation User account created successfully");
@@ -47,10 +53,11 @@ export class OrganisationAccountComponent implements OnInit {
 
   private initUserForm() {
     this.userForm = this.fb.group({
-      username: ['', Validators.required],
+      userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.email]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+      file: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
       street: ['', Validators.required],
@@ -60,7 +67,7 @@ export class OrganisationAccountComponent implements OnInit {
         name: ['', Validators.required],
         registrationNumber: ['', Validators.required],
         address: ['', Validators.required],
-        dateOfIncoporation: ['', Validators.required]
+        dateOfIncorporation: ['', Validators.required]
       })
     }, {validator: [this.passwordMatchValidator]} as AbstractControlOptions);    
   }

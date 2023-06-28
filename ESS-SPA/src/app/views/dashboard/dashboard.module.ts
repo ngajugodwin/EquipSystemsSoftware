@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 import {
   AvatarModule,
@@ -21,6 +22,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 
 import { WidgetsModule } from '../widgets/widgets.module';
+import {ItemsDisplayComponent} from './items-display/items-display.component';
 
 @NgModule({
   imports: [
@@ -40,9 +42,10 @@ import { WidgetsModule } from '../widgets/widgets.module';
     ChartjsModule,
     AvatarModule,
     TableModule,
-    WidgetsModule
+    WidgetsModule,
+    CarouselModule.forRoot()
   ],
-  declarations: [DashboardComponent]
+  declarations: [DashboardComponent, ItemsDisplayComponent]
 })
 export class DashboardModule {
 }

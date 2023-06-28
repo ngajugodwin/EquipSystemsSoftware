@@ -24,6 +24,14 @@ namespace ItemBookingApp_API.Areas.Resources.AppUser
 
         public string? OrganisationId { get; set; }
 
+        public string? IdentificationUrl { get; set; }
+
+        public string? State { get; set; }
+        public string? Street { get; set; }
+
+        public string? City { get; set; }
+
+
         public OrganisationResource OrganisationResource { get; set; }
     }
 }

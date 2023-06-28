@@ -36,6 +36,10 @@ namespace ItemBookingApp_API.Areas.Resources.AppUser
 
         public string Street { get; set; } = string.Empty;
 
+        public bool IsExternalReg { get; set; }
+
+        public IFormFile? File { get; set; }
+
 
         // public SaveOrganisationResource SaveOrganisationResource { get; set; }
 

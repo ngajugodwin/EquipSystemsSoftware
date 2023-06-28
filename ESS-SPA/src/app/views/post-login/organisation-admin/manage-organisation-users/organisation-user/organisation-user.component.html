@@ -75,14 +75,23 @@
               </div>
           </div>
         </c-col>
+        <c-col [xs]="6" *ngIf="currentMeansOfIdentity">
+          <img width="100%" height="100%" src="{{currentMeansOfIdentity}}">
+          <!-- <c-avatar
+            size="lg"
+            [src]="currentMeansOfIdentity"
+        ></c-avatar> -->
+        </c-col>
         <c-col [xs]="12">
-        <button [disabled]="!userForm.valid" form="userForm" cButton type="submit">Save</button>
+        <!-- <button [disabled]="!userForm.valid" form="userForm" cButton type="submit">Save</button> -->
         </c-col>
         </form>
     </c-card-body>
     <c-card-footer>
-      <!-- <button type="submit" [disabled]="!userForm.valid" form="userForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Submit</button>
-      <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button> -->
+     <div class="center-pagination">
+      <button  style="margin-right: 10px;" type="submit" [disabled]="!userForm.valid" form="userForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Submit</button>
+      <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+     </div>
     </c-card-footer>
   </c-card>
 </c-col>

@@ -26,7 +26,7 @@ namespace ItemBookingApp_API.Controllers
               
 
         [HttpPost]
-        public async Task<IActionResult> CreateNewAccountAsync([FromBody] SaveUserResource saveUserResource, [FromQuery] bool isExternalReg)
+        public async Task<IActionResult> CreateNewAccountAsync([FromForm] SaveUserResource saveUserResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
@@ -43,7 +43,7 @@ namespace ItemBookingApp_API.Controllers
 
             var userToSave = _mapper.Map<SaveUserResource, AppUser>(saveUserResource);
 
-            var result = await _userService.SaveAsync(userToSave, isExternalReg, userRoles, saveUserResource.Password);
+            var result = await _userService.SaveAsync(userToSave, saveUserResource.IsExternalReg, userRoles, saveUserResource.Password, saveUserResource.File);
 
             if (!result.Success)
             {

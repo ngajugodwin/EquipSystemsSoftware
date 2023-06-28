@@ -36,6 +36,9 @@ namespace ItemBookingApp_API.Domain.Models.Identity
 
         public string ZipCode { get; set; } = string.Empty;
 
+        public string? IdentificationUrl { get; set; }
+        public string? PublicId { get; set; }
+
         public AppUser()
         {
             CreatedAt = DateTime.Now;

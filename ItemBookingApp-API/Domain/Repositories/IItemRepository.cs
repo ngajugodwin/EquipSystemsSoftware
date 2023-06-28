@@ -7,7 +7,7 @@ namespace ItemBookingApp_API.Domain.Repositories
 {
     public interface IItemRepository
     {
-
+        Task<List<Item>> GetItemsForCarouselDisplay();
         Task<Item> GetItemAsync(int itemId);
         Task<PagedList<Item>> GetAvailableItemsForCustomerListAsync(CustomerItemQuery customerItemQuery);
         Task<PagedList<Item>> ListAsync(ItemQuery itemQuery, int itemTypeId);
@@ -23,5 +23,6 @@ namespace ItemBookingApp_API.Domain.Repositories
         Task<bool> IsExist(string itemName, string serialNumber);
 
         Task<IEnumerable<Item>> GetItemsAsync(int[] itemIds);
+
     }
 }

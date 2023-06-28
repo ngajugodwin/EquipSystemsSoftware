@@ -1,4 +1,7 @@
-﻿using ItemBookingApp_API.Domain.Models;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using ItemBookingApp_API.Areas.Resources.Item;
+using ItemBookingApp_API.Domain.Models;
 using ItemBookingApp_API.Domain.Models.Identity;
 using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Repositories;
@@ -10,27 +13,37 @@ using ItemBookingApp_API.Services.Constants;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 using System.Formats.Asn1;
+using ItemBookingApp_API.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace ItemBookingApp_API.Services
 {
     public class UserService : IUserService
     {
-        private readonly RoleManager<Role> _roleManager;
+        private readonly RoleManager<Domain.Models.Identity.Role> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ApplicationUserManager _applicationUserManager;
         private readonly IOrganisationService _organisationService;
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
+        private Cloudinary _cloudinary;
 
-        public UserService(IUnitOfWork unitOfWork, RoleManager<Role> roleManager,
+        public UserService(IUnitOfWork unitOfWork, RoleManager<Domain.Models.Identity.Role> roleManager,
                            SignInManager<AppUser> signInManager,
                            ApplicationUserManager applicationUserManager,
-                           IOrganisationService organisationService)
+                           IOrganisationService organisationService,
+                            IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _unitOfWork = unitOfWork;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _applicationUserManager = applicationUserManager;
             _organisationService = organisationService;
+            _cloudinaryConfig = cloudinaryConfig;
+
+            Account acct = new Account(_cloudinaryConfig.Value.CloudName, _cloudinaryConfig.Value.ApiKey, _cloudinaryConfig.Value.ApiSecret);
+
+            _cloudinary = new Cloudinary(acct);
         }
         public async Task<UserResponse> ChangePassword(long userId, string oldPassword, string newPassword, bool isAdmin)
         {
@@ -66,10 +79,19 @@ namespace ItemBookingApp_API.Services
             if (userFromRepo == null)
                 return new UserResponse("User not found!");
 
-            var result = await _applicationUserManager.DeleteAsync(userFromRepo);
+            if (userFromRepo != null)
+            {
+                if (!string.IsNullOrWhiteSpace(userFromRepo.PublicId))
+                {
+                    DeleteFileFromCloudindary(userFromRepo.PublicId);
+                }
+              
+                var result = await _applicationUserManager.DeleteAsync(userFromRepo);
 
-            if (result.Succeeded)
-                return new UserResponse(userFromRepo);
+                if (result.Succeeded)
+                    return new UserResponse(userFromRepo);
+            }
+           
 
             return new UserResponse("Failed to delete user account");
 
@@ -222,7 +244,7 @@ namespace ItemBookingApp_API.Services
             return new UserResponse(userFromRepo);
         }
 
-        public async Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password)
+        public async Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password, IFormFile file)
         {
             try
             {              
@@ -231,17 +253,20 @@ namespace ItemBookingApp_API.Services
                     switch (user.AccountType)
                     {
                         case AccountType.Individual:
-                            return await CreateIndividualAccount(user, password, userRoles);
+                            return await CreateIndividualAccount(user, password, userRoles, file);
                         case AccountType.Organisation:
-                            return await CreateOrganisationAccount(user, password, userRoles);
+                            return await CreateOrganisationAccount(user, password, userRoles, file);
                         case AccountType.Master:
-                            return await CreateMasterAccount(user, password, userRoles);
+                            return await CreateMasterAccount(user, password, userRoles, file);
                         default:
                             return new UserResponse("Failed to create user");
                     }
+                } else
+                {
+                    return await CreateOrganisationAccount(user, password, userRoles, file);
+
                 }
 
-                return await CreateOrganisationAccount(user, password, userRoles);
             }
             catch (Exception ex)
             {
@@ -294,7 +319,7 @@ namespace ItemBookingApp_API.Services
             }
         }
 
-        private async Task<UserResponse> CreateMasterAccount(AppUser user, string password, List<string> userRoles)
+        private async Task<UserResponse> CreateMasterAccount(AppUser user, string password, List<string> userRoles, IFormFile file)
         {
 
             if (user != null && user.AccountType == AccountType.Master)
@@ -304,14 +329,14 @@ namespace ItemBookingApp_API.Services
 
                 user.Status = EntityStatus.Active;
 
-                return await CreateUser(user, password, userRoles);
+                return await CreateUser(user, password, userRoles, file);
             }
 
             return new UserResponse("Failed to create user");
         }
                
 
-        private async Task<UserResponse> CreateOrganisationAccount(AppUser user, string password, List<string> userRoles)
+        private async Task<UserResponse> CreateOrganisationAccount(AppUser user, string password, List<string> userRoles, IFormFile file)
         {
             var createdUser = new AppUser();
 
@@ -329,14 +354,14 @@ namespace ItemBookingApp_API.Services
                         userRoles.Clear();
                         userRoles.Add(RoleName.Owner);
 
-                        return await CreateUser(user, password, userRoles);
+                        return await CreateUser(user, password, userRoles, file);
                     }
 
                     return new UserResponse("Failed to create user");
                 }
 
 
-                return await CreateUser(user, password, userRoles);
+                return await CreateUser(user, password, userRoles, file);
             }
             catch (Exception ex)
             {
@@ -345,7 +370,7 @@ namespace ItemBookingApp_API.Services
             }
         }
 
-        private async Task<UserResponse> CreateIndividualAccount(AppUser user, string password, List<string> userRoles)
+        private async Task<UserResponse> CreateIndividualAccount(AppUser user, string password, List<string> userRoles, IFormFile file)
         {
             try
             {
@@ -356,7 +381,7 @@ namespace ItemBookingApp_API.Services
                     userRoles.Clear();
                     userRoles.Add(RoleName.Owner);
 
-                    return await CreateUser(user, password, userRoles);
+                    return await CreateUser(user, password, userRoles, file);
                 }
 
                 return new UserResponse("Failed to create user");
@@ -369,28 +394,83 @@ namespace ItemBookingApp_API.Services
           
         }
 
-        private async Task<UserResponse> CreateUser(AppUser user, string password, List<string> userRoles)
+        private async Task<UserResponse> CreateUser(AppUser user, string password, List<string> userRoles, IFormFile meansOfIdentification)
         {
             if (user == null) {
                 var errors = new List<IdentityError>();
                 errors.Add(new IdentityError { Code = "ERROR", Description = "Object is null"});
                 return new UserResponse("User object is null", errors);
             }
-            var result = await _applicationUserManager.CreateAsync(user, password);
-            
-            if (result.Succeeded)
-            {
-                if (userRoles.Count() > 0)
-                {
-                    var savedUser = await _applicationUserManager.FindByNameAsync(user.UserName);
 
-                    await _applicationUserManager.AddToRolesAsync(savedUser, userRoles);
+
+            try
+            {
+                var result = await _applicationUserManager.CreateAsync(user, password);
+
+                if (result.Succeeded)
+                {
+                    ProcessIdentificationPhoto(meansOfIdentification, user);
+
+                    if (userRoles.Count() > 0)
+                    {
+                        var savedUser = await _applicationUserManager.FindByNameAsync(user.UserName);                     
+
+                        await _applicationUserManager.UpdateAsync(user);
+
+                        await _applicationUserManager.AddToRolesAsync(savedUser, userRoles);
+                    }
+
+                    return new UserResponse(user);
                 }
 
-                return new UserResponse(user);
+                return new UserResponse($"Failed to create User", result.Errors);
+            }
+            catch (Exception ex)
+            {
+
+                return new UserResponse($"Unable to create account: {ex.Message}");
+            }
+        }
+
+        private async void DeleteFileFromCloudindary(string publicId)
+        {
+            try
+            {
+                var deletionParams = new DeletionParams(publicId)
+                {
+                    ResourceType = ResourceType.Image,
+                    PublicId = publicId,
+                    Type = "upload",
+                };
+
+                var results = await _cloudinary.DestroyAsync(deletionParams);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
-            return new UserResponse($"Failed to create User", result.Errors);
+        }
+
+        private void ProcessIdentificationPhoto(IFormFile file, AppUser user)
+        {
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using (var stream = file.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(file.Name, stream)                       
+                    };
+
+                    uploadResult = _cloudinary.Upload(uploadParams);
+                }
+            }
+
+            user.IdentificationUrl = uploadResult.Url.ToString();
+            user.PublicId = uploadResult.PublicId;
         }
     }
 }

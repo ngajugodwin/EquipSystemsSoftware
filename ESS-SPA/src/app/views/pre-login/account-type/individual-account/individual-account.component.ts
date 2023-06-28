@@ -14,6 +14,7 @@ import { UserService } from 'src/app/shared/services/user-service/user.service';
   styleUrls: ['./individual-account.component.css']
 })
 export class IndividualAccountComponent implements OnInit {
+  selectedFile: any;
   userForm: FormGroup;
   user: IUser;
   
@@ -26,15 +27,32 @@ export class IndividualAccountComponent implements OnInit {
   }
 
   save() {
+
+    if (this.selectedFile === null || this.selectedFile === undefined) {
+      alert('Please select a file');
+      return;
+    }  
+    
+    if (!this.selectedFile.name.includes('.jpg', 0)) {
+      alert('Only jpg pictures are supported');
+      return;
+    }
+
     if (this.userForm.valid) {
       const user: IUser = Object.assign({}, this.userForm.value);
-      user.accountType = AccountType.Individual;
+      user.accountType = AccountType.Individual;      
 
-      this.userService.createUserAccount(user).subscribe({
-        next: (() => {
-          this.toasterService.showSuccess('SUCCESS', "New User account created successfully");
-          this.clear();
-          this.router.navigate(['/login']);
+      this.userService.createUserAccountV2(user, this.selectedFile).subscribe({
+        next: ((res) => {
+          if (res) {
+            this.toasterService.showSuccess('SUCCESS', "Account created and pending activation");
+            this.clear();
+            this.router.navigate(['/login']);
+          } else {
+            this.toasterService.showError('ERROR', "Unable to create your account");
+
+          }
+        
         }),
         error: ((error: ErrorResponse) => {
           this.toasterService.showError(error.title, error.message);
@@ -42,14 +60,19 @@ export class IndividualAccountComponent implements OnInit {
       });
   }}
 
+  onFileChanged(event: any) {
+    this.selectedFile = event.target.files[0]
+  }
+
 
   private initUserForm() {
     this.userForm = this.fb.group({
-      username: ['', Validators.required],
+      userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.email]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       city: ['', Validators.required],
+      file: ['', Validators.required],
       state: ['', Validators.required],
       street: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],

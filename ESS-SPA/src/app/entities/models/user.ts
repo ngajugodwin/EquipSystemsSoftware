@@ -21,4 +21,5 @@ export interface IUser {
     password: string,
     userRoles: IRole[],
     createdAt: Date,
+    identificationUrl: string
 }

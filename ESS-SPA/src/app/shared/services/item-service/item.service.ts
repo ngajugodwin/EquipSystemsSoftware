@@ -106,6 +106,10 @@ export class ItemService {
     return this.http.get<IItem>(CUSTOMER_URL.BASE_URL + `/Items/${itemId}`);
   }
 
+  getItemsForCarouselDisplay() {
+    return this.http.get<IItem[]>(CUSTOMER_URL.BASE_URL + `/Items/carouselDisplay`);
+  }
+
   getItemsForCustomer(itemParams: ItemParams, page?: number, itemsPerPage?: number) {
     const paginatedResult: PaginationResult<IItem[]> = new PaginationResult<IItem[]>();
   

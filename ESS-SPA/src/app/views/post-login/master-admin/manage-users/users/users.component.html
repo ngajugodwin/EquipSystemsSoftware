@@ -110,6 +110,7 @@
                     Actions
                   </a>
                   <ul cDropdownMenu>                    
+                    <li routerLink="/master-admin/review-user/{{user.id}}" *ngIf="user.status.toLowerCase() === 'pending'"><a cDropdownItem>Review</a></li>
                     <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onApproveUser(user)" cDropdownItem>Approve</a></li>
                     <li *ngIf="user.status.toLowerCase() === 'pending'"><a (click)="onRejectUser(user)" cDropdownItem>Reject</a></li>
                     <li *ngIf="user.status.toLowerCase() === 'disabled'"><a (click)="onEnableDisableUser(user, true)" cDropdownItem>Enable</a></li>

@@ -136,6 +136,9 @@ namespace ItemBookingApp_API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("IdentificationUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsPrimaryOrganisationContact")
                         .HasColumnType("bit");
 
@@ -169,6 +172,9 @@ namespace ItemBookingApp_API.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

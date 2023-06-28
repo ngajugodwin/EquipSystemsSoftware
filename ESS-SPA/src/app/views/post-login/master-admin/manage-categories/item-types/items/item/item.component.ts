@@ -92,7 +92,6 @@ console.log(data.target.value);
       
       if (!this.selectedFile.name.includes('.jpg', 0)) {
         alert('Only jpg pictures are supported');
-        // TODO: display notification when file is not supported or in right format
         return;
       }
     }

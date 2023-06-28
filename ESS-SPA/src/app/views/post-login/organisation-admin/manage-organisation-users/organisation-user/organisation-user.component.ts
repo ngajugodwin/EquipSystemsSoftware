@@ -23,6 +23,8 @@ export class OrganisationUserComponent implements OnInit {
   userForm: FormGroup;
   isEditUserMode = false;
   currentUser: IUser;
+  currentMeansOfIdentity: string;
+  selectedFile: any;
   
   constructor(private fb: FormBuilder, 
       private router: Router, 
@@ -41,6 +43,11 @@ export class OrganisationUserComponent implements OnInit {
   get userFormGroups () {
     return this.userForm.get('roles') as FormArray;
   }
+
+  onFileChanged(event: any) {
+    this.selectedFile = event.target.files[0]
+  }
+
 
   initUserForm() {
     this.userForm = this.fb.group({
@@ -77,7 +84,6 @@ export class OrganisationUserComponent implements OnInit {
       this.disableControl();
       this.getUserRoles(user);
       this.assignValuesToControl(user);
-      console.log('EDIT USER');
 
     } else {
       console.log('NEW USER');
@@ -132,9 +138,10 @@ export class OrganisationUserComponent implements OnInit {
       email: user.email || '',
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      userRoles: user.userRoles
+      userRoles: user.userRoles,
     });
     this.userForm.controls['email'].disable();
+    this.currentMeansOfIdentity = user.identificationUrl;
   }
 
   getSelectedRoleName() {

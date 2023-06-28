@@ -24,6 +24,9 @@ namespace ItemBookingApp_API.EntityConfiguration
             builder.Property(u => u.Email)
                .IsRequired();
 
+            builder.Property(u => u.OrganisationId)
+                .HasDefaultValue(null);
+
             builder.HasOne(u => u.Organisation)
              .WithMany(o => o.Users)             
              .HasForeignKey(u => u.OrganisationId)

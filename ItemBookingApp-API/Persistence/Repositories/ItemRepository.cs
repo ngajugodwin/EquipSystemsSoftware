@@ -61,6 +61,16 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return status;
         }
 
+        public Task<List<Item>> GetItemsForCarouselDisplay()
+        {
+            var result =  _context.Items.Include(c => c.Category)
+             .Include(i => i.ItemType)
+             .Where(x => x.IsActive == true).OrderBy(x => x.Name).AsNoTracking();
+
+
+            return result.ToListAsync();
+        }
+
 
         public async Task<PagedList<Item>> GetAvailableItemsForCustomerListAsync(CustomerItemQuery customerItemQuery)
         {

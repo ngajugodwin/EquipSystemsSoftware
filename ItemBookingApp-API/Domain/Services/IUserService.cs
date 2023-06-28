@@ -19,7 +19,7 @@ namespace ItemBookingApp_API.Domain.Services
 
         Task<AppUser> GetUserByEmailAsync(string email);
 
-        Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password);
+        Task<UserResponse> SaveAsync(AppUser user, bool isExternalReg, List<string> userRoles, string password, IFormFile file);
 
         Task<UserResponse> UpdateAsync(long userId, AppUser user, List<string> userRoles);
 

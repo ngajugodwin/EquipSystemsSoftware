@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {UsersComponent} from '../users/users.component';
 import {UserComponent} from '../users/user/user.component';
+import {UserReviewComponent} from './user-review/user-review.component';
 
 import {UsersRoutingModule } from './users-routing.module'
 import {
@@ -42,7 +43,8 @@ exports: [
 ], 
 declarations:[
     UsersComponent,
-    UserComponent
+    UserComponent,
+    UserReviewComponent
 ],
 providers:[
 

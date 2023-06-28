@@ -1,0 +1,62 @@
+<div *ngIf="user">
+  <div class="card">
+    <div class="card-header">
+    <c-row>
+      <c-col>
+        <i></i><span class="table-title">Base Information</span>
+      </c-col>
+      <c-col style="display: flex; justify-content: end;">
+        <button routerLink="/master-admin/manage-users" class="btn btn-primary">Back</button>
+      </c-col>
+    </c-row>
+    </div>
+    <div class="card-body">
+      <c-row>
+        <c-col>
+          <img src="{{user.identificationUrl}}">
+          <h3 *ngIf="!user.identificationUrl" style="margin: 20px;">No Image to display</h3>
+        </c-col>
+        <c-col xs="6">
+          <table class="table table-responsive-sm table-striped">
+            <tbody>
+              <tr>
+                <td><strong>FULL NAME :</strong></td>
+                <td>{{user.firstName + ' ' + user.lastName}}</td>
+              </tr>
+              <tr>
+                <td><strong>EMAIL :</strong></td>
+                <td>{{user.email}}</td>
+              </tr>
+              <tr>
+                <td><strong>USERNAME :</strong></td>
+                <td>{{user.userName}}</td>
+              </tr>   
+              <tr>
+                <td><strong>STATE :</strong></td>
+                <td>{{user.state}}</td>
+              </tr> 
+              <tr>
+                <td><strong>STREET :</strong></td>
+                <td>{{user.street}}</td>
+              </tr> 
+              <tr>
+                <td><strong>CITY :</strong></td>
+                <td>{{user.city}}</td>
+              </tr>      
+              <tr>
+                <td><strong>ROLES :</strong></td>
+                <td>{{user.userRoles.join(' | ') | uppercase}}</td>
+              </tr>
+              <tr>
+                <td><strong>CREATED AT :</strong></td>
+                <td>{{user.createdAt | date}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </c-col>
+      </c-row>
+    </div>
+    <div class="card-footer">
+    </div>
+  </div>
+</div>

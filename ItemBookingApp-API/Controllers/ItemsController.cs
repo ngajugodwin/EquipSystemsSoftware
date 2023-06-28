@@ -30,6 +30,15 @@ namespace ItemBookingApp_API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("carouselDisplay")]
+        public async Task<IActionResult> ListAsync()
+        {
+            var items =  await _itemRepository.GetItemsForCarouselDisplay();
+
+            var itemsToReturn = _mapper.Map<IEnumerable<Item>, IEnumerable<ItemToReturnDto>>(items);
+
+            return Ok(itemsToReturn);
+        }
 
         [HttpGet]
         public async Task<IActionResult> ListAsync([FromQuery] CustomerItemQuery customerItemQuery)
