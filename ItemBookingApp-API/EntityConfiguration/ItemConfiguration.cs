@@ -27,6 +27,9 @@ namespace ItemBookingApp_API.EntityConfiguration
             builder.Property(i => i.SerialNumber)
                 .IsRequired();
 
+            builder.Property(i => i.Description)
+             .IsRequired();
+
             builder.HasOne(b => b.ItemType)
              .WithMany(i => i.Items)
              .HasForeignKey(b => b.ItemTypeId)

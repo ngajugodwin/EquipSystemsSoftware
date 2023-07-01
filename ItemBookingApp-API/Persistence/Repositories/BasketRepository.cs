@@ -138,10 +138,6 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         public async Task<CustomerBasket> GetBasketAsync(long userId, int basketId)
         {
-            //var data = await _context.CustomerBaskets
-            //    .Include(x => x.Items).ThenInclude(x => x.Item)
-            //    .ThenInclude(x => x.ItemType)
-            //    .Where(x => x.Id == basketId && x.UserId == userId).FirstAsync();
 
             var data = await _context.CustomerBaskets
                .Include(x => x.Items).ThenInclude(x => x.Item)
@@ -154,7 +150,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         public async Task<CustomerBasket> GetCurrentBasket(long userId)
         {
-            var userBasket = await _context.CustomerBaskets.FirstOrDefaultAsync(x => x.UserId == userId);
+            var userBasket = await _context.CustomerBaskets.Include(x => x.Items).FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (userBasket != null)
             {
@@ -183,7 +179,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
             if (existingBasket != null)
             {              
 
-                var result = await AddOneItemToExistingBasket(basket.UserId, existingBasket.Id, basket.Items.First());
+                var result = await AddOneItemToExistingBasket(basket.UserId, existingBasket.Id, basket.Items.Last());
 
                 return result;
             }
@@ -278,7 +274,6 @@ namespace ItemBookingApp_API.Persistence.Repositories
                             {
                                 oldItem.Quantity = newItem.Quantity;
                             }
-                           // existingBasket.Items.Add(oldItem);
                         }
 
                     }
@@ -293,37 +288,6 @@ namespace ItemBookingApp_API.Persistence.Repositories
             return new CustomerBasket();
         }
 
-        //public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basketToUpdate)
-        //{
-        //    var existingBasket = await GetBasketAsync(basketToUpdate.Id);
-        //        // _context.CustomerBaskets.FirstOrDefaultAsync(b => b.Id == basketToUpdate.Id);
-
-
-        //    if (existingBasket != null)
-        //    {
-        //        if (existingBasket.Items.Count() > 0)
-        //        {
-        //            foreach (var newItem in basketToUpdate.Items)
-        //            {
-        //                foreach (var oldItem in existingBasket.Items)
-        //                {
-        //                    if (newItem.ItemId == oldItem.ItemId && newItem.Quantity != oldItem.Quantity)
-        //                    {
-        //                        oldItem.Quantity = newItem.Quantity;
-        //                    }
-        //                    existingBasket.Items.Add(oldItem);
-        //                }
-
-        //            }
-        //        }
-        //        _context.CustomerBaskets.Update(existingBasket);
-
-        //        await _unitOfWork.CompleteAsync();
-
-        //        return basketToUpdate;
-        //    }
-
-        //    return new CustomerBasket();
-        //}
+       
     }
 }

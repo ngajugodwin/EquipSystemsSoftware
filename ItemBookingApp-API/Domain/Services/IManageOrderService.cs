@@ -11,5 +11,6 @@ namespace ItemBookingApp_API.Domain.Services
         Task<OrderResponse> ApproveOrder(string approvedByUserEmail, int orderId);
         Task<OrderResponse> CloseOrder(int orderId);
         Task<OrderResponse> RejectOrder(int orderId);
+        Task<OrderResponse> GetOrderByIdAsync(int id);
     }
 }

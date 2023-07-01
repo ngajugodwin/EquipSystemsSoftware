@@ -1,30 +1,41 @@
-<div class="container" mt-2>
+<c-row>
+  <c-col xs>   
+    <c-card class="mb-4">
+        <c-card-header>
+          <c-col class="table-title" xs="6">My Basket</c-col>  
+        </c-card-header>
+        <c-card-body>
+          <c-container>
+            <div  *ngIf="(basket$ |async) as basket">
+              <div class="container">
+                <div class="row">
+                  <div class="col-12 py-5 mb-1">
+                    <app-basket-summary
+                      (incrementDecrementValue)="increaseOrDecreaseQuantity($event)"
+                      (remove)="removeItemFromBasket($event)"
+                    ></app-basket-summary>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6 offset-6">
+                    <app-order-totals></app-order-totals>
+                    <a style="display: flex; justify-content: center;" routerLink="/checkout-items" class="btn btn-outline-primary py-2 btn-block">
+                      Proceed to checkout
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+           <div *ngIf="(basket$ | async) === null">
+             <p style="display: flex; justify-content: center;"><strong>There are no items in your basket</strong></p>
+           </div>
+          </c-container>
+        </c-card-body>
+      <c-card-body>
+            
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
 
-  <div *ngIf="(basket$ | async) === null">
-    <p>There are no items in your basket</p>
-  </div>
 
-  <div *ngIf="(basket$ |async) as basket">
-
-    <div class="pb-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 py-5 mb-1">
-            <app-basket-summary
-              (incrementDecrementValue)="increaseOrDecreaseQuantity($event)"
-              (remove)="removeItemFromBasket($event)"
-            ></app-basket-summary>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6 offset-6">
-            <app-order-totals></app-order-totals>
-            <a routerLink="/checkout-items" class="btn btn-outline-primary py-2 btn-block">
-              Proceed to checkout
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>

@@ -57,7 +57,7 @@ export class AuthService {
   logout() {
     this.clearStorage();
     this.router.navigate(['/login']);
-    this.toasterService.showInfo('Authentication', 'Logout successfully!');
+    // this.toasterService.showInfo('Authentication', 'Logout successfully!');
   }
 
   roleMatch(allowedRoles: Array<string>): boolean {

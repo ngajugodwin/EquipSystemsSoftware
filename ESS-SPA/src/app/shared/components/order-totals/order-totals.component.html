@@ -6,15 +6,15 @@
   <ul class="list-unstyled mb-4" *ngIf="(basketTotal$ | async) as totals">
     <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
       <strong class="text-muted">Order subtotal</strong>
-      <strong >{{totals.subTotal | currency}}</strong>
+      <strong >{{totals.subTotal | currency: 'GBP'}}</strong>
     </li>
     <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
       <strong class="text-muted">Shipping/Handling</strong>
-      <strong >{{totals.shipping | currency}}</strong>
+      <strong >{{totals.shipping | currency: 'GBP'}}</strong>
     </li>  
     <li style="justify-content: space-between;" class="d-flex justify-content-betweeen py-3 border-bottom">
       <strong class="text-muted">Total:</strong>
-      <strong >{{totals.total | currency}}</strong>
+      <strong >{{totals.total | currency: 'GBP'}}</strong>
     </li>
   </ul>
 </div>

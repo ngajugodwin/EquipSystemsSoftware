@@ -15,6 +15,8 @@ namespace ItemBookingApp_API.Resources.CustomerQueries
 
         public string ItemType { get; set; }
 
+        public string Description { get; set; } = string.Empty;
+
         public string Category { get; set; }
 
         public string? Url { get; set; }

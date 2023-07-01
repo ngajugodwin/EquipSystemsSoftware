@@ -24,6 +24,10 @@ rejectOrder(orderId: number) {
   return this.http.delete<IOrder>(MASTER_ADMIN_URL.MANAGE_ORDERS + `/manageorders/${orderId}`);
 }
 
+getOrderDetails(orderId: number) {
+  return this.http.get<IOrder>(MASTER_ADMIN_URL.MANAGE_ORDERS + `/manageorders/getOrderDetails/${orderId}`);
+}
+
 
 getOrdersForModeration(page?: number, itemsPerPage?: number, ordersParams?: any): Observable<PaginationResult<IOrder[]>>  {
   const paginatedResult: PaginationResult<IOrder[]> = new PaginationResult<IOrder[]>();

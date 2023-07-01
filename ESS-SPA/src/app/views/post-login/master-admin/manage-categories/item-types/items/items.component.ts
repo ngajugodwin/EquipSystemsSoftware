@@ -50,7 +50,6 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
     this.itemParams.status = (currentStatus === undefined) ? this.itemParams.status : currentStatus;
     this.itemService.getItems(this.currentItemType.id, this.pagination.currentPage, this.pagination.itemsPerPage, this.itemParams).subscribe({
       next: (res) => {
-    console.log(res.result);
         this.items = res.result;
         this.pagination = res.pagination;
       },
@@ -115,9 +114,9 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
         console.log(res);
          this.items.splice(this.items.findIndex(c => c.id === res.id), 1);
          if (res.status.toLocaleLowerCase() === 'active'){
-          this.toasterService.showInfo('SUCCESS', 'Item enabled successfully'); //TODO: show success toaster
+          this.toasterService.showInfo('SUCCESS', 'Item enabled successfully');
          }
-         this.toasterService.showInfo('SUCCESS', 'Item disabled successfully'); //TODO: show success toaster
+         this.toasterService.showInfo('SUCCESS', 'Item disabled successfully'); 
       }),
       error: ((error: ErrorResponse) => {
         this.toasterService.showError(error.title, error.message);

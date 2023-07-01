@@ -33,6 +33,7 @@ export class BookingsComponent implements OnInit {
     this.checkOutService.getOrdersForUser().subscribe({
       next: (res) => {
         if (res) {
+          console.log(res);
           this.orders = res.result;
           this.pagination = res.pagination;
         }

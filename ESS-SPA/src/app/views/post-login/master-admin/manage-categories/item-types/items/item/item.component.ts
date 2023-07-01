@@ -8,6 +8,7 @@ import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IItem } from 'src/app/entities/models/item';
 import { ModalData } from 'src/app/entities/models/modalData';
 import { ItemService } from 'src/app/shared/services/item-service/item.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 // import { FileUploader } from 'ng2-file-upload';
 
 @Component({
@@ -26,7 +27,8 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
   selectedFile: any;
 
 
-  constructor(private fb: FormBuilder, private itemService: ItemService) { 
+  constructor(private fb: FormBuilder, private itemService: ItemService,
+    private toasterService: ToasterService) { 
     super();
 
   }
@@ -38,7 +40,6 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
 
   checkForEditAction() {
     if (this.data.item) {
-      console.log(this.data.item);
       this.assignValuesToControl(this.data.item);
     }
   }
@@ -49,6 +50,7 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
     this.itemForm.patchValue({
       id: item.id,
       name: item.name,
+      description: item.description,
       price: item.price,
       availableQuantity: item.availableQuantity,
       serialNumber: item.serialNumber,
@@ -65,14 +67,11 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
       name: ['', Validators.required],
       serialNumber: ['', Validators.required],
       price: ['', Validators.required],
+      description: ['', Validators.required],
       availableQuantity: ['', Validators.required],
       url: [''],
       file: ['', Validators.required]
     })
-  }
-
-  OnFileSelected(data: any) {
-console.log(data.target.value);
   }
 
 
@@ -89,11 +88,6 @@ console.log(data.target.value);
         alert('Please select a file');
         return;
       }  
-      
-      if (!this.selectedFile.name.includes('.jpg', 0)) {
-        alert('Only jpg pictures are supported');
-        return;
-      }
     }
 
    
@@ -107,11 +101,10 @@ console.log(data.target.value);
           next: (updatedItem) => {
             this.isSaving = false;
             this.result = updatedItem;
-            console.log('Item type updated successfully' + updatedItem) //TODO show success toaster message 
             this.close();
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
        } else {      
@@ -124,7 +117,7 @@ console.log(data.target.value);
             }
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
        }

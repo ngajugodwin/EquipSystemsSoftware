@@ -65,7 +65,7 @@ namespace ItemBookingApp_API.Persistence.Repositories
         {
             var result =  _context.Items.Include(c => c.Category)
              .Include(i => i.ItemType)
-             .Where(x => x.IsActive == true).OrderBy(x => x.Name).AsNoTracking();
+             .Where(x => x.IsActive == true && x.ItemState == ItemState.Available).OrderBy(x => x.Name).AsNoTracking();
 
 
             return result.ToListAsync();
@@ -74,10 +74,9 @@ namespace ItemBookingApp_API.Persistence.Repositories
 
         public async Task<PagedList<Item>> GetAvailableItemsForCustomerListAsync(CustomerItemQuery customerItemQuery)
         {
-
             var result = _context.Items.Include(c => c.Category)
                 .Include(i => i.ItemType)
-                .Where(x => x.IsActive == true).OrderBy(x => x.Name).AsQueryable().AsNoTracking();
+                .Where(x => x.IsActive == true && x.ItemState == ItemState.Available).OrderBy(x => x.Name).AsQueryable().AsNoTracking();
 
             if (customerItemQuery.CategoryId > 0)
             {

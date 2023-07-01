@@ -17,20 +17,33 @@ namespace ItemBookingApp_API.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IItemRepository _itemRepository;
+        private readonly IPaymentService _paymentService;
         private readonly INotificationService<Mail> _notificationService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserService _userService;
 
         public ManageOrderService(IOrderRepository orderRepository, 
             IItemRepository itemRepository,
+            IPaymentService paymentService,
             INotificationService<Mail> notificationService,
             IUnitOfWork unitOfWork, IUserService userService)
         {
             _orderRepository = orderRepository;
             _itemRepository = itemRepository;
+            _paymentService = paymentService;
             _notificationService = notificationService;
             _unitOfWork = unitOfWork;
             _userService = userService;
+        }
+
+        public async Task<OrderResponse> GetOrderByIdAsync(int id)
+        {
+            var order =  await _orderRepository.GetOrderByIdAsync(id);
+
+            if (order == null)
+                return new OrderResponse("Order not found");
+
+            return new OrderResponse(order);
         }
 
         public async Task<PagedList<Order>> GetBookingsListForModerationAsync(OrderQuery orderQuery)
@@ -50,10 +63,6 @@ namespace ItemBookingApp_API.Services
             if (orderForApproval == null)
                 return new OrderResponse("Order not found");
 
-
-            //if (orderForApproval.Status == OrderStatus.PaymentReceived)
-            //    return new OrderResponse("Only confirmed payment can be proccessed!");
-
             try
             {
                 if (orderForApproval.BookingInformation.Status == ApprovalStatus.Pending)
@@ -66,19 +75,13 @@ namespace ItemBookingApp_API.Services
                     if (result)
                     {
                         orderForApproval.BookingInformation.Status = ApprovalStatus.Approved;
-                       
+                        orderForApproval.Status = OrderStatus.PaymentReceived;
+                        await _unitOfWork.CompleteAsync();
+                        await _notificationService.SendNotification(new Mail { Body = "You item has been approved", EmailTo = "ngajugodwin@gmail.com", Subject = "EquipSystems - Approval Mail" });
+                        return new OrderResponse(orderForApproval);
                     }
 
-
-                    
-                    await _unitOfWork.CompleteAsync();
-
-                   // var mailBody = PrepareMailBody(orderForApproval);
-
-                    await _notificationService.SendNotification(new Mail { Body = "You item has been approved", EmailTo = "ngajugodwin@gmail.com", Subject = "EquipSystems - Approval Mail" });
-                    
-                    return new OrderResponse(orderForApproval);
-
+                    return new OrderResponse("Unable to approve request");
                 }
                 else
                 {
@@ -138,15 +141,6 @@ namespace ItemBookingApp_API.Services
 
             try
             {
-                //if (orderFromRepo.Status == OrderStatus.PaymentFailed)
-                //{
-
-                //    _orderRepository.DeleteOrderAsync(orderFromRepo);
-                //    await _unitOfWork.CompleteAsync();
-                //    return new OrderResponse(orderFromRepo);
-                //}
-
-                // return new OrderResponse("Faild to delete order");
 
                 _orderRepository.DeleteOrderAsync(orderFromRepo);
                 await _unitOfWork.CompleteAsync();

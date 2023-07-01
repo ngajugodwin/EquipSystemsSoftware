@@ -2,8 +2,6 @@
 <c-row>
   <c-col xs>   
     <c-card class="mb-4">
-        <!-- <c-card-header>Users</c-card-header>
-        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
         <c-card-header>
           <c-container >
             <i></i><span class="table-title">Item Types</span>
@@ -21,9 +19,6 @@
                           <option value="active">Active</option>
                           <option value="disabled">Disabled</option>
                         </select>
-                        <!-- <select class="selectBox" (change)="onStatusChange($event)" [value]="filterStatus[0].name">
-                          <option [value]="filter.id" *ngFor="let filter of filterStatus">{{filter.name}}</option>
-                        </select> -->
                       </div>
                     </c-col>
                     <c-col xs="5">
@@ -41,9 +36,6 @@
         >
           <thead cTableColor="light">
             <tr>
-              <th class="text-center">
-                <svg cIcon name="cilPeople"></svg>
-              </th>
               <th>Name</th>
               <th>Status</th>
               <th>Actions</th>
@@ -51,13 +43,6 @@
           </thead>
           <tbody>
             <tr (dblclick)="onSelectedItemType(itemType)" class="clickable" *ngFor="let itemType of itemTypes; let i = index">            
-              <td class="text-center">
-                <c-avatar
-                  size="md"
-                  src="./assets/img/avatars/2.jpg"
-                  status="danger"
-                ></c-avatar>
-              </td>
               <td>
                 {{itemType.name}}
               </td>
@@ -65,9 +50,6 @@
                 <c-badge *ngIf="itemType.status.toLowerCase() === 'active' " color="success">{{itemType.status.toUpperCase()}}</c-badge>
                 <c-badge *ngIf="itemType.status.toLowerCase() === 'inactive' " color="danger">{{itemType.status.toUpperCase()}}</c-badge>
               </td>     
-              <!-- <td>
-                <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
-              </td> -->
               <td>
                 <c-dropdown>
                   <a cButton cDropdownToggle color="info" [routerLink]="[]">

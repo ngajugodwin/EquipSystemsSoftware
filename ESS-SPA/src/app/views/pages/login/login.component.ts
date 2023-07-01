@@ -24,15 +24,17 @@ export class LoginComponent {
     this.authService.clearStorage();
     this.isProcessing = true;
     this.authService.login(this.model).subscribe({
-      next: (response) => {
-        this.initCustomerBasket();
+      next: () => {            
+        this.toasterService.showSuccess('SUCCESS', 'Authentication Successful');
         this.router.navigate(['/dashboard']);
-      this.toasterService.showSuccess('SUCCESS', 'Authentication Successful')
-      console.log(response);
+        
       }, error: (error: ErrorResponse) => {
         this.isProcessing = false;
         this.toasterService.showError(error.title, error.message);
 
+      },
+      complete:() => {
+        this.initCustomerBasket();  
       }
     });
   }

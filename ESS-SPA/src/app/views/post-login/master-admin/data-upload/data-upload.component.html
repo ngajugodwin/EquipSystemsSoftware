@@ -6,7 +6,7 @@
     <c-card-body>  
       <c-col [xs]="6">
         <label cLabel>Select File</label>
-        <input (change)="onFileChanged($event)" style="padding-bottom: 33px;" class="form-control" style="color: red;"  accept=".jpg" type="file" id="myFile" name="filename" #fileInput />
+        <input (change)="onFileChanged($event)" style="padding-bottom: 33px;" class="form-control" style="color: red;"  accept="image/*"  type="file" id="myFile" name="filename" #fileInput />
       </c-col>         
     </c-card-body>
     <c-card-footer>

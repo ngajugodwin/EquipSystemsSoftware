@@ -12,7 +12,8 @@ import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.
 export class ItemsDisplayComponent implements OnInit {
   items: IItem[] = [];
 
-  constructor(private itemService: ItemService, private toasterService: ToasterService) { }
+  constructor(private itemService: ItemService, 
+    private toasterService: ToasterService) { }
 
   ngOnInit() {
     this.getItems();
@@ -22,7 +23,6 @@ export class ItemsDisplayComponent implements OnInit {
     this.itemService.getItemsForCarouselDisplay().subscribe({
       next: (res) => {
         if (res){
-          console.log(res);
           this.items = res;
         }
       },

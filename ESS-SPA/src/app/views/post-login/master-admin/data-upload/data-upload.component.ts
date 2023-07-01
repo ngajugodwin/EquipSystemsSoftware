@@ -31,11 +31,6 @@ export class DataUploadComponent extends NgxModalComponent<ModalData, any> imple
       return;
     }
 
-    if (!this.selectedFile.name.includes('.jpg', 0)) {
-      alert('Only jpg pictures are supported');
-      return;
-    }
-
     this.result = this.selectedFile;
     this.close();
   }

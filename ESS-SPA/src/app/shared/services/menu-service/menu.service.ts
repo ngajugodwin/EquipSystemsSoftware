@@ -27,20 +27,20 @@ export class MenuService {
     iconComponent: { name: 'cil-notes' }
   },
   {
-    name: 'Checkout Items',
-    url: '/checkout-items',
-    iconComponent: { name: 'cil-align-left' }
+    name: 'Shop Items',
+    url: '/shop-items',
+    iconComponent: { name: 'cil-cart' }
   },
   {
     name: 'Basket',
     url: '/basket',
-    iconComponent: { name: 'cil-dollar' }
+    iconComponent: { name: 'cil-british-pound' }
   },
   {
-    name: 'Shop Items',
-    url: '/shop-items',
-    iconComponent: { name: 'cil-align-right' }
-  },
+    name: 'Checkout Items',
+    url: '/checkout-items',
+    iconComponent: { name: 'cil-cart' }
+  }, 
   {
     name: 'Self Service',
     url: '/self-service',

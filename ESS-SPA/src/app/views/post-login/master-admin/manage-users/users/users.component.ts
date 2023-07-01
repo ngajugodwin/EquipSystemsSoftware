@@ -41,12 +41,11 @@ export class UsersComponent implements OnInit {
     this.userParams.accountType = accounType === undefined ? this.userParams.accountType : accounType;
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams).subscribe({
       next: ((res) => {
-        console.log(res);
         this.users = res.result
         this.pagination = res.pagination;
 
       }), error: ((error: ErrorResponse) => {
-        console.log(error); //TODO display error toaster
+        this.toasterService.showError(error.title, error.message);
       })
     })
   }
@@ -57,7 +56,6 @@ export class UsersComponent implements OnInit {
 
   onAccountTypeChange(data: any) {
     this.userParams.accountType = data.target.value;
-    console.log(this.userParams.accountType);
     this.getUsers(this.userParams.status);
   }
 
@@ -65,7 +63,6 @@ export class UsersComponent implements OnInit {
     for (var n in status) {
       if (typeof status[n] === "number") {
         this.filterStatus.push({ id: <any>status[n], name: n });
-      //  this.filterStatus = this.filterStatus.filter(x => x.name.toLowerCase() !== 'pending');
       }
     }
   }
@@ -154,7 +151,6 @@ export class UsersComponent implements OnInit {
    this.userParams.searchString = '';
   this.userParams.status = EntityStatus.Pending;
    this.userParams.accountType = AccountType.Individual;
-  //  this.userParams.accountTypeName = '';
   }
 
 }

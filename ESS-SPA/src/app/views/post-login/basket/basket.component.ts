@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { IBasket } from 'src/app/entities/models/basket';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { BasketService } from 'src/app/shared/services/basket-service/basket.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-basket',
@@ -12,7 +13,7 @@ import { BasketService } from 'src/app/shared/services/basket-service/basket.ser
 export class BasketComponent implements OnInit {
   basket$: Observable<IBasket | null>;
 
-  constructor(private basketService: BasketService) { }
+  constructor(private basketService: BasketService, private toasterService: ToasterService) { }
 
   ngOnInit() {
     this.basket$ = this.basketService.basket$;
@@ -21,10 +22,9 @@ export class BasketComponent implements OnInit {
   increaseOrDecreaseQuantity(result: any) {
     this.basketService.incrementOrDecrementItemQuantity(result.itemId, result.status).subscribe({
       next: (res) => {
-       console.log(res);
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }
@@ -40,10 +40,9 @@ export class BasketComponent implements OnInit {
 
     this.basketService.removeOneItemFromBasket(itemId).subscribe({
       next: (res) => {
-       console.log(res);
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }

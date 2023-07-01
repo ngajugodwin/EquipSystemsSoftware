@@ -8,6 +8,7 @@ import { IItemType } from 'src/app/entities/models/itemType';
 import { ModalData } from 'src/app/entities/models/modalData';
 import { CategoryService } from 'src/app/shared/services/category-service/category.service';
 import { ItemTypeService } from 'src/app/shared/services/itemTypes-service/item-type.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-item-type',
@@ -24,10 +25,10 @@ export class ItemTypeComponent extends NgxModalComponent<ModalData, IItemType> i
   isSaving = false;
 
   constructor(private fb: FormBuilder,
+    private toasterService: ToasterService,
     private itemTypeService: ItemTypeService) {
       super();
      }
-
 
   ngOnInit() {
     this.initItemTypeForm();
@@ -63,11 +64,10 @@ export class ItemTypeComponent extends NgxModalComponent<ModalData, IItemType> i
           next: (updatedItemType) => {
             this.isSaving = false;
             this.result = updatedItemType;
-            console.log('Item type updated successfully' + updatedItemType) //TODO show success toaster message 
             this.close();
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
        } else {      
@@ -79,7 +79,7 @@ export class ItemTypeComponent extends NgxModalComponent<ModalData, IItemType> i
             }
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
        }

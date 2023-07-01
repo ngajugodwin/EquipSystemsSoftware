@@ -28,7 +28,6 @@ createPaymentIntent(){
     .pipe(
       map((basket:IBasket) => {
         this.basketSource.next(basket);
-        console.log(this.getCurrentBasket());
       })
     );
 }
@@ -42,8 +41,6 @@ setShippingPrice(deliveryMethod: IDeliveryMethod) {
     this.calculateTotals();
     let updateDeliveryMethod = new UpdateDeliveryMethod(basket.id, basket.deliveryMethodId);
     this.updateDeliveryMethod(updateDeliveryMethod);
-
-    //this.setBasket(basket);
   }
 }
 
@@ -75,8 +72,7 @@ getCurrentLoggedInUserBasket(userId: number) {
   .subscribe({
     next: (basket: IBasket) => {
       if (basket) {
-        this.basketSource.next(basket);
-        localStorage.setItem('basket_id', basket.id.toString());
+        this.updateBasketSource(basket);
       }
     },
     error: (err: ErrorResponse) => {
@@ -89,7 +85,6 @@ getBasket(basketId: number) {
   return this.http.get<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket/${basketId}`)
     .pipe(
       map((basket: IBasket) => {
-        console.log(basket);
         this.basketSource.next(basket);
         if (basket.shippingPrice) {
           this.shipping = basket.shippingPrice;
@@ -98,10 +93,6 @@ getBasket(basketId: number) {
       })
     );
 }
-
-// createItemType(categoryId: number, itemTypeToCreate: IItemType) {
-//   return this.http.post<IItemType>(MASTER_ADMIN_URL.MANAGE_ITEM_TYPES + `/${categoryId}/ManageItemTypes`, itemTypeToCreate);
-// }
 
 setBasket(basket: IBasket) {
   return this.http.post<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket`, basket)
@@ -115,53 +106,17 @@ setBasket(basket: IBasket) {
       })
 }
 
-increateItemQuantity(isIncrease: boolean, itemId: number) {
-  var data = {
-    status: isIncrease,
-    itemId: itemId
-  }
-
-  return this.http.put<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket`, data)
-      .subscribe({
-        next: (basket: IBasket) => {
-          this.basketSource.next(basket);
-        },
-        error: (err: ErrorResponse) => {
-          this.toasterService.showError(err.title, err.message);
-        }
-      })
-}
-
-decreaseItemQuantity(isDecreaseIncrease: boolean, itemId: number) {
- var data = {
-    status: isDecreaseIncrease,
-    itemId: itemId
-  }
-  return this.http.put<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket`, data)
-      .subscribe({
-        next: (basket: IBasket) => {
-          this.basketSource.next(basket);
-        },
-        error: (err: ErrorResponse) => {
-      this.toasterService.showError(err.title, err.message);
-        }
-      })
-}
 
 getCurrentBasket() {
   return this.basketSource.value;
 }
 
 incrementOrDecrementItemQuantity(itemId: number, status: boolean) {
-  // public bool Status { get; set; }
-
-  // public int ItemId { get; set; }
 
   return this.http.put<IBasket>(CUSTOMER_URL.BASE_URL + `/${this.authService.getCurrentUser().id}/basket/${this.getCurrentBasket()?.id}`, { itemId, status })
   .pipe(
     map((basket: IBasket) => {
-      this.basketSource.next(basket);
-     this.calculateTotals();
+      this.updateBasketSource(basket);
     })
   );
 }
@@ -172,14 +127,12 @@ removeOneItemFromBasket(itemId: number) {
   return this.http.put<IBasket>(CUSTOMER_URL.BASE_URL + `/${basketId}/basket/${userId}/removeOneItemFromBasket/${itemId}`, {})
   .pipe(
     map((basket: IBasket) => {
-      this.basketSource.next(basket);
-     this.calculateTotals();
+    this.updateBasketSource(basket);
     })
   );
 }
 
 addItemToBasket(item: number, quantity = 1) {
-  console.log(item);
   const itemToAdd: IBasketItem =this. mapItemtoBasketItem(item, quantity);
   
 
@@ -189,31 +142,11 @@ addItemToBasket(item: number, quantity = 1) {
     basket = this.createBasket();
   } 
 
-  console.log
-
  basket.items = this.addOrUpdateItem(basket.items, itemToAdd, quantity);
 
   this.setBasket(basket);
 }
 
-
-// addItemToBasket(item: number, quantity = 2) {
-//   console.log(item);
-//   const itemToAdd: IBasketItem =this. mapItemtoBasketItem(item, quantity);
-  
-
-//   let basket = this.getCurrentBasket();
-
-//   if (basket == null) {
-//     basket = this.createBasket();
-//   }
-
-//   console.log
-
-//   basket.items = this.addOrUpdateItem(basket.items, itemToAdd, quantity);
-
-//   this.setBasket(basket);
-// }
 
 private updateBasketSource(basket: IBasket){
   this.basketSource.next(basket);
@@ -289,7 +222,7 @@ deleteBasket(basketId: number) {
         localStorage.removeItem('basket_id');
       }, 
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       } 
     }
   );

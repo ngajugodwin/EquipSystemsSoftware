@@ -4,6 +4,7 @@ import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IItem } from 'src/app/entities/models/item';
 import { BasketService } from 'src/app/shared/services/basket-service/basket.service';
 import { ItemService } from 'src/app/shared/services/item-service/item.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-product-details',
@@ -14,8 +15,8 @@ export class ProductDetailsComponent implements OnInit {
   quantity = 1;
   item: IItem;
 
-
   constructor(private itemService: ItemService, private basketService: BasketService,
+    private toasterService: ToasterService,
      private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
@@ -43,7 +44,7 @@ export class ProductDetailsComponent implements OnInit {
          this.item = res;
         }
       }, error: (err: ErrorResponse) => {
-        console.log(err);
+       this.toasterService.showError(err.title, err.message);
       }
     })
       }

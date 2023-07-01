@@ -39,7 +39,6 @@
                     <h6>Shipping address</h6>                    
                   </c-col>
                   <c-col [xs]="6">
-                    <!-- <button class="btn btn-outline-success" style="float: right;">Save as default address</button>                   -->
                   </c-col>
                   <c-col [xs]="6">
                     <label cLabel for="inputFirstName">First Name</label>
@@ -93,9 +92,7 @@
     <c-card-footer>
           <div class="center-action-button">
             <button [disabled]="!hasBasket || !this.checkoutForm.get('bookingForm')?.valid" (click)="createPaymentIntent()" style="margin-right: 10px;" type="button" form="checkoutForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> >> PAY</button>
-
-            <!-- <button (click)="createOrder()" style="margin-right: 10px;" type="button" form="checkoutForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Create Booking</button> -->
-      <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> >> Shop </button>
+            <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> >> Shop </button>
           </div>
     </c-card-footer>
   </c-card>

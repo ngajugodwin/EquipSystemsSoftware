@@ -37,10 +37,11 @@ class="mb-0 border"
 <thead cTableColor="light">
 <tr>
 <th class="text-center">
-  <svg cIcon name="cilPeople"></svg>
+  <svg cIcon name="cilLayers"></svg>
 </th>
 <th>Name</th>
 <th>Status</th>
+<th>State</th>
 <th>Actions</th>
 </tr>
 </thead>
@@ -48,11 +49,6 @@ class="mb-0 border"
 <tbody>
 <tr class="clickable" *ngFor="let item of items; let i = index">            
 <td class="text-center">
-  <!-- <c-avatar
-    size="md"
-    src="./assets/img/avatars/2.jpg"
-    status="danger"
-  ></c-avatar> -->
   <c-avatar
     size="md"
     [src]="item.url === null ? './assets/img/avatars/2.jpg' : item.url "
@@ -64,10 +60,10 @@ class="mb-0 border"
 <td>
   <c-badge *ngIf="item.status.toLowerCase() === 'active' " color="success">{{item.status.toUpperCase()}}</c-badge>
   <c-badge *ngIf="item.status.toLowerCase() === 'inactive' " color="danger">{{item.status.toUpperCase()}}</c-badge>
+ </td>
+<td>
+ <c-badge color="info">{{item.itemState.toUpperCase()}}</c-badge>
 </td>     
-<!-- <td>
-  <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
-</td> -->
 <td>
   <c-dropdown>
     <a cButton cDropdownToggle color="info" [routerLink]="[]">

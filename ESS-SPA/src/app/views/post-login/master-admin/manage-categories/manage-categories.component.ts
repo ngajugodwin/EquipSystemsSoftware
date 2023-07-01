@@ -111,9 +111,9 @@ export class ManageCategoriesComponent implements OnInit, OnDestroy {
       next: ((res) => {
          this.categories.splice(this.categories.findIndex(c => c.id === res.id), 1);
          if (res.status.toLocaleLowerCase() === 'active'){
-          this.toasterService.showSuccess('SUCCESS', 'Category enabled successfully'); //TODO: show success toaster
+          this.toasterService.showSuccess('SUCCESS', 'Category enabled successfully');
          }
-         this.toasterService.showInfo('SUCCESS', 'Category disabled successfully'); //TODO: show success toaster
+         this.toasterService.showInfo('SUCCESS', 'Category disabled successfully');
       }),
       error: ((error: ErrorResponse) => {
        this.toasterService.showError(error.title, error.message);

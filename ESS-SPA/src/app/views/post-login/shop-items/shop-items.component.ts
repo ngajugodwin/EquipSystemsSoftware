@@ -9,6 +9,7 @@ import { CategoryService } from 'src/app/shared/services/category-service/catego
 import { ItemService } from 'src/app/shared/services/item-service/item.service';
 import { ItemTypeService } from 'src/app/shared/services/itemTypes-service/item-type.service';
 import {CategoryParams, ItemParams, ItemTypeParams} from '../../../entities/models/itemParams';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-shop-items',
@@ -41,6 +42,7 @@ export class ShopItemsComponent implements OnInit {
   ]
   
   constructor(private itemService: ItemService, private itemTypeService: ItemTypeService, 
+    private toasterService: ToasterService,
     private categoryService: CategoryService) { }
 
   ngOnInit() {
@@ -56,14 +58,13 @@ export class ShopItemsComponent implements OnInit {
       .subscribe({
       next: (res) => {
         if (res) {
-          console.log(res);
           this.items = res.result;
           this.totalCount = res.pagination.totalItems;
           this.itemPagination = res.pagination;
         }
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }
@@ -77,7 +78,7 @@ export class ShopItemsComponent implements OnInit {
         }
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }
@@ -91,7 +92,7 @@ export class ShopItemsComponent implements OnInit {
         }
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }

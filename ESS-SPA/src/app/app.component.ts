@@ -15,7 +15,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent implements OnInit {
-  // title = 'CoreUI Free Angular Admin Template';
   title = 'EquipSystems Software';
 
   jwtHelper = new JwtHelperService();
@@ -28,7 +27,6 @@ export class AppComponent implements OnInit {
     private basketService: BasketService
   ) {
     titleService.setTitle(this.title);
-    // iconSet singleton
     iconSetService.icons = { ...iconSubset };
   }
 
@@ -50,9 +48,8 @@ export class AppComponent implements OnInit {
     if (basketId) {
       this.basketService.getBasket(Number(basketId)).subscribe({
         next: (res) => {
-            console.log('Init Basket');
         }, error: (err: ErrorResponse) => {
-          console.log(err);
+         
         }
       })
     }

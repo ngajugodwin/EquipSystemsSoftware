@@ -30,27 +30,18 @@
 
     <c-header-nav class="d-none d-lg-flex">
       <c-nav-item>
-        <a routerLink="./" cNavLink>
+        <a routerLink="/basket" cNavLink>
+          <svg cIcon name="cilCart" size="lg"></svg>
+        </a>
+      </c-nav-item>
+      <c-nav-item>
+        <a routerLink="/basket" cNavLink>
          <div *ngIf="(basket$ |async) as basket">
-          <strong>{{basket.items.length}}</strong>
+          <strong style="color: blue;">{{basket.items.length}}</strong>
          </div>
         </a>
       </c-nav-item>
-      <c-nav-item>
-        <a routerLink="./" cNavLink>
-          <svg cIcon name="cilBell" size="lg"></svg>
-        </a>
-      </c-nav-item>
-      <c-nav-item>
-        <a routerLink="./" cNavLink>
-          <svg cIcon name="cilList" size="lg"></svg>
-        </a>
-      </c-nav-item>
-      <c-nav-item>
-        <a routerLink="./" cNavLink>
-          <svg cIcon name="cilEnvelopeOpen" size="lg"></svg>
-        </a>
-      </c-nav-item>
+      
     </c-header-nav>
     <c-header-nav class="ms-3">
       <ng-container *ngTemplateOutlet="userDropdown"></ng-container>
@@ -77,51 +68,12 @@
         cTextColor="primary"
         shape="rounded-1"
         size="md"
-        src="./assets/img/avatars/8.jpg"
+        src="./assets/img/avatars/user_Avatar.jpg"
         status="success"
       >
       </c-avatar>
     </button>
     <ul cDropdownMenu class="pt-0 pr-5 w-auto">
-      <li>
-        <h6 cDropdownHeader class="bg-light fw-semibold py-2">Account</h6>
-      </li>
-      <!-- <li>
-        <a routerLink="./" cDropdownItem>
-          <svg cIcon class="me-2" name="cilBell"></svg>
-          Updates
-          <c-badge class="ms-2 float-end" color="info">
-            42
-          </c-badge>
-        </a>
-      </li>
-      <li>
-        <a routerLink="./" cDropdownItem>
-          <svg cIcon class="me-2" name="cilEnvelopeOpen"></svg>
-          Messages
-          <c-badge class="ms-2 float-end" color="success">
-            42
-          </c-badge>
-        </a>
-      </li>
-      <li>
-        <a routerLink="./" cDropdownItem>
-          <svg cIcon class="me-2" name="cilTask"></svg>
-          Tasks
-          <c-badge class="ms-2 float-end" color="danger">
-            42
-          </c-badge>
-        </a>
-      </li> -->
-      <li>
-        <a routerLink="./" cDropdownItem>
-          <svg cIcon class="me-2" name='cilCommentSquare'></svg>
-          Comments
-          <c-badge class="ms-auto" color="warning">
-            42
-          </c-badge>
-        </a>
-      </li>
       <li>
         <h6 cDropdownHeader class="bg-light fw-semibold py-2">Settings</h6>
       </li>

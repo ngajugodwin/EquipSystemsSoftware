@@ -4,6 +4,7 @@ using ItemBookingApp_API.Domain.Models.Queries;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Extension;
 using ItemBookingApp_API.Resources.Order;
+using ItemBookingApp_API.Services;
 using ItemBookingApp_API.Services.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,17 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         {
             _manageOrderService = manageOrderService;
             _mapper = mapper;
+        }
+
+        [HttpGet("getOrderDetails/{orderId}")]
+        public async Task<ActionResult<OrderToReturnDto>> GetOrderByIdForUser(int orderId)
+        {
+            var order = await _manageOrderService.GetOrderByIdAsync(orderId);
+
+            if (order == null)
+                return NotFound("Not found");
+
+            return _mapper.Map<Order, OrderToReturnDto>(order.Resource);
         }
 
         [HttpGet]

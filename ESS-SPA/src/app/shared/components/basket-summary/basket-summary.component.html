@@ -25,8 +25,6 @@
           <th scope="row">
             <div class="p-2">
               <img src="{{item.picture}}" alt="Item name" class="img-fluid" style="max-height: 50px ; margin-right: 10px;">
-
-              <!-- <img src="{{}}" alt="{{}}"> -->
               <div class="ml-3 d-inline-block align-middle">
                 <h5 class="mb-0">
                   <a routerLink="/shop-items/{{item.itemId}}" class="text-dark">{{item.name}}</a>
@@ -35,7 +33,7 @@
               </div>
             </div>
           </th>
-          <td class="align-middle"><strong>{{item.price | currency}}</strong></td>
+          <td class="align-middle"><strong>{{item.price | currency: 'GBP'}}</strong></td>
           <td class="align-middle">
             <div class="d-flex align-items-center">
               <button *ngIf="isBasket" (click)="increaseOrDecreaseQuantity(item.itemId, true)" style="margin: 8px;"  type="submit" class="btn btn-primary fa fa-shopping-cart mr-5">+</button>
@@ -43,8 +41,7 @@
               <button *ngIf="isBasket" (click)="increaseOrDecreaseQuantity(item.itemId, false)" style="margin-left: 8px;" routerLinkActive="router-link-active"  type="submit" class="btn btn-primary">-</button>
             </div>
           </td>
-          <td class="align-middle"><strong>{{item.price * item.quantity | currency}}</strong></td>
-          <!-- <td class="align-middle"><strong>4,00</strong></td> -->
+          <td class="align-middle"><strong>{{item.price * item.quantity | currency: 'GBP'}}</strong></td>
           <td class="align-middle text-center">
             <button *ngIf="isBasket" (click)="removeItemFromBasket(item.itemId)" class="btn btn-danger">X</button>
           </td>

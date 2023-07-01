@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IOrder } from 'src/app/entities/models/order';
 import { CheckoutService } from 'src/app/shared/services/checkout-service/checkout.service';
+import { OrderService } from 'src/app/shared/services/order-service/order.service';
 
 @Component({
   selector: 'app-details',
@@ -12,7 +13,7 @@ import { CheckoutService } from 'src/app/shared/services/checkout-service/checko
 export class DetailsComponent implements OnInit {
   order: IOrder;
   
-  constructor(private checkoutService: CheckoutService,
+  constructor(private orderService: OrderService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -20,7 +21,7 @@ export class DetailsComponent implements OnInit {
   }
 
   getBookingDetails() {
-    this.checkoutService.getOrderDetails(Number(this.route.snapshot.paramMap.get('id'))).subscribe({
+    this.orderService.getOrderDetails(Number(this.route.snapshot.paramMap.get('id'))).subscribe({
       next: (res) => {
         if (res) {
           this.order = res

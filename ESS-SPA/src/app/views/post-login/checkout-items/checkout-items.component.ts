@@ -11,6 +11,7 @@ import { BasketService } from 'src/app/shared/services/basket-service/basket.ser
 import { IBasket } from 'src/app/entities/models/basket';
 import { Router } from '@angular/router';
 import { PaymentComponent } from './payment/payment.component';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-checkout-items',
@@ -28,6 +29,7 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
     private router: Router, 
     private checkoutService: CheckoutService,
     private basketService: BasketService,
+    private toasterService: ToasterService,
     private NgxModalService:NgxModalService,
     private authService: AuthService) { }
 
@@ -46,9 +48,7 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
       }else{
         this.hasBasket = false;
       }
-    })
-
-    console.log(this.hasBasket);
+    });
   }
 
   ngOnDestroy(): void {
@@ -70,9 +70,6 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
         zipCode: [null, Validators.required],
         deliveryMethod: [null, Validators.required]
       }),
-      // deliveryForm: this.fb.group({
-      //   deliveryMethod: [null, Validators.required]
-      // }),
       paymentForm: this.fb.group({
         nameOnCard: [null, Validators.required]
       })
@@ -80,11 +77,9 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
   }
 
   createPaymentIntent() {
-    let yy = this.checkoutForm.get('addressForm')?.get('deliveryMethod');
+    let dm = this.checkoutForm.get('addressForm')?.get('deliveryMethod');
 
-   // let bookingForm = this.checkoutForm.get('bookingForm')?.get('deliveryMethod');
-
-    if (yy?.status === "INVALID") {
+    if (dm?.status === "INVALID") {
       alert('Please select at least one delivery method');
       return;
     }
@@ -95,7 +90,7 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
         this.createOrder();
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+       this.toasterService.showError(err.title, err.message);
       }
     })
   }
@@ -108,7 +103,7 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
         }
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }
@@ -117,19 +112,16 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
     this.checkoutService.getDeliveryMethods().subscribe({
       next: (res: IDeliveryMethod[]) => {
         this.deliveryMethods = res;
-        console.log(res);
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }
 
   getDeliveryMethodValue() {
     const basket = this.basketService.getCurrentBasket();
-    console.log(basket);
     if(basket?.deliveryMethodId !== null) {
-      console.log(basket);
       this.checkoutForm.get('addressForm')?.get('deliveryMethod')?.patchValue(basket?.deliveryMethodId);
     }
   }
@@ -137,7 +129,6 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
 
   setTheShippingPrice(selectedMethod: any) {
     var result = this.filterDeliverMethods(Number(selectedMethod.target.value));
-    console.log(result);
     
     if (result !== null) {
       this.basketService.setShippingPrice(result);
@@ -184,26 +175,6 @@ export class CheckoutItemsComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  // createOrder() {
-  //   const basket = this.basketService.getCurrentBasket();
-  //   if (basket) {
-  //     const orderToCreate = this.getOrderToCreate(basket);
-
-  //     console.log(orderToCreate);
-
-  //     this.checkoutService.createOrder(orderToCreate).subscribe({
-  //       next: (res) => {
-  //         if (res) {
-  //           this.basketService.deleteLocalBasket(res.basketId);
-  //         }
-  //       },
-  //       error: (err: ErrorResponse) => {
-  //         console.log(err);
-  //       }
-  //     })
-  //   }
-  // }
 
   cancel() {
     this.router.navigate(['/shop-items'])

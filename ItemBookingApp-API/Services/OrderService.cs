@@ -57,15 +57,8 @@ namespace ItemBookingApp_API.Services
             await _genericRepository.AddAsync<Order>(order);
 
             try
-            {
-                //save to db and return order
-                
+            {                
                 await _unitOfWork.CompleteAsync();
-
-                //delete basket
-             //   await _basketRepository.DeleteBasket(basketId);
-                
-               // return processed order to client
                 return order;
             }
             catch (Exception ex)
@@ -80,17 +73,17 @@ namespace ItemBookingApp_API.Services
         {
             var result = await _genericRepository.ListAsync<DeliveryMethod>();
 
-            //var d = result.GetType().tol;
-
-            ////return (IReadOnlyList)result;
-            //return d.Current.;
-
             return result;
         }
 
         public async Task<Order> GetOrderByIdAsync(int id, string borrowerEmail)
         {
             return await _orderRepository.GetOrderByIdAsync(id, borrowerEmail);
+        }
+
+        public async Task<Order> GetOrderByIdAsync(int id)
+        {
+            return await _orderRepository.GetOrderByIdAsync(id);
         }
 
         public async Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string borrowerEmail)

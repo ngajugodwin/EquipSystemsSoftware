@@ -12,4 +12,5 @@ export interface IItem {
     description: string,
     availableQuantity: number,
     categoryId: number;
+    itemState: string;
 }

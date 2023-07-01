@@ -4,15 +4,7 @@
 </div>
 <div class="col-6">
   <h3>{{item.name}}</h3>
-  <p>{{item.price | currency}}</p>
-  <!-- <div class="d-flex justify-content-start align-items-center">
-    <button class="btn btn-info">Increase</button>
-    <i class="fa fa-minus-circle text-warning mr-2" style="cursor: pointer; font-size: 2em;" ></i>
-    <span class="font-weight-bold" style="font-size: 1.5em;">2</span>
-    <button class="btn btn-info">Reduce</button>
-    <i class="fa fa-plus-circle text-warning mx-2" style="cursor: pointer; font-size: 2em;"></i>
-    <button class="btn btn-outline-secondary btn-lg ml-4">Add to Cart</button>
-  </div> -->
+  <p>{{item.price | currency: 'GBP'}}</p>
   <div>
     <p>QTY: <strong>{{quantity}}</strong></p>
     <button (click)="increaseOrDecreaseQuantity(true)" class="btn btn-info" style="margin-right: 10px;"><strong>Increase</strong></button>

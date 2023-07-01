@@ -37,7 +37,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("CustomerBasketId");
 
-                    b.ToTable("BasketItems", (string)null);
+                    b.ToTable("BasketItems");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Category", b =>
@@ -63,7 +63,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.CustomerBasket", b =>
@@ -95,7 +95,7 @@ namespace ItemBookingApp_API.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("CustomerBaskets", (string)null);
+                    b.ToTable("CustomerBaskets");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Identity.AppUser", b =>
@@ -280,6 +280,10 @@ namespace ItemBookingApp_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool?>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -318,7 +322,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("ItemTypeId");
 
-                    b.ToTable("Items", (string)null);
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.ItemType", b =>
@@ -347,7 +351,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ItemTypes", (string)null);
+                    b.ToTable("ItemTypes");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.OrderAggregate.DeliveryMethod", b =>
@@ -375,7 +379,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeliveryMethods", (string)null);
+                    b.ToTable("DeliveryMethods");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.OrderAggregate.Order", b =>
@@ -411,7 +415,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("DeliveryMethodId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.OrderAggregate.OrderItem", b =>
@@ -435,7 +439,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Organisation", b =>
@@ -478,7 +482,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("ApprovedByUserId");
 
-                    b.ToTable("Organisations", (string)null);
+                    b.ToTable("Organisations");
                 });
 
             modelBuilder.Entity("ItemBookingApp_API.Domain.Models.Token", b =>
@@ -510,7 +514,7 @@ namespace ItemBookingApp_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tokens", (string)null);
+                    b.ToTable("Tokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
@@ -698,32 +702,7 @@ namespace ItemBookingApp_API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ItemBookingApp_API.Domain.Models.OrderAggregate.Order.BookingInformation#ItemBookingApp_API.Domain.Models.OrderAggregate.BookingInformation", "BookingInformation", b1 =>
-                        {
-                            b1.Property<int>("OrderId")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTimeOffset>("EndDate")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.Property<DateTimeOffset?>("ReturnedDate")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.Property<DateTimeOffset>("StartDate")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.Property<int>("Status")
-                                .HasColumnType("int");
-
-                            b1.HasKey("OrderId");
-
-                            b1.ToTable("Orders", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("OrderId");
-                        });
-
-                    b.OwnsOne("ItemBookingApp_API.Domain.Models.OrderAggregate.Order.ShipToAddress#ItemBookingApp_API.Domain.Models.OrderAggregate.Address", "ShipToAddress", b1 =>
+                    b.OwnsOne("ItemBookingApp_API.Domain.Models.OrderAggregate.Address", "ShipToAddress", b1 =>
                         {
                             b1.Property<int>("OrderId")
                                 .HasColumnType("int");
@@ -754,7 +733,32 @@ namespace ItemBookingApp_API.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Orders", (string)null);
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.OwnsOne("ItemBookingApp_API.Domain.Models.OrderAggregate.BookingInformation", "BookingInformation", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("int");
+
+                            b1.Property<DateTimeOffset>("EndDate")
+                                .HasColumnType("datetimeoffset");
+
+                            b1.Property<DateTimeOffset?>("ReturnedDate")
+                                .HasColumnType("datetimeoffset");
+
+                            b1.Property<DateTimeOffset>("StartDate")
+                                .HasColumnType("datetimeoffset");
+
+                            b1.Property<int>("Status")
+                                .HasColumnType("int");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
@@ -776,7 +780,7 @@ namespace ItemBookingApp_API.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.OwnsOne("ItemBookingApp_API.Domain.Models.OrderAggregate.OrderItem.ItemOrdered#ItemBookingApp_API.Domain.Models.OrderAggregate.ItemOrdered", "ItemOrdered", b1 =>
+                    b.OwnsOne("ItemBookingApp_API.Domain.Models.OrderAggregate.ItemOrdered", "ItemOrdered", b1 =>
                         {
                             b1.Property<int>("OrderItemId")
                                 .HasColumnType("int");
@@ -794,7 +798,7 @@ namespace ItemBookingApp_API.Migrations
 
                             b1.HasKey("OrderItemId");
 
-                            b1.ToTable("OrderItems", (string)null);
+                            b1.ToTable("OrderItems");
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderItemId");

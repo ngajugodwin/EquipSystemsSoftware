@@ -2,8 +2,6 @@
 <c-row>
   <c-col xs>   
     <c-card class="mb-4">
-        <!-- <c-card-header>Users</c-card-header>
-        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
         <c-card-header>
           <c-container>
             <c-row  class="align-items-start">
@@ -63,9 +61,6 @@
         >
           <thead cTableColor="light">
             <tr>
-              <th class="text-center">
-                <svg cIcon name="cilPeople"></svg>
-              </th>
               <th>Name</th>
               <th>Status</th>
               <th>Created At</th>
@@ -73,14 +68,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let category of categories; let i = index">            
-              <td class="text-center">
-                <c-avatar
-                  size="md"
-                  src="./assets/img/avatars/2.jpg"
-                  status="danger"
-                ></c-avatar>
-              </td>
+            <tr *ngFor="let category of categories; let i = index"> 
               <td>
                 {{category.name}}
               </td>
@@ -90,9 +78,6 @@
                 <c-badge *ngIf="category.status.toLowerCase() === 'disabled' " color="danger">{{category.status.toUpperCase()}}</c-badge>
               </td>     
               <td>{{category.createdAt | date}}</td>
-              <!-- <td>
-                <span [ngClass]="org.status.toLowerCase() === 'deleted' ? 'badge badge-danger' : 'badge badge-success'">{{ user.status | uppercase}}</span>
-              </td> -->
               <td>
                 <c-dropdown>
                   <a cButton cDropdownToggle color="info" [routerLink]="[]">

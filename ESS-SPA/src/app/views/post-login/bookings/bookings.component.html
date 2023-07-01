@@ -50,10 +50,13 @@
             <tr *ngFor="let order of orders; let i = index">    
               <td># EQUP-SYS-00000{{order.id}}</td>
               <td>{{order.orderDate | date: 'medium'}}</td>
-              <td>{{order.total | currency}}</td>
-              <td>{{order.status}}</td>
+              <td>{{order.total | currency: 'GBP'}}</td>
               <td>
-                <button class="btn btn-info" routerLink="/my-bookings/{{order.id}}">View Details</button>
+                <c-badge *ngIf="order.status.toLowerCase() === 'payment received' " color="success">{{order.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="order.status.toLowerCase() === 'payment pending' " color="info">{{order.status.toUpperCase()}}</c-badge>
+              </td>
+              <td>
+                <button class="btn btn-primary" routerLink="/my-bookings/{{order.id}}">View Details</button>
               </td>
             </tr>
           </tbody>

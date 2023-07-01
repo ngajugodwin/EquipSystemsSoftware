@@ -28,6 +28,8 @@ namespace ItemBookingApp_API.Domain.Models
 
         public int AvailableQuantity { get; set; }
 
+        public string Description { get; set; }
+
         public virtual ICollection<BasketItem> BasketItems { get; set; }
 
         public Item()

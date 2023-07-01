@@ -6,6 +6,7 @@ import { ICategory } from 'src/app/entities/models/category';
 import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { CategoryService } from 'src/app/shared/services/category-service/category.service';
 import {ModalData} from '../../../../../entities/models/modalData';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-category',
@@ -21,9 +22,9 @@ export class CategoryComponent extends NgxModalComponent<ModalData, ICategory> i
   categoryForm: FormGroup;
   isSaving = false;
 
-  constructor(private fb: FormBuilder, private router: Router, 
+  constructor(private fb: FormBuilder,
     private categoryService: CategoryService,
-    private activatedRoute: ActivatedRoute) { 
+    private toasterService: ToasterService) { 
       super();
     }
 
@@ -36,13 +37,12 @@ export class CategoryComponent extends NgxModalComponent<ModalData, ICategory> i
     this.categoryForm = this.fb.group({
       id: [null],
       name: ['', Validators.required]
-    })
+    });
   }
 
   checkForEditAction() {
     if (this.data) {
       this.assignValuesToControl(this.data);
-      this.formTitle = 'Edit Item Type';
     }
   }
 
@@ -51,39 +51,39 @@ export class CategoryComponent extends NgxModalComponent<ModalData, ICategory> i
     const category: ICategory = Object.assign({}, this.categoryForm.value);
 
     if (this.categoryForm.valid) {
-       if (this.categoryForm.value['id'] !== null) {
+       if (this.categoryForm.value['id'] !== undefined) {
         this.categoryService.updateCategory(category.id, category).subscribe({
           next: (updatedCategory) => {
             this.isSaving = false;
             this.result = updatedCategory;
             this.closeDialog(); 
-            console.log('Category updated successfully' + updatedCategory) //TODO show success toaster message 
-            
+            this.toasterService.showInfo('SUCCESS', 'Category updated successfully');            
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
        } else {      
+        console.log(category);
         this.categoryService.createCategory(category).subscribe({
           next: (newCategory: ICategory) => {
             if (newCategory) {
               this.result = newCategory;
-              console.log(newCategory) //TODO show success toaster     
+              this.toasterService.showInfo('SUCCESS', 'Category created successfully');
               this.closeDialog();  
             }
           },
           error: (error: ErrorResponse) => {
-            console.log(error) // TODO: show error toaster
+            this.toasterService.showError(error.title, error.message);
           }
         })
+
        }
      }
    }
 
   closeDialog() {
     this.close();
-    // this.router.navigate(['/master-admin/manage-categories']);
   }
 
   assignValuesToControl(category: ICategory) {
