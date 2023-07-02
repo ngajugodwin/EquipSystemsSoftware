@@ -26,7 +26,6 @@ export class UserReviewComponent implements OnInit {
       next: (res) => {
         if (res) {
           this.user = res
-          console.log(res);
         }
       },
       error: (err: ErrorResponse) => {

@@ -4,6 +4,7 @@ import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IOrder } from 'src/app/entities/models/order';
 import { Pagination } from 'src/app/entities/models/pagination';
 import { CheckoutService } from 'src/app/shared/services/checkout-service/checkout.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-bookings',
@@ -15,7 +16,7 @@ export class BookingsComponent implements OnInit {
   orderParams: any = {};
   pagination: Pagination;  
 
-  constructor(private checkOutService: CheckoutService) { }
+  constructor(private checkOutService: CheckoutService, private toasterService: ToasterService) { }
 
   ngOnInit() {
     this.initOrderParams();
@@ -33,13 +34,12 @@ export class BookingsComponent implements OnInit {
     this.checkOutService.getOrdersForUser().subscribe({
       next: (res) => {
         if (res) {
-          this.orders.length
           this.orders = res.result;
           this.pagination = res.pagination;
         }
       },
       error: (err: ErrorResponse) => {
-        console.log(err);
+        this.toasterService.showError(err.title, err.message);
       }
     })
   }

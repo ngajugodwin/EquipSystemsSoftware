@@ -6,6 +6,7 @@ import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { IOrganisation } from 'src/app/entities/models/organisation';
 import { Pagination } from 'src/app/entities/models/pagination';
 import { OrganisationService } from 'src/app/shared/services/organisation-service/organisation.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 @Component({
   selector: 'app-manage-organisations',
@@ -18,7 +19,7 @@ export class ManageOrganisationsComponent implements OnInit {
   organisations: IOrganisation[] = [];
   
 
-  constructor(private organisationService: OrganisationService) { }
+  constructor(private organisationService: OrganisationService, private toasterService: ToasterService) { }
 
   ngOnInit() {
     this.initOrganisationParams();
@@ -50,13 +51,12 @@ export class ManageOrganisationsComponent implements OnInit {
       "Are you sure you want to approve this organisation?"
     );
     if (!result) {
-      console.log('no');
       return;
     }
     this.organisationService.activateOrDisableOrganisation(organisationId, true).subscribe(
       (res: IOrganisation) => {
         if (res) {
-          console.log(res); // show toaster
+          this.toasterService.showInfo('SUCCESS', 'Organisation user account approved');
           this.organisations.splice(this.organisations.findIndex(x => x.id === res.id), 1);
         }
       }
@@ -74,10 +74,10 @@ export class ManageOrganisationsComponent implements OnInit {
     this.organisationService.rejectOrganisation(organisationId).subscribe({
       next: ((res) => {
          this.organisations.splice(this.organisations.findIndex(c => c.id === res.id), 1);
-         console.log('Organisation rejected successfully'); // TODO show success toaster
+         this.toasterService.showInfo('SUCCESS', 'Organisation rejected successfully');
       }),
       error: ((error: ErrorResponse) => {
-        console.log(error); //TODO: show error toaster
+        this.toasterService.showError(error.title, error.message);
       })
     });
   }
@@ -96,12 +96,12 @@ export class ManageOrganisationsComponent implements OnInit {
       next: ((res) => {
          this.organisations.splice(this.organisations.findIndex(c => c.id === res.id), 1);
          if (res.status.toLocaleLowerCase() === 'active'){
-          console.log('Organisation enabled successfully'); //TODO: show success toaster
+          this.toasterService.showInfo('SUCCESS', 'Organisation enabled successfully'); 
          }
-         console.log('Organisation disabled successfully'); //TODO: show success toaster
+         this.toasterService.showInfo('SUCCESS', 'Organisation disabled successfully');
       }),
       error: ((error: ErrorResponse) => {
-        console.log(error); //TODO: show error toaster
+        this.toasterService.showError(error.title, error.message);
       })
     });
   }

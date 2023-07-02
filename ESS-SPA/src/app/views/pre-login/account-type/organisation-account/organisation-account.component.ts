@@ -35,8 +35,8 @@ export class OrganisationAccountComponent implements OnInit {
       const user: IUser = Object.assign({}, this.userForm.value);
       user.accountType = AccountType.Organisation     
       user.organisation = Object.assign({}, this.userForm.controls['organisation'].value);
-      console.log(user);
-      this.userService.createUserAccountV2(user, this.selectedFile).subscribe({
+      
+      this.userService.createOrganisationUserAccountV2(user, this.selectedFile).subscribe({
         next: ((res) => {
           if (res) {
             this.toasterService.showSuccess('SUCCESS', "New Organisation User account created successfully");

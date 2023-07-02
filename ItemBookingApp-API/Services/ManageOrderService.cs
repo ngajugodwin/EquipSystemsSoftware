@@ -6,6 +6,7 @@ using ItemBookingApp_API.Domain.Repositories;
 using ItemBookingApp_API.Domain.Services;
 using ItemBookingApp_API.Domain.Services.Communication;
 using ItemBookingApp_API.Resources.Query;
+using MailKit.Search;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
@@ -77,7 +78,8 @@ namespace ItemBookingApp_API.Services
                         orderForApproval.BookingInformation.Status = ApprovalStatus.Approved;
                         orderForApproval.Status = OrderStatus.PaymentReceived;
                         await _unitOfWork.CompleteAsync();
-                        await _notificationService.SendNotification(new Mail { Body = "You item has been approved", EmailTo = "ngajugodwin@gmail.com", Subject = "EquipSystems - Approval Mail" });
+                        var mailBody = PrepareApprovalMailBody(orderForApproval);
+                        await _notificationService.SendNotification(new Mail { Body = mailBody, EmailTo = orderForApproval.BorrowerEmail, Subject = "EquipSystemsSoftware - Approval Mail" });
                         return new OrderResponse(orderForApproval);
                     }
 
@@ -115,6 +117,10 @@ namespace ItemBookingApp_API.Services
                 if (result)
                 {
                     await _unitOfWork.CompleteAsync();
+
+                    var mailBody = PrepareClosingMailBody(orderFromRepo);
+                    await _notificationService.SendNotification(new Mail { Body = mailBody, EmailTo = orderFromRepo.BorrowerEmail, Subject = "EquipSystemsSoftware - Approval Mail" });
+
                     return new OrderResponse(orderFromRepo);
                 }
 
@@ -150,57 +156,42 @@ namespace ItemBookingApp_API.Services
             {
 
                 return new OrderResponse($"An error occurred while while approving current booking: {ex.Message}");
-            }
-            
+            }            
 
         }
 
-        private string PrepareMailBody(Order order)
+        private string PrepareApprovalMailBody(Order order)
         {
             var mailBody = string.Empty;
 
             mailBody = $"<p>Dear {order.ShipToAddress.FirstName},</p>" + "</b>"
                         + "<p style=\"text-align: justify;\">Please be informed your booking/order request has been approved and will be delivered to you soon.&nbsp;</p>"
-                        + "<p style=\"text-align: justify;\">Below is your booking/order information you've placed:</p>"
-                        + "<p style=\"text-align: justify;\">&nbsp;</p>"
-                        + "<table style=\"border-collapse: collapse; width: 100%; height: 72px;\" border=\"1\">"
-                        + "<tbody>"
-                        + "<tr style=\"height: 18px;\">"
-                        + "<td style=\"width: 100%; height: 18px;\" colspan=\"2\"><strong>Order/Booking #:&nbsp;</strong></td>"
-                        + "/tr>"
 
-                        +"<table style=\"border-collapse: collapse; width:\"100%\"; height: \"72%\" border=\"1\"> "
-                        + "< tbody >"
-                        +"< tr style = \"`height: 18px;\" >"
-
-                        + $"< td style = \"width: 100%; height: 18px;\" colspan =\" 2\">< strong > Order / Booking #: EQIPSYSTEM0000{order.Id};</strong></td>"
-                        +"</ tr >"
-                        + "< tr style = \"height: 18px;\">"
-                        + "< td style = \"width: 22.1591%; height: 18px;\">+< strong> Duration:\"&nbsp;\"</ strong ></ td >"
-                        + "< td style = \"width: 77.8409%; height: 18px;\"></ td >"
-                        + "</ tr >"
-                        + "< tr style = \"height: 18px;\">"
-                        + $"< td style =\"width: 22.1591%; height: 18px;\">< strong > Due Date: {order.BookingInformation.EndDate}</ strong ></ td >"
-                        + "< td style = \"width: 77.8409%; height: 18px;\" > &nbsp;</ td >"
-                        + "</ tr >"
-                        + "< tr style = \"height: 18px;\" >"
-                        + $"< td style = \"width: 22.1591%; height: 18px;\" >< strong > Processed By: {order.BookingInformation.Status}</ strong ></ td >"
-                        + "< td style = \"width: 77.8409%; height: 18px;\" > &nbsp;</ td >"
-                        +"</ tr >"
-                        +"</ tbody >"
-                        +"</ table >"
-
-                        +"< p style =\"text-align: justify;\">" + "/p>"
-                        + "< p style =\"text-align: justify;\">" + "We value your patronage.Thank you for choosing EquipSystems Software.</ p >"
-                        + "< p style =\"text-align: justify;\">" + "&nbsp;</ p >"
-                        + "< p style =\"text-align: justify;\">" + "< em >< strong >for: EquipSystems Software </ strong ></ em ></ p >"
-                        + "< p style =\"text-align: justify;\">" + "< em >< strong > Tel: 123456 </ strong ></ em ></ p >"
-                        + "< p style =\"text-align: justify;\">" + "< em >< strong > Email: equipsystems@gmail.com </ strong ></ em ></ p >";
-
+                        + "<p style=\"text-align: justify;\">We value your patronage. Thank you for choosing EquipSystems Software.</p>"
+                        + "<br>"
+                        + "<br>"
+                        + "<p style=\"text-align: justify;\">for: EquipSystems Software.</p>"
+                        +"<p style=\"text-align: justify;\">Tel: 123456</p>"
+                        + "<p style=\"text-align: justify;\">Email: equipsystems@gmail.com</p>";
 
             return mailBody;
+        }
 
+        private string PrepareClosingMailBody(Order order)
+        {
+            var mailBody = string.Empty;
 
+            mailBody = $"<p>Dear {order.ShipToAddress.FirstName},</p>" + "</b>"
+                        + "<p style=\"text-align: justify;\">Please be informed your booking/order request has been closed.&nbsp;</p>"
+
+                        + "<p style=\"text-align: justify;\">We value your patronage. Thank you for choosing EquipSystems Software.</p>"
+                        + "<br>"
+                        + "<br>"
+                        + "<p style=\"text-align: justify;\">for: EquipSystems Software.</p>"
+                        + "<p style=\"text-align: justify;\">Tel: 123456</p>"
+                        + "<p style=\"text-align: justify;\">Email: equipsystems@gmail.com</p>";
+
+            return mailBody;
         }
 
 

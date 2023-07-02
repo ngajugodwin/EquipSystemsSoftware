@@ -99,7 +99,6 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
 
       this.checkoutService.createOrder(orderToCreate).subscribe({
         next: (res) => {
-          console.log(res);
           if (res) {
             this.stripe?.confirmCardPayment(basket.clientSecret?.toString()!, {
               payment_method: {

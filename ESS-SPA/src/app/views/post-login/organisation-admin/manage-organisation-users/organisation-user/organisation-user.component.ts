@@ -72,7 +72,6 @@ export class OrganisationUserComponent implements OnInit {
       this.getUser();
     });
 
-    // this.roleService.getRoles()
   }
 
   getUser() {
@@ -86,7 +85,6 @@ export class OrganisationUserComponent implements OnInit {
       this.assignValuesToControl(user);
 
     } else {
-      console.log('NEW USER');
       this.formTitle = 'New User';
       const availableRoles = this.roles;
       for (let i = 0; i < availableRoles.length; i++) {
@@ -102,7 +100,6 @@ export class OrganisationUserComponent implements OnInit {
     const userRoles = user.userRoles;
     const availableRoles = this.roles;
 
-    console.log(availableRoles);
 
     if (user) {
       for (let i = 0; i < availableRoles.length; i++) {

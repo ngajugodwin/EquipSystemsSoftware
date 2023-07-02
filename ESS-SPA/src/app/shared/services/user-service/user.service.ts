@@ -15,7 +15,34 @@ export class UserService {
 
 constructor(private http: HttpClient) { }
 
-createUserAccountV2(userForCreation: IUser, file: any) {
+createIndividualUserAccountV2(userForCreation: IUser, file: any) {
+
+  const formData = new FormData();
+  const headers = new HttpHeaders();
+  
+  headers.append('Content-Type', 'multipart/form-data');
+  headers.append('Accept', 'application/json');
+
+  if (file !== null || formData !== undefined) {
+    formData.append('File', file, file.name);
+    formData.append('userName', userForCreation.userName.toString());
+    formData.append('email', userForCreation.email.toString());
+    formData.append('firstName', userForCreation.firstName.toString());
+    formData.append('lastName', userForCreation.lastName.toString());
+    formData.append('city', userForCreation.city.toString());
+    formData.append('state', userForCreation.state.toString());
+    formData.append('accountType', userForCreation.accountType.toString());
+    formData.append('street', userForCreation.street.toString());
+    formData.append('password', userForCreation.password.toString());
+    formData.append('isExternalReg', JSON.stringify(true));
+    
+  }
+  const httpOptions = { headers: headers };
+
+  return this.http.post<IUser>(AUTH_URL.REGISTER, formData, httpOptions);
+}
+
+createOrganisationUserAccountV2(userForCreation: IUser, file: any) {
 
   const formData = new FormData();
   const headers = new HttpHeaders();

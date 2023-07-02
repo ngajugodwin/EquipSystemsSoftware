@@ -149,9 +149,6 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             if (result)
                 return BadRequest("An item with the same name of serial number exist");
 
-            //var itemToSave = _mapper.Map<SaveItemResource, Item>(saveItemResource);
-
-
             var file = saveItemResource.File;
 
             var uploadResult = new ImageUploadResult();

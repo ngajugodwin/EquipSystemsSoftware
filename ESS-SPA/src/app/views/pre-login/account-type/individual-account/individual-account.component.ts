@@ -42,7 +42,7 @@ export class IndividualAccountComponent implements OnInit {
       const user: IUser = Object.assign({}, this.userForm.value);
       user.accountType = AccountType.Individual;      
 
-      this.userService.createUserAccountV2(user, this.selectedFile).subscribe({
+      this.userService.createIndividualUserAccountV2(user, this.selectedFile).subscribe({
         next: ((res) => {
           if (res) {
             this.toasterService.showSuccess('SUCCESS', "Account created and pending activation");

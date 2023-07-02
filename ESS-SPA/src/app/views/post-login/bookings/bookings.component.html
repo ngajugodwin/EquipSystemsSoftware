@@ -42,7 +42,8 @@
               <th>Order</th>
               <th>Date</th>
               <th>Total</th>
-              <th>Status</th>
+              <th>Payment Status</th>
+              <th>Booking Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -54,6 +55,10 @@
               <td>
                 <c-badge *ngIf="order.status.toLowerCase() === 'payment received' " color="success">{{order.status.toUpperCase()}}</c-badge>
                 <c-badge *ngIf="order.status.toLowerCase() === 'pending' " color="info">{{order.status.toUpperCase()}}</c-badge>
+              </td>
+              <td>
+                <c-badge *ngIf="order.bookingInformation.bookingStatus.toLowerCase() === 'closed' " color="success">{{order.bookingInformation.bookingStatus.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="order.bookingInformation.bookingStatus.toLowerCase() !== 'closed' " color="info">{{order.bookingInformation.bookingStatus.toUpperCase()}}</c-badge>
               </td>
               <td>
                 <button class="btn btn-primary" routerLink="/my-bookings/{{order.id}}">View Details</button>
