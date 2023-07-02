@@ -1,10 +1,11 @@
 <carousel>
+  <p *ngIf="!items" style="display: flex; justify-content: center; margin-top: 10px;"><strong>There are no items to display</strong></p>
   <slide *ngFor="let item of items">
     <div>
       <img src="{{item.url}}" alt="item picture" style="display: block; width: 100%;">
     <div class="carousel-caption d-none d-md-block">
       <h3>Item Name: {{item.name}}</h3>
-      <p>Price: {{item.price | currency}}</p>
+      <p>Price: {{item.price | currency: 'GBP'}}</p>
     </div>
     </div>
   </slide>

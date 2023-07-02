@@ -43,7 +43,6 @@ activateOrDisableItemType(categoryId: number, itemTypeId: number, newStatus: boo
 }
 
 getItemTypes(categoryId: number, page?: number, itemsPerPage?: number, itemTypesParams?: any)  {
-  console.log(categoryId);
   const paginatedResult: PaginationResult<IItemType[]> = new PaginationResult<IItemType[]>();
 
   let params = new HttpParams();

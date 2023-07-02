@@ -7,6 +7,7 @@ import { ErrorResponse } from 'src/app/entities/models/errorResponse';
 import { ModalData } from 'src/app/entities/models/modalData';
 import { BasketService } from 'src/app/shared/services/basket-service/basket.service';
 import { CheckoutService } from 'src/app/shared/services/checkout-service/checkout.service';
+import { ToasterService } from 'src/app/shared/services/toaster-service/toaster.service';
 
 
 @Component({
@@ -34,7 +35,9 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
   message: string;
   data: any;
 
-  constructor(private fb: FormBuilder, private basketService: BasketService, private checkoutService: CheckoutService) { 
+  constructor(private fb: FormBuilder, private basketService: BasketService, 
+    private toasterService: ToasterService,
+    private checkoutService: CheckoutService) { 
     super();
   }
   
@@ -51,7 +54,6 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
   }
 
   async initStripeComponents(): Promise<void> {
-    // debugger;
     await loadStripe('pk_test_51NM6bmHdGjjKRw2W5DipSvypq9Kn8PcDtiBq21i2lRZTErgbGhwxaZWpZ9v1wUBbjVrARWCl0mdd7jg6oQgks13l00xLditF5H').then(stripe => {
       this.stripe = stripe;
       const elements = stripe?.elements();
@@ -81,11 +83,7 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
           else this.cardErrors = null;
         })
       }
-    });
-   
-
-   
-   
+    });   
   }
 
   createPaymentForm () {
@@ -95,7 +93,6 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
   }
   
   save() {
-    console.log(this.stripe);
     const orderToCreate = this.data.orderToCreate
     const basket: IBasket = this.data.basket;
     const accountName = this.paymentForm.controls['nameOnCard'].value;
@@ -118,78 +115,20 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
                this.result = basket;             
                this.close()             
               } else {
-                console.log('Payment failed')
+                this.toasterService.showError('SUCCESS', 'Payment failed');
               }
             })
-            // this.basketService.deleteLocalBasket(res.basketId);
           }
         },
         error: (err: ErrorResponse) => {
-          console.log(err);
+          this.toasterService.showError(err.title, err.message);
         }
       })
      }
-  
-
-  // private getOrderToCreate(basket: IBasket) {
-  //   return {
-  //     basketId: basket.id,
-  //     deliveryMethodId: Number(this.checkoutForm.get('deliveryForm')?.get('deliveryMethod')?.value),
-  //     shipToAddress: this.checkoutForm.get('addressForm')?.value
-  //   };
-  // }
-
-  // private async confirmPaymentWithStripe(basket: IBasket | null) {
-  //   if (!basket) throw new Error('Basket is null');
-  //   const result = this.stripe?.confirmCardPayment(basket.clientSecret!, {
-  //     payment_method: {
-  //       card: this.cardNumber!,
-  //       billing_details: {
-  //         name: this.checkoutForm?.get('paymentForm')?.get('nameOnCard')?.value
-  //       }
-  //     }
-  //   });
-  //   if (!result) throw new Error('Problem attempting payment with stripe');
-  //   return result;
-  // }
 
   ngOnDestroy(): void {
     this.cardNumber?.destroy();
     this.cardExpiry?.destroy();
     this.cardCvc?.destroy();
   }
-
-  // async test(): Promise<void> {
-  //   // debugger;
-  //   const stripe = await loadStripe('pk_test_51NM6bmHdGjjKRw2W5DipSvypq9Kn8PcDtiBq21i2lRZTErgbGhwxaZWpZ9v1wUBbjVrARWCl0mdd7jg6oQgks13l00xLditF5H');
-  //   const elements = stripe?.elements();
-
-  //   if (elements) {
-  //     this.cardNumber = elements.create('cardNumber');
-  //     this.cardNumber.mount(this.cardNumberElement?.nativeElement);
-  //     this.cardNumber.on('change', event => {
-  //       this.cardNumberComplete = event.complete;
-  //       if (event.error) this.cardErrors = event.error.message;
-  //       else this.cardErrors = null;
-  //     })
-
-  //     this.cardExpiry = elements.create('cardExpiry');
-  //     this.cardExpiry.mount(this.cardExpiryElement?.nativeElement);
-  //     this.cardExpiry.on('change', event => {
-  //       this.cardExpiryComplete = event.complete;
-  //       if (event.error) this.cardErrors = event.error.message;
-  //       else this.cardErrors = null;
-  //     })
-
-  //     this.cardCvc = elements.create('cardCvc');
-  //     this.cardCvc.mount(this.cardCvcElement?.nativeElement);
-  //     this.cardCvc.on('change', event => {
-  //       this.cardCvcComplete = event.complete;
-  //       if (event.error) this.cardErrors = event.error.message;
-  //       else this.cardErrors = null;
-  //     })
-  //   }
-   
-  // }
-
 }

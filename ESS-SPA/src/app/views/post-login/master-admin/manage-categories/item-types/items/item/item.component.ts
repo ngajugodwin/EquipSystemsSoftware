@@ -108,7 +108,6 @@ export class ItemComponent extends NgxModalComponent<ModalData, IItem> implement
           }
         })
        } else {      
-        console.log(item);
         this.itemService.createItem(this.data.currentItemType.id, item, this.selectedFile).subscribe({
           next: (newItem: IItem) => {
             if (newItem) {

@@ -23,14 +23,12 @@
             <div class="form-floating">
                 <div class="form-control" #cardExpiry></div>
                 <label>Card Expiry</label>
-                <!-- <span *ngIf="cardErrors" class="text-danger">{{cardErrors}}</span> -->
             </div>
           </div>
           <div class="col-6" style="margin-top: 10px;">
             <div class="form-floating">
                 <div class="form-control" #cardCvc></div>
                 <label>Card Cvc</label>
-                <!-- <span class="text-danger">{{cardErrors}}</span> -->
             </div>
           </div>
         </c-row>
@@ -38,8 +36,7 @@
     </c-card-body>
     <c-card-footer>
       <div class="center-action-button">
-        <button (click)="save()" style="margin-right: 10px;" type="button" form="paymentForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save  </button>
-        <!-- <button type="reset" (click)="closeDialog()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button> -->
+        <button (click)="save()" style="margin-right: 10px;" type="button" form="paymentForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Process Payment  </button>
       </div>    
     </c-card-footer>
   </c-card>

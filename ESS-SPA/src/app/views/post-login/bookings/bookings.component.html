@@ -46,14 +46,14 @@
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody>         
             <tr *ngFor="let order of orders; let i = index">    
               <td># EQUP-SYS-00000{{order.id}}</td>
               <td>{{order.orderDate | date: 'medium'}}</td>
               <td>{{order.total | currency: 'GBP'}}</td>
               <td>
                 <c-badge *ngIf="order.status.toLowerCase() === 'payment received' " color="success">{{order.status.toUpperCase()}}</c-badge>
-                <c-badge *ngIf="order.status.toLowerCase() === 'payment pending' " color="info">{{order.status.toUpperCase()}}</c-badge>
+                <c-badge *ngIf="order.status.toLowerCase() === 'pending' " color="info">{{order.status.toUpperCase()}}</c-badge>
               </td>
               <td>
                 <button class="btn btn-primary" routerLink="/my-bookings/{{order.id}}">View Details</button>
@@ -61,6 +61,8 @@
             </tr>
           </tbody>
         </table>       
+        <p *ngIf="orders.length <= 0" style="display: flex; justify-content: center; margin-top: 10px;"><strong>There are currently no booking/order to display.</strong></p>
+
       </c-card-body>
       <c-card-footer>
          <div class="center-pagination">

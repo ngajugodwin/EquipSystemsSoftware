@@ -50,13 +50,13 @@ export class ItemService {
       formData.append('itemTypeId', itemToCreate.itemTypeId.toString());
       formData.append('categoryId', itemToCreate.categoryId.toString());
       formData.append('serialNumber', itemToCreate.serialNumber);
+      formData.append('description', itemToCreate.description);
       formData.append('availableQuantity', itemToCreate.availableQuantity.toString());
       formData.append('price', itemToCreate.price.toString());
       
     }
     const httpOptions = { headers: headers };
 
-    console.log(itemToCreate)
     return this.http.post<IItem>(MASTER_ADMIN_URL.MANAGE_ITEM + `/${itemTypeId}/ManageItems`, formData, httpOptions);
   }
   

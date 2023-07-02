@@ -64,7 +64,6 @@ export class CategoryComponent extends NgxModalComponent<ModalData, ICategory> i
           }
         })
        } else {      
-        console.log(category);
         this.categoryService.createCategory(category).subscribe({
           next: (newCategory: ICategory) => {
             if (newCategory) {

@@ -25,6 +25,7 @@ export class ProductDetailsComponent implements OnInit {
 
   addItemToBasket() {
     this.basketService.addItemToBasket(this.item.id, this.quantity);
+    this.toasterService.showInfo("SUCCESS", `${this.item.name} has been added to your basket`);
   }
 
   increaseOrDecreaseQuantity(status: boolean) {

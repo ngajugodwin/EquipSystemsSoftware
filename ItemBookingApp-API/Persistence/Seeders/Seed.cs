@@ -60,15 +60,21 @@ namespace ItemBookingApp_API.Persistence.Seeders
                 foreach (var user in users)
                 {
                     user.Status = Domain.Models.EntityStatus.Active;
+                    user.AccountType = AccountType.Master;
                     _userManager.CreateAsync(user, "password").Wait();
                     _userManager.AddToRoleAsync(user, "SuperAdmin").Wait();
-                }
+                }             
 
                 var superAdmin = new AppUser
                 {
                     FirstName = "Admin",
                     LastName = "Admin",
                     UserName = "admin",
+                    Street = "Priory St",
+                    State = "Cov",
+                    City = "Coventry",
+                    ZipCode = "CV1 5FB",
+                    AccountType = AccountType.Master,
                     Status = Domain.Models.EntityStatus.Active,
                     Email = "admin@example.com"
                 };
@@ -77,7 +83,7 @@ namespace ItemBookingApp_API.Persistence.Seeders
 
                 if (result.Succeeded)
                 {
-                    var admin = _userManager.FindByNameAsync("SuperAdmin").Result;
+                    var admin = _userManager.FindByEmailAsync("admin@example.com").Result;
 
                     _userManager.AddToRoleAsync(admin, "SuperAdmin").Wait();
                 }

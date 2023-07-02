@@ -2,8 +2,6 @@
 <c-row>
   <c-col xs>
     <c-card class="mb-4">
-        <!-- <c-card-header>Users</c-card-header>
-        <button cButton color="primary" [routerLink]="['/admin/manage-users/new']">New User</button> -->
         <c-card-header>
           <c-container>
             <c-row class="align-items-start">
@@ -29,7 +27,6 @@
                   </form>
                 </div>
               </c-col>
-              <!-- <c-col xs="2"><button cButton color="primary" [routerLink]="['/master-admin/manage-users/new']">New User</button></c-col> -->
             </c-row>
           </c-container>
         </c-card-header>
@@ -82,6 +79,14 @@
           <tbody>
             <tr *ngFor="let user of users">
               <td class="text-center">
+                <c-avatar
+                cTextColor="primary"
+                shape="rounded-1"
+                size="md"
+                src="./assets/img/avatars/user_Avatar.jpg"
+                status="info"
+              >
+              </c-avatar>
               </td>
               <td>
                 <div>{{ user.firstName }}</div>
@@ -94,16 +99,9 @@
                 <c-badge *ngIf="user.status.toLowerCase()=== 'pending' " color="info">{{user.status.toUpperCase()}}</c-badge>
                 <c-badge *ngIf="user.status.toLowerCase() === 'disabled' " color="danger">{{user.status.toUpperCase()}}</c-badge>
               </td>     
-              <!-- <td>
-                <div>{{ user.status }}</div>
-              </td> -->
               <td>
                 <c-badge color="info">{{user.typeName}}</c-badge>
-              </td>
-           
-              <!-- <td>
-                <div>{{ user.accountType }}</div>
-              </td> -->
+              </td>           
               <td>
                 <c-dropdown>
                   <a cButton cDropdownToggle color="info" [routerLink]="[]">

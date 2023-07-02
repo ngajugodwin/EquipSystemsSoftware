@@ -182,14 +182,12 @@ namespace ItemBookingApp_API.Services
 
         public async Task<PagedList<AppUser>> ListAsync(UserQuery userQuery)
         {            
-          //  var user = await _applicationUserManager.FindByIdAsync(userQuery.UserId);
                 
             return await _applicationUserManager.ListAsync(userQuery, userQuery.AccountType);
         }
 
         public async Task<PagedList<AppUser>> ListAsyncV2(UserQuery userQuery)
         {
-            //  var user = await _applicationUserManager.FindByIdAsync(userQuery.UserId);
 
             return await _applicationUserManager.ListAsyncV2(userQuery);
         }

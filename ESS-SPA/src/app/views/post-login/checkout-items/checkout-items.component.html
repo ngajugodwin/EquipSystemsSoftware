@@ -91,8 +91,8 @@
     </c-card-body>
     <c-card-footer>
           <div class="center-action-button">
-            <button [disabled]="!hasBasket || !this.checkoutForm.get('bookingForm')?.valid" (click)="createPaymentIntent()" style="margin-right: 10px;" type="button" form="checkoutForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> >> PAY</button>
-            <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> >> Shop </button>
+            <button [disabled]="!hasBasket || !this.checkoutForm.get('bookingForm')?.valid" (click)="createPaymentIntent()" style="margin-right: 10px;" type="button" form="checkoutForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> >> PAY >></button>
+            <button type="reset" (click)="cancel()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> >> Shop >> </button>
           </div>
     </c-card-footer>
   </c-card>

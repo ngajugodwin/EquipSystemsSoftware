@@ -74,7 +74,8 @@ rejectUser(user: IUser) {
 
 onEnableDisableUser(userId: number, newStatus: boolean): Observable<IUser> {
   let params = new HttpParams();
-  params = new HttpParams().set('userStatus', newStatus);
+  params = new HttpParams().set('userDeactivationStatus', newStatus);
+  
   return this.http.put<IUser>(USER_URL.SUPER_ADMIN_BASE_URL + `${userId}/activateOrDisableUser`, {}, {params: params});
 }
 

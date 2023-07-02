@@ -15,7 +15,7 @@
         </form>
     </c-card-body>
     <c-card-footer>
-      <div>
+      <div class="center-action-button">
         <button style="margin-right: 10px;" type="submit" [disabled]="!categoryForm.valid || isSaving === true" form="categoryForm" class="btn btn-sm btn-primary mr-2"><i class="fa fa-dot-circle-o"></i> Save  </button>
         <button type="reset" (click)="closeDialog()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
       </div>    

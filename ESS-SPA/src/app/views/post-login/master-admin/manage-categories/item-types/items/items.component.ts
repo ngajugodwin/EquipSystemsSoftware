@@ -61,7 +61,6 @@ export class ItemsComponent implements OnInit, OnDestroy, OnChanges  {
   }
 
   newItem() {
-    console.log(this.currentItemType);
     if (this.currentItemType === undefined){
       alert('You must first select an item type');
       return;

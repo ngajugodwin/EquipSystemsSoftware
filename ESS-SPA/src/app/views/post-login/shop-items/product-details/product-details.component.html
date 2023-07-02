@@ -4,7 +4,7 @@
 </div>
 <div class="col-6">
   <h3>{{item.name}}</h3>
-  <p>{{item.price | currency: 'GBP'}}</p>
+  <p>Price: {{item.price | currency: 'GBP'}}</p>
   <div>
     <p>QTY: <strong>{{quantity}}</strong></p>
     <button (click)="increaseOrDecreaseQuantity(true)" class="btn btn-info" style="margin-right: 10px;"><strong>Increase</strong></button>
