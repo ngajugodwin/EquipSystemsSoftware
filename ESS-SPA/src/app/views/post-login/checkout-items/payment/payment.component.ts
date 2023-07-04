@@ -54,11 +54,13 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
   }
 
   async initStripeComponents(): Promise<void> {
+    //load strip elements
     await loadStripe('pk_test_51NM6bmHdGjjKRw2W5DipSvypq9Kn8PcDtiBq21i2lRZTErgbGhwxaZWpZ9v1wUBbjVrARWCl0mdd7jg6oQgks13l00xLditF5H').then(stripe => {
       this.stripe = stripe;
       const elements = stripe?.elements();
 
       if (elements) {
+        //create card number element instance
         this.cardNumber = elements.create('cardNumber');
         this.cardNumber.mount(this.cardNumberElement?.nativeElement);
         this.cardNumber.on('change', event => {
@@ -67,6 +69,7 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
           else this.cardErrors = null;
         })
 
+        //create card expiry element instance
         this.cardExpiry = elements.create('cardExpiry');
         this.cardExpiry.mount(this.cardExpiryElement?.nativeElement);
         this.cardExpiry.on('change', event => {
@@ -75,6 +78,7 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
           else this.cardErrors = null;
         })
 
+        //create card cvc element instance
         this.cardCvc = elements.create('cardCvc');
         this.cardCvc.mount(this.cardCvcElement?.nativeElement);
         this.cardCvc.on('change', event => {
@@ -93,13 +97,16 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
   }
   
   save() {
+    //Prepare necessary data for payment processing
     const orderToCreate = this.data.orderToCreate
     const basket: IBasket = this.data.basket;
     const accountName = this.paymentForm.controls['nameOnCard'].value;
 
+    // create customer order by calling backend API
       this.checkoutService.createOrder(orderToCreate).subscribe({
         next: (res) => {
           if (res) {
+            // call Stripe API gateway to validate customer card
             this.stripe?.confirmCardPayment(basket.clientSecret?.toString()!, {
               payment_method: {
                 card: this.cardNumber!,
@@ -108,18 +115,21 @@ export class PaymentComponent extends NgxModalComponent<ModalData, IBasket> impl
                 }
               }
             }).then(res => {
-              if(res.paymentIntent) {       
+              if(res.paymentIntent) {      
+                //delete customer basket from cart once a successful payment occurs 
                 this.basketService.deleteBasket(basket.id);        
                this.basketService.deleteLocalBasket(basket.id);  
                this.result = basket;             
                this.close()             
               } else {
+                //Toast message if the payment fails
                 this.toasterService.showError('SUCCESS', 'Payment failed');
               }
             })
           }
         },
         error: (err: ErrorResponse) => {
+          //Toast message for any error encountered during the process
           this.toasterService.showError(err.title, err.message);
         }
       })

@@ -27,25 +27,14 @@ export class DefaultLayoutComponent implements OnInit {
 
   initMenu() {
     const roles = [SUPER_ADMIN_ROLE];
-    const menus = this.menuService.getMenus();
+    const menus = this.menuService.getMenus(); // get all menus and sections
     this.navItems = menus;
     if (this.authService.roleMatch(roles)) {
+      //validate the role and apply filter to get only organisation admin settings menu 
       this.navItems = menus.filter(menu => menu.name?.toLowerCase() !== 'organisation settings')
     } else {
+      //validate the role and apply filter to get only super admin settings menu 
        this.navItems = menus.filter(menu => menu.name?.toLowerCase() !== 'master settings');
     }
   }
-
-  
-  // initMenu() {
-  //   const roles = [SUPER_ADMIN_ROLE];
-  //   console.log(roles);
-  //   const menus = this.menuService.getMenus();
-  //   this.navItems = menus;
-  //   if (this.authService.roleMatch(roles)) {
-  //     this.navItems = menus
-  //   } else {
-  //      this.navItems = menus.filter(menu => menu.name?.toLowerCase() !== 'Master Settings');
-  //   }
-  // }
 }

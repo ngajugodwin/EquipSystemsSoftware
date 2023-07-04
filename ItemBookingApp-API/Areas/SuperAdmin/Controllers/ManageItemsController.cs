@@ -79,7 +79,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 
         [HttpPut("{itemId}/changeItemImage")]
         public async Task<IActionResult> ChangeItemImage([FromForm] ChangeItemImageResource changeItemImageResource)
-        {
+        {    // find item by ID from database
             var item = await _genericRepository.FindAsync<Item>(x => x.Id == changeItemImageResource.ItemId);
 
             if (item == null)
@@ -90,10 +90,8 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             {
                 DeleteFileFromCloudindary(item.PublicId);
             }
-
-
+            // create Cloudinary image upload result instance
             var file = changeItemImageResource.File;
-
             var uploadResult = new ImageUploadResult();
 
             if (file.Length > 0)
@@ -103,17 +101,15 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
                     var uploadParams = new ImageUploadParams()
                     {
                         File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
+                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face") //transform image to capture relevant areas
                     };
-
+                    //upload image to cloudinary 
                     uploadResult = _cloudinary.Upload(uploadParams);
                 }
-            }           
-
-
+            }
+            //update entity information with relevant data
             changeItemImageResource.Url = uploadResult.Url.ToString();
             changeItemImageResource.PublicId = uploadResult.PublicId;
-
 
             var itemToUpdate = _mapper.Map<ChangeItemImageResource, Item>(changeItemImageResource);
 
@@ -121,7 +117,7 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             item.PublicId = itemToUpdate.PublicId;
 
             try
-            {
+            {    //store change to database
                 _genericRepository.UpdateAsync<Item>(item);
                 await _unitOfWork.CompleteAsync();
 
@@ -133,8 +129,6 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             {
                 throw ex;
             }
-
-
         }
 
 
@@ -143,7 +137,8 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
-
+            
+            //validate if an item exist with similar name
             var result = await _itemRepository.IsExist(saveItemResource.Name, saveItemResource.SerialNumber);
 
             if (result)
@@ -151,22 +146,23 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 
             var file = saveItemResource.File;
 
+            //create an instance of cloudinary image upload result
             var uploadResult = new ImageUploadResult();
 
             if (file.Length> 0)
             {
                 using(var stream = file.OpenReadStream())
-                {
+                {   //set required attributes
                     var uploadParams = new ImageUploadParams()
                     {
                         File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
+                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face") // transform image to capture relevant areas
                     };
-
+                    //upload image to Cloudinary cloud storage
                     uploadResult = _cloudinary.Upload(uploadParams);
                 }
             }
-
+            // update item properties with relevant information
             saveItemResource.Url = uploadResult.Url.ToString();
             saveItemResource.PublicId = uploadResult.PublicId;
 
@@ -174,8 +170,8 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             var itemToSave = _mapper.Map<SaveItemResource, Item>(saveItemResource);
 
             try
-            {
-                itemToSave.IsActive = true;
+            {   // set item to be active and available for user. Then save to Database
+                itemToSave.IsActive = true; 
                 itemToSave.ItemState = ItemState.Available;
                 await _genericRepository.AddAsync<Item>(itemToSave);
                 await _unitOfWork.CompleteAsync();
@@ -195,20 +191,19 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
         [HttpPut("{itemId}")]
         public async Task<IActionResult> UpdateItemsync(int itemId, [FromBody] UpdateItemResource updateItemResource)
         {
-            // return Ok();
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
             if (itemId != updateItemResource.Id)
                 return BadRequest("Id does not match request body");
-
+            //get the item from database 
             var itemFromRepo = await _genericRepository.FindAsync<Item>(x => x.Id == itemId);
 
-            if (itemFromRepo == null)
-                return BadRequest("Item not found!");
+            if (itemFromRepo == null) return BadRequest("Item not found!");
 
             var item = _mapper.Map<UpdateItemResource, Item>(updateItemResource);
 
+            //update properties with new information
             itemFromRepo.Name = item.Name;
             itemFromRepo.ItemTypeId = item.ItemTypeId;
             itemFromRepo.Description = item.Description;
@@ -217,12 +212,12 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             itemFromRepo.Price = item.Price;
 
             try
-            {
+            {   // save changes to database
                 _genericRepository.UpdateAsync<Item>(itemFromRepo);
                 await _unitOfWork.CompleteAsync();
 
                 var updatedItemToReturn = _mapper.Map<ItemResource>(itemFromRepo);
-
+                //return updated information back to the client
                 return Ok(updatedItemToReturn);
             }
             catch (Exception ex)
@@ -233,16 +228,14 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
 
         [HttpDelete("{itemId}")]
         public async Task<IActionResult> DeleteItemAsync(int itemId)
-        {
+        {   //find item for deletion 
             var item = await _genericRepository.FindAsync<Item>(i => i.Id == itemId);
 
             if (item == null)
-            {
                 return BadRequest("Item not found");
-            }
 
             if (item.ItemState == ItemState.NotAvailable)
-            {
+            {   //delete and persist changes to database
                 _genericRepository.Remove<Item>(item);
                 await _unitOfWork.CompleteAsync();
 

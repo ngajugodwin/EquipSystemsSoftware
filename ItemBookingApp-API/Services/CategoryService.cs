@@ -64,44 +64,49 @@ namespace ItemBookingApp_API.Services
         {
             try
             {
+                // validate if a category exist
                 var existingCategory = await _genericRepository.FindAsync<Category>(c => c.Name == category.Name);
 
                 if (existingCategory != null)
                     return new CategoryResponse("Category already exist");
 
+                // add the category to the database
                 await _genericRepository.AddAsync<Category>(category);
                 await _unitOfWork.CompleteAsync();
 
-                return new CategoryResponse(category);
+                return new CategoryResponse(category); //return entity
             }
             catch (Exception ex)
             {
-                // Do some logging
+                //return exception message 
                 return new CategoryResponse($"An error occurred while saving the category: {ex.Message}");
             }
         }
 
         public async Task<CategoryResponse> UpdateAsync(int categoryId, Category category)
         {
+            // find category based on Id
             var categoryFromRepo = await _genericRepository.FindAsync<Category>(c => c.Id == categoryId);
 
             if (categoryFromRepo == null)
                 return new CategoryResponse("Category not found");
 
+            // check if category of same name exist
             var isExist = await _categoryRepository.IsExist(category.Name);
 
             if (isExist)
                 return new CategoryResponse("Category already exist");
 
+            // update the category name
             categoryFromRepo.Name = category.Name;
 
             try
-            {
+            {   // save changes to databse and return data
                 await _unitOfWork.CompleteAsync();
                 return new CategoryResponse(categoryFromRepo);
             }
             catch (Exception ex)
-            {
+            {   // return an exception if this occurs
                 return new CategoryResponse($"An error occured when updating category: {ex.Message}");
             }
         }
