@@ -25,6 +25,7 @@ namespace ItemBookingAppTest
         [Fact]
         public async void CreateCustomerPaymentIntent_Test()
         {
+            // initialise basket item using fake data
             var basketItem = new BasketItem
             {
                 ItemId = 1,
@@ -34,27 +35,32 @@ namespace ItemBookingAppTest
                 {
                     Id = 1,
                     Name = "Bicycle",
+                    Price = 12,
                     Description = "Test Bicycle"
                 }
             };
 
             var basketItems = new List<BasketItem> { basketItem };
 
+            // create test customer basket which will be using for payment proccessing
             var customerBasket = new CustomerBasket
             {
                 Id = 2,
                 ClientSecret = "ejueiuho89hwe8",
                 DeliveryMethodId = 2,
+                ShippingPrice = 10,
                 Items = basketItems
             };
 
+            // mock up the creation of the paymentIntent function using the customer basket
             mock.Setup(p => p.CreateOrUpdatePaymentIntent(customerBasket.Id)).ReturnsAsync(customerBasket);
 
             PaymentsController paymentController = new PaymentsController(mock.Object, mapper.Object, logger.Object);
 
+            // test the payment intent function from the payment controller using the fake data prepared
             var result = await paymentController.CreateOrUpdatePaymentIntent(customerBasket.Id);
 
-            Assert.NotNull(result);
+            Assert.NotNull(result); // Assert that a payment was successful by returning a valid basket
         }
 
 

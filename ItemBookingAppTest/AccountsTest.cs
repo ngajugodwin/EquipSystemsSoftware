@@ -29,8 +29,10 @@ namespace ItemBookingAppTest
         [Fact]
         public async void Login_Test()
         {
+            // preparet test user data
             var user = new UserResource { Id = 1, Email = "test@example.com" };
 
+            //prepare token response with test data
             var token = new TokenResource 
             { 
                 RefreshToken = "teteiw7wefwefwefhyw78ie" , 
@@ -39,10 +41,12 @@ namespace ItemBookingAppTest
                 Expiration = DateTime.Now 
             };
 
+            //mockup authentication service to call login function
             mockAuthService.Setup(p => p.LoginAsync(user.Email, "password")).ReturnsAsync(new AuthResponse(token));
 
             AuthController authController = new AuthController(mockAuthService.Object);
 
+            // call controller to test the login function with test data
             var result = await authController.LoginAsync(
                 new LoginResource 
                 { 
@@ -50,7 +54,7 @@ namespace ItemBookingAppTest
                     Password = "password"
                 });
 
-            Assert.NotNull(result);
+            Assert.NotNull(result); // Assert and confirm the user object was found and not null
         }
 
         //[Fact]

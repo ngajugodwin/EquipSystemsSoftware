@@ -62,13 +62,14 @@ namespace ItemBookingAppTest
         [Fact]
         public async void ApproveOnePendingOrderTest()
         {
+            //prepare test data for order items
             var orderItems = new List<OrderItem>
             {
                 new OrderItem
                 {
                     Id = 1,
                     Price = 10,
-                    Quantity = 1,
+                    Quantity = 1,                    
                     ItemOrdered = new ItemOrdered
                     {
                         ItemId = 1,
@@ -77,7 +78,9 @@ namespace ItemBookingAppTest
                     }
                 }
             };
-            var oneOrder = new Order { Id = 1, BorrowerEmail = "test@example.com", OrderDate = DateTime.Now,
+
+            //prepare test order data
+            var order = new Order { Id = 1, BorrowerEmail = "test@example.com", OrderDate = DateTime.Now,
                 Status = OrderStatus.PaymentReceived , OrderItems = orderItems,
                 BookingInformation = new BookingInformation 
                 { 
@@ -87,15 +90,18 @@ namespace ItemBookingAppTest
                 }
             };
 
+            //setup and mock up getOrderById function using test data
+            manageOrderMock.Setup(p => p.GetOrderByIdAsync(order.Id)).ReturnsAsync(new OrderResponse(order));
 
-            manageOrderMock.Setup(p => p.GetOrderByIdAsync(oneOrder.Id)).ReturnsAsync(new OrderResponse(oneOrder));
+            //setup and mock up approveOrder function 
+            manageOrderMock.Setup(p => p.ApproveOrder(order.BorrowerEmail, 1)).ReturnsAsync(new OrderResponse(order));
 
-            manageOrderMock.Setup(p => p.ApproveOrder("test@example.com", 1)).ReturnsAsync(new OrderResponse(oneOrder));
-
+            //mock controller and call appoveBooking function
             ManageOrdersController orderController = new ManageOrdersController(manageOrderMock.Object, mapper.Object);
             var result = await orderController.ApproveBooking(1);
 
-            Assert.Equal(1, (char)oneOrder.BookingInformation.Status);
+            // Assert that the order got approved and the booking status changed successfully
+            Assert.Equal(1, (char)order.BookingInformation.Status);
         }
 
     }
