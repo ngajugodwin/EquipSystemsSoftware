@@ -41,7 +41,7 @@ namespace ItemBookingApp_API.Controllers
                 }
             }
 
-            var userToSave = _mapper.Map<SaveUserResource, AppUser>(saveUserResource);
+            var userToSave = _mapper.Map<SaveUserResource, AppUser>(saveUserResource);         
 
             var result = await _userService.SaveAsync(userToSave, saveUserResource.IsExternalReg, userRoles, saveUserResource.Password, saveUserResource.File);
 
@@ -58,7 +58,6 @@ namespace ItemBookingApp_API.Controllers
             var userToReturn = _mapper.Map<UserResource>(result.Resource);
 
             return Ok(userToReturn);
-            //  return CreatedAtRoute("GetUserAsync", new { controller = "Users", id = userToReturn.Id }, userToReturn);
         }
     }
 }

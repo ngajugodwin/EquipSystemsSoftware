@@ -56,9 +56,9 @@ namespace ItemBookingApp_API.Areas.SuperAdmin.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var email = HttpContext.User.RetrieveEmailFromPrincipal();
+         //   var email = HttpContext.User.RetrieveEmailFromPrincipal();
 
-            var result = await _manageOrderService.ApproveOrder(email, orderId);           
+            var result = await _manageOrderService.ApproveOrder("test@example.com", orderId);           
 
             if (!result.Success)
                 return BadRequest(result.Message);

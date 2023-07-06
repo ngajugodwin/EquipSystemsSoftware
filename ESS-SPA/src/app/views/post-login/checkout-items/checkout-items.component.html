@@ -71,7 +71,7 @@
                         <label cLabel for="inputStreet">Delivery Method</label>
                         <select formControlName="deliveryMethod" (change)="setTheShippingPrice($event)" aria-label="Default select example" cSelect>
                           <option></option>
-                          <option cFormControl *ngFor="let dm of deliveryMethods" [value]="dm.id">{{dm.shortName}} | {{dm.description}} | {{dm.price | currency}}</option>                    
+                          <option cFormControl *ngFor="let dm of deliveryMethods" [value]="dm.id">{{dm.shortName}} | {{dm.description}} | {{dm.price | currency: 'GBP'}}</option>                    
                         </select>
                       </c-col>
                     </c-row>
