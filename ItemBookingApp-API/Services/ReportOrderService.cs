@@ -30,24 +30,22 @@ namespace ItemBookingApp_API.Services
 
         public async Task<MemoryStream> ExportOrders(OrderReportQuery orderReportQuery)
         {
+            // get order report
             var data = await GetOrderReport(orderReportQuery);
-
-            var orders = data.ToList();
-            
-            var tempFile = Path.GetTempFileName();
-
+            var orders = data.ToList();            
+            var tempFile = Path.GetTempFileName(); //create a temp file
             var memory = new MemoryStream();
-
             try
             {
                 using (var fs = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None, Int16.MaxValue))
                 {
-                    IWorkbook workbook;
+                    IWorkbook workbook; // create a workgroup using library
                     workbook = new XSSFWorkbook();
                     ISheet excelSheet = workbook.CreateSheet("Order_Data");
                     IRow row = excelSheet.CreateRow(0);
                     int rowCounter = 1;
 
+                    //create header rows in excel
                     row.CreateCell(0).SetCellValue("S/N");
                     row.CreateCell(1).SetCellValue("Name");
                     row.CreateCell(2).SetCellValue("Email");
@@ -55,7 +53,7 @@ namespace ItemBookingApp_API.Services
                     row.CreateCell(4).SetCellValue("CreatedAt");
                     row.CreateCell(5).SetCellValue("Items");
 
-
+                    //iterate over the list of orders
                     foreach (var order in orders)
                     {
                         row = excelSheet.CreateRow(rowCounter++);
@@ -66,17 +64,15 @@ namespace ItemBookingApp_API.Services
                         row.CreateCell(4).SetCellValue(order.OrderDate.ToString("dd/MM/yyyy"));
                         row.CreateCell(5).SetCellValue(GetItems(order));
                     }
-
-                    workbook.Write(fs, false);
+                    workbook.Write(fs, false); //write value
                 }
-
                 using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None, Int16.MaxValue, FileOptions.DeleteOnClose))
                 {
                     await stream.CopyToAsync(memory);
                 }
 
-                memory.Position = 0;
-                return memory;
+                memory.Position = 0; 
+                return memory; //return memory object
             }
             catch (Exception ex)
             {
